@@ -1,5 +1,5 @@
-using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(AudioSource))]
@@ -20,32 +20,53 @@ public class BallController : MonoBehaviour
     [SerializeField]
     private AudioClip _bounceSound;
 
+    private bool _isLaunched;
     private Rigidbody _rb;
     private AudioSource _audioSource;
+    private Transform _start;
 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
         _audioSource = GetComponent<AudioSource>();
+        _start = GameObject.FindGameObjectWithTag("Player").transform.GetChild(0).transform;
 
         _rb.useGravity = false;
         _rb.linearDamping = 0;
         _rb.angularDamping = 0;
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
 
-        _rb.linearVelocity = transform.right * _minSpeed;
+        ResetBall();
     }
 
-     void FixedUpdate()
+    void FixedUpdate()
     {
+        if (!_isLaunched) return;
         if (_gravity <= 0) return;
         _rb.AddForce(Vector3.right * -_gravity, ForceMode.Acceleration);
 
         ClampSpeed(_rb.linearVelocity.magnitude);
     }
+    
+    void Update()
+    {
+        if (_isLaunched) return;
+
+        Keyboard keyboard = Keyboard.current;
+        if (!keyboard.spaceKey.wasPressedThisFrame) return;
+        
+        LaunchBall();
+    }
 
     void OnCollisionEnter(Collision other)
     {
+        if (!_isLaunched) return;
+        if (other.gameObject.CompareTag("OutOfBounds"))
+        {
+            ResetBall();
+            return;
+        }
+
         if (_bounceSound == null)
         {
             Debug.LogWarning("Bounce sound not assigned.");
@@ -60,5 +81,21 @@ public class BallController : MonoBehaviour
 
         float clampedSpeed = Mathf.Clamp(currentSpeed, _minSpeed, _maxSpeed);
         _rb.linearVelocity = _rb.linearVelocity.normalized * clampedSpeed;
+    }
+
+    private void LaunchBall()
+    {
+        transform.parent = null;
+        _rb.linearVelocity = Quaternion.Euler(0, 0, Random.Range(-45f, 45f)) * transform.right * _minSpeed;
+        _isLaunched = true;
+    }
+
+    private void ResetBall()
+    {
+        _isLaunched = false;
+        _rb.linearVelocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+        transform.position = _start.position;
+        transform.parent = _start;
     }
 }
