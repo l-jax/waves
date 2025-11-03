@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BlockController
   _breakSound: {fileID: 0}
-  _breakParticles: {fileID: 0}
+  _breakParticles: {fileID: 7992277016241461058, guid: 5e22fbd4b7b664aaa8f56c6151ac5312, type: 3}
 --- !u!82 &3549060698290801803
 AudioSource:
   m_ObjectHideFlags: 0
