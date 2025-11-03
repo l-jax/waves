@@ -43,7 +43,7 @@ public class BallController : MonoBehaviour
     {
         if (!_isLaunched) return;
         if (_gravity <= 0) return;
-        _rb.AddForce(Vector3.right * -_gravity, ForceMode.Acceleration);
+        _rb.AddForce(Vector3.down * _gravity, ForceMode.Acceleration);
 
         ClampSpeed(_rb.linearVelocity.magnitude);
     }
@@ -86,7 +86,7 @@ public class BallController : MonoBehaviour
     private void LaunchBall()
     {
         transform.parent = null;
-        _rb.linearVelocity = Quaternion.Euler(0, 0, Random.Range(-45f, 45f)) * transform.right * _minSpeed;
+        _rb.linearVelocity = Quaternion.Euler(0, 0, Random.Range(-45f, 45f)) * transform.up * _minSpeed;
         _isLaunched = true;
     }
 
