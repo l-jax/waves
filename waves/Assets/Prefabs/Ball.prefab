@@ -71,7 +71,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: c0cb741308765483c842272d252a70e1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -227,13 +227,13 @@ MonoBehaviour:
   _gravity: 0.5
   _minSpeed: 10
   _maxSpeed: 15
+  _bounceSound: {fileID: 0}
   _minPitch: 0.9
   _maxPitch: 1.1
   _squashAmount: 1.2
   _stretchAmount: 1.2
   _squashToStretchTime: 0.08
   _stretchToNormalTime: 0.08
-  _bounceSound: {fileID: 0}
   _bounceParticlesPrefab: {fileID: 86423232036158362, guid: 89b92c4524b0d43919767f79a5343800, type: 3}
 --- !u!54 &4072723508955196370
 Rigidbody:
@@ -320,39 +320,21 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.27500153
-        inSlope: 0
-        outSlope: 0
+        value: 0.40767586
+        inSlope: -0.81083953
+        outSlope: -0.81083953
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.33333334
+        outWeight: 0.31436315
       - serializedVersion: 3
-        time: 0.2703556
-        value: 0.19043627
-        inSlope: -0.7436911
-        outSlope: -0.7436911
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 0.55999935
-        value: 0.049992383
-        inSlope: -1.0465224
-        outSlope: -1.0465224
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 1
-      - serializedVersion: 3
-        time: 0.8999987
+        time: 1
         value: 0
-        inSlope: 0
-        outSlope: 0
+        inSlope: -0.22604185
+        outSlope: -0.22604185
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0
+        inWeight: 0.41517133
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -360,7 +342,7 @@ TrailRenderer:
     colorGradient:
       serializedVersion: 2
       key0: {r: 1, g: 1, b: 1, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 0}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -376,7 +358,7 @@ TrailRenderer:
       ctime6: 0
       ctime7: 0
       atime0: 0
-      atime1: 65535
+      atime1: 39321
       atime2: 0
       atime3: 0
       atime4: 0
@@ -384,7 +366,7 @@ TrailRenderer:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: -1
+      m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
