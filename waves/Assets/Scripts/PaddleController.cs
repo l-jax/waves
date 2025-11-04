@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 public class PaddleController : MonoBehaviour
 {
     [Header("Movement Settings")]
-
     [Tooltip("Is debug mode enabled? If true, keyboard controls replace microphone input.")]
     [SerializeField]
     private bool _debugMode = false;
@@ -18,17 +17,9 @@ public class PaddleController : MonoBehaviour
     [SerializeField]
     private float _rightBoundary = 4f;
 
-    [Tooltip("The minimum frequency needed to move the paddle.")]
+    [Tooltip("The paddle's maximum movement speed.")]
     [SerializeField]
-    private float _minFrequency = 100f;
-
-    [Tooltip("The maximum frequency allowed to move the paddle.")]
-    [SerializeField]
-    private float _maxFrequency = 400f;
-
-    [Tooltip("The paddle movement speed.")]
-    [SerializeField]
-    private float _speed = 8f;
+    private float _speed = 10f;
 
     [Header("Visuals")]
     [SerializeField]
@@ -42,6 +33,10 @@ public class PaddleController : MonoBehaviour
         Instantiate(_ballPrefab, ballPosition, Quaternion.identity);
 
         _pitchTracker = GameObject.Find("Microphone").GetComponent<PitchTracker>();
+        if (_pitchTracker == null)
+        {
+            Debug.LogError("No PitchTracker found in the scene");
+        }
     }
 
     void Update()
@@ -51,9 +46,12 @@ public class PaddleController : MonoBehaviour
             HandleDebugInput();
             return;
         }
+        
+        if (_pitchTracker == null) return;
 
-        if (_pitchTracker.CurrentPitch < _minFrequency) return;
-        MovePaddle(_pitchTracker.CurrentPitch);
+        float normalizedTarget = _pitchTracker.NormalizedPosition;
+
+        MovePaddle(normalizedTarget);
     }
 
     private void HandleDebugInput()
@@ -61,20 +59,18 @@ public class PaddleController : MonoBehaviour
         Keyboard keyboard = Keyboard.current;
         float moveInput = keyboard.aKey.isPressed ? -1 : keyboard.dKey.isPressed ? 1 : 0;
 
-        transform.position += transform.right * moveInput * _speed * Time.deltaTime;
+        transform.position += transform.right * moveInput * 10f * Time.deltaTime;
 
-        float clampedX = Mathf.Clamp(transform.position.x, _rightBoundary, _leftBoundary);
+        float clampedX = Mathf.Clamp(transform.position.x, _leftBoundary, _rightBoundary);
         transform.position = new Vector3(clampedX, transform.position.y, transform.position.z);
     }
 
-    private void MovePaddle(float detectedFrequency)
+    private void MovePaddle(float normalizedTarget)
     {
-        float pitchNormalized = Mathf.InverseLerp(_minFrequency, _maxFrequency, detectedFrequency);
-        pitchNormalized = Mathf.Clamp01(pitchNormalized);
-
-        float targetXPosition = Mathf.Lerp(_leftBoundary, _rightBoundary, pitchNormalized);
+        float targetXPosition = Mathf.Lerp(_leftBoundary, _rightBoundary, normalizedTarget);
 
         Vector3 targetPos = new (targetXPosition, transform.position.y, transform.position.z);
-        transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * 10f);
+
+        transform.position = Vector3.Lerp(transform.position, targetPos, _speed * Time.deltaTime);
     }
 }

@@ -1541,7 +1541,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &563289974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1554,13 +1554,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89c07af63b3314f47b76903884522d03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MicrophoneController
+  _minFrequency: 100
+  _maxFrequency: 350
+  _pitchSmoothingRate: 1
   _microphoneDevice: 
-  _loudnessSampleWindow: 128
-  _fftSize: 2048
-  _pitchDetectionThreshold: 0.02
+  _pitchDetectionThreshold: 0.001
+  _pitchConfidenceThreshold: 0.3
   _autocorrelationSampleWindow: 2048
-  _minFrequency: 70
-  _maxFrequency: 800
+  _minDetectionFrequency: 70
+  _maxDetectionFrequency: 800
+  _currentLoudness: 0
+  _currentRawPitch: 0
 --- !u!4 &563289975
 Transform:
   m_ObjectHideFlags: 0
@@ -4321,9 +4325,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26e550522553e40f6a84068ce1d1dbe8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PaddleController
-  _leftBoundary: 4
-  _rightBoundary: -4
-  _speed: 8
+  _debugMode: 0
+  _leftBoundary: -4
+  _rightBoundary: 4
+  _speed: 200
   _ballPrefab: {fileID: 5374123133602908995, guid: e369203036aca47b3a8dbc653dbdbaa2, type: 3}
 --- !u!1001 &2130723343
 PrefabInstance:
