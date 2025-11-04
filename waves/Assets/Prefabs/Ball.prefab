@@ -224,9 +224,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 090b5c92478b34a07ad2ed35ffb10b38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BallController
-  _gravity: 0.5
-  _minSpeed: 10
-  _maxSpeed: 15
+  _gravity: 0.6
+  _minSpeed: 5
+  _maxSpeed: 10
   _bounceSound: {fileID: 0}
   _minPitch: 0.9
   _maxPitch: 1.1
@@ -235,6 +235,10 @@ MonoBehaviour:
   _squashToStretchTime: 0.08
   _stretchToNormalTime: 0.08
   _bounceParticlesPrefab: {fileID: 86423232036158362, guid: 89b92c4524b0d43919767f79a5343800, type: 3}
+  _shakeDurationBounce: 0.05
+  _shakeMagnitudeBounce: 0.05
+  _shakeDurationBlock: 0.1
+  _shakeMagnitudeBlock: 0.1
 --- !u!54 &4072723508955196370
 Rigidbody:
   m_ObjectHideFlags: 0

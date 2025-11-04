@@ -9,13 +9,13 @@ public class BallController : MonoBehaviour
     [Header("Movement")]
     [Tooltip("A small constant downward force to apply every physics step.")]
     [SerializeField]
-    private float _gravity = 0.5f;
+    private float _gravity = 0.6f;
 
     [SerializeField]
-    private float _minSpeed = 10f;
+    private float _minSpeed = 5f;
 
     [SerializeField]
-    private float _maxSpeed = 15f;
+    private float _maxSpeed = 10f;
 
     [Header("Audio")]
     [SerializeField]
@@ -51,11 +51,27 @@ public class BallController : MonoBehaviour
     [SerializeField]
     private ParticleSystem _bounceParticlesPrefab;
 
+    [Tooltip("Camera shake duration on bounce.")]
+    [SerializeField]
+    private float _shakeDurationBounce = 0.05f;
+
+    [Tooltip("Camera shake magnitude on bounce.")]
+    [SerializeField]
+    private float _shakeMagnitudeBounce = 0.05f;
+
+        [Tooltip("Camera shake duration on block break.")]
+    [SerializeField]
+    private float _shakeDurationBlock = 0.1f;
+
+    [Tooltip("Camera shake magnitude on block break.")]
+    [SerializeField]
+    private float _shakeMagnitudeBlock = 0.1f;
+
     private bool _isLaunched;
     private Rigidbody _rb;
     private AudioSource _audioSource;
     private Transform _start;
-    private Vector3 _originalScale = new (0.5f, 0.5f, 0.5f);
+    private Vector3 _originalScale = new (0.3f, 0.3f, 0.3f);
     private Coroutine _squashStretchCoroutine;
     private CameraController _cameraController;
 
@@ -110,9 +126,17 @@ public class BallController : MonoBehaviour
         HitPaddle(other.contacts[0].point, other.transform);
     }
 
-    private void PlayCollisionEffects(Collision collision)
+    private void PlayCollisionEffects(Collision other)
     {
-        _cameraController.TriggerShake(0.1f, 0.1f);
+
+        if (other.gameObject.CompareTag("Block"))
+        {
+            _cameraController.TriggerShake(_shakeDurationBlock, _shakeMagnitudeBlock);
+        }
+        else
+        {
+            _cameraController.TriggerShake(_shakeDurationBounce, _shakeMagnitudeBounce);
+        }
 
         if (_bounceSound != null)
         {
@@ -126,7 +150,7 @@ public class BallController : MonoBehaviour
 
         if (_bounceParticlesPrefab != null)
         {
-            ContactPoint contact = collision.contacts[0];
+            ContactPoint contact = other.contacts[0];
             Quaternion particleRotation = Quaternion.LookRotation(contact.normal);
             Instantiate(_bounceParticlesPrefab, contact.point, particleRotation);
         }
@@ -178,6 +202,7 @@ public class BallController : MonoBehaviour
     {
         transform.parent = null;
         _rb.linearVelocity = Quaternion.Euler(0, 0, Random.Range(-45f, 45f)) * transform.up * _minSpeed;
+        transform.GetComponent<TrailRenderer>().enabled = true;
         _isLaunched = true;
     }
 
@@ -194,6 +219,8 @@ public class BallController : MonoBehaviour
             _squashStretchCoroutine = null;
         }
         transform.localScale = _originalScale;
+
+        transform.GetComponent<TrailRenderer>().enabled = false;
 
         _cameraController.StopShake();
 
