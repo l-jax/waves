@@ -9,7 +9,6 @@ A voice-controlled Breakout clone under construction for [GitHub Game Off 2025](
 wave /weɪv/
 noun
 a repeating pattern of motion, energy, or sound
-(for example, sound waves or radio waves)
 ```
 
 ## How to Play
