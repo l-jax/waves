@@ -111,7 +111,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2, y: 0.5, z: 1}
+  m_Size: {x: 1.5, y: 0.5, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2929429054968249584
 MonoBehaviour:
@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40f4fd388e67541d4a984c0a9e2a5906, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BlockController
-  _breakSound: {fileID: 0}
+  _breakSound: {fileID: 8300000, guid: bd13b73c845844ade9d9a3bf34058b22, type: 3}
   _breakParticles: {fileID: 7992277016241461058, guid: 5e22fbd4b7b664aaa8f56c6151ac5312, type: 3}
 --- !u!82 &3549060698290801803
 AudioSource:
@@ -139,7 +139,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
