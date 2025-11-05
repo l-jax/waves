@@ -230,15 +230,15 @@ MonoBehaviour:
   _bounceSound: {fileID: 0}
   _minPitch: 0.9
   _maxPitch: 1.1
-  _squashAmount: 1.2
-  _stretchAmount: 1.2
+  _squashAmount: 1.5
+  _stretchAmount: 1.5
   _squashToStretchTime: 0.08
   _stretchToNormalTime: 0.08
   _bounceParticlesPrefab: {fileID: 86423232036158362, guid: 89b92c4524b0d43919767f79a5343800, type: 3}
   _shakeDurationBounce: 0.05
-  _shakeMagnitudeBounce: 0.05
+  _shakeMagnitudeBounce: 0.02
   _shakeDurationBlock: 0.1
-  _shakeMagnitudeBlock: 0.1
+  _shakeMagnitudeBlock: 0.15
 --- !u!54 &4072723508955196370
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -314,7 +314,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.2
+  m_Time: 0.3
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -323,14 +323,14 @@ TrailRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0
-        value: 0.18912804
-        inSlope: 0.056894198
-        outSlope: 0.056894198
+        time: 0.0034294128
+        value: 0.24468529
+        inSlope: -0.010917872
+        outSlope: -0.010917872
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.4
+        outWeight: 0.337348
       - serializedVersion: 3
         time: 1
         value: 0
@@ -345,7 +345,7 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 0.39215687}
+      key0: {r: 1, g: 1, b: 1, a: 0.19607843}
       key1: {r: 1, g: 1, b: 1, a: 0}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
@@ -361,8 +361,8 @@ TrailRenderer:
       ctime5: 0
       ctime6: 0
       ctime7: 0
-      atime0: 0
-      atime1: 43562
+      atime0: 193
+      atime1: 65535
       atime2: 0
       atime3: 0
       atime4: 0
