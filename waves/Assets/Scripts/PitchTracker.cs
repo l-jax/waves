@@ -51,7 +51,6 @@ public class PitchTracker : MonoBehaviour
     private string _currentMicrophoneDevice;
     private float[] _micSampleBuffer;
     private int _sampleRate;
-    
     private float _smoothedPitch = 0f;
 
     [Header("Debug Info (Read-Only)")]
@@ -59,6 +58,8 @@ public class PitchTracker : MonoBehaviour
     private float _currentLoudness;
     [SerializeField]
     private float _currentRawPitch;
+    [SerializeField]
+    private float _currentNormalizedPosition;
 
     void Start()
     {
@@ -93,22 +94,21 @@ public class PitchTracker : MonoBehaviour
         if (!Microphone.IsRecording(_currentMicrophoneDevice)) StartMicrophone();
 
         _currentLoudness = GetLoudness();
-        if (_currentLoudness > _pitchDetectionThreshold)
-        _currentRawPitch = GetPitch();
-        else
+        if (_currentLoudness > _pitchDetectionThreshold) 
+        {
+            _currentRawPitch = GetPitch();
+        } else {
             _currentRawPitch = 0f;
+        }
+
+        float targetPosition = NormalizedPosition;
 
         if (_currentRawPitch >= _minDetectionFrequency && _currentRawPitch <= _maxDetectionFrequency)
         {
-            if (_smoothedPitch == 0f) _smoothedPitch = _currentRawPitch;
-
-            _smoothedPitch = Mathf.Lerp(_smoothedPitch, _currentRawPitch, _pitchSmoothingRate * Time.deltaTime);
-
-
-            float targetPosition = Mathf.InverseLerp(_minFrequency, _maxFrequency, _smoothedPitch);
-
-            NormalizedPosition = Mathf.Lerp(NormalizedPosition, targetPosition, _pitchSmoothingRate * Time.deltaTime);
+            targetPosition = Mathf.InverseLerp(_minFrequency, _maxFrequency, _currentRawPitch);
         }
+        NormalizedPosition = Mathf.Lerp(NormalizedPosition, targetPosition, _pitchSmoothingRate);
+        _currentNormalizedPosition = NormalizedPosition;
     }
 
     private float GetLoudness()

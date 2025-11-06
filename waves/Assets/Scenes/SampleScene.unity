@@ -2520,16 +2520,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MicrophoneController
   _minFrequency: 100
-  _maxFrequency: 350
-  _pitchSmoothingRate: 1
+  _maxFrequency: 600
+  _pitchSmoothingRate: 0.1
   _microphoneDevice: 
   _pitchDetectionThreshold: 0.001
-  _pitchConfidenceThreshold: 0.3
+  _pitchConfidenceThreshold: 0.5
   _autocorrelationSampleWindow: 2048
   _minDetectionFrequency: 70
   _maxDetectionFrequency: 800
   _currentLoudness: 0
   _currentRawPitch: 0
+  _currentNormalizedPosition: 0
 --- !u!4 &563289975
 Transform:
   m_ObjectHideFlags: 0
@@ -7128,7 +7129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26e550522553e40f6a84068ce1d1dbe8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PaddleController
-  _debugMode: 1
+  _debugMode: 0
   _leftBoundary: -5
   _rightBoundary: 5
   _speed: 200
