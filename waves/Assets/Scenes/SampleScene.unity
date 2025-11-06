@@ -2519,9 +2519,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89c07af63b3314f47b76903884522d03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MicrophoneController
-  _minFrequency: 100
-  _maxFrequency: 600
-  _pitchSmoothingRate: 0.1
+  _minFrequency: 200
+  _maxFrequency: 300
+  _pitchSmoothingRate: 0.05
   _microphoneDevice: 
   _pitchDetectionThreshold: 0.001
   _pitchConfidenceThreshold: 0.5
@@ -6110,10 +6110,26 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[2]'
       value: 
       objectReference: {fileID: 2100000, guid: 6322804f1e2fa45f7a7d3c8d1b632295, type: 2}
+    - target: {fileID: -4683669308469848369, guid: 0c90766e9d9a7456caf52b167a5ec985, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: ed3a1bda7b4aa474f973228871c5d471, type: 2}
+    - target: {fileID: -1461304994638716399, guid: 0c90766e9d9a7456caf52b167a5ec985, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: ed3a1bda7b4aa474f973228871c5d471, type: 2}
+    - target: {fileID: -678588488315902003, guid: 0c90766e9d9a7456caf52b167a5ec985, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: ed3a1bda7b4aa474f973228871c5d471, type: 2}
     - target: {fileID: 919132149155446097, guid: 0c90766e9d9a7456caf52b167a5ec985, type: 3}
       propertyPath: m_Name
       value: Border
       objectReference: {fileID: 0}
+    - target: {fileID: 7202271454713460447, guid: 0c90766e9d9a7456caf52b167a5ec985, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: ed3a1bda7b4aa474f973228871c5d471, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7129,7 +7145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26e550522553e40f6a84068ce1d1dbe8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PaddleController
-  _debugMode: 0
+  _debugMode: 1
   _leftBoundary: -5
   _rightBoundary: 5
   _speed: 200
