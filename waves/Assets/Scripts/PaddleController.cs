@@ -17,9 +17,13 @@ public class PaddleController : MonoBehaviour
     [SerializeField]
     private float _rightBoundary = 4f;
 
-    [Tooltip("The paddle's maximum movement speed.")]
+    [Tooltip("Use additional smoothing in paddle movement (disable for direct control).")]
     [SerializeField]
-    private float _speed = 10f;
+    private bool _usePaddleSmoothing = false;
+
+    [Tooltip("The paddle's smoothing speed (only used if smoothing is enabled).")]
+    [SerializeField]
+    private float _speed = 15f;
 
     [Header("Visuals")]
     [SerializeField]
@@ -59,18 +63,26 @@ public class PaddleController : MonoBehaviour
         Keyboard keyboard = Keyboard.current;
         float moveInput = keyboard.aKey.isPressed ? -1 : keyboard.dKey.isPressed ? 1 : 0;
 
-        transform.position += transform.right * moveInput * 10f * Time.deltaTime;
+        transform.position += moveInput * 10f * Time.deltaTime * transform.right;
 
         float clampedX = Mathf.Clamp(transform.position.x, _leftBoundary, _rightBoundary);
-        transform.position = new Vector3(clampedX, transform.position.y, transform.position.z);
+        transform.position = new(clampedX, transform.position.y, transform.position.z);
     }
 
     private void MovePaddle(float normalizedTarget)
     {
         float targetXPosition = Mathf.Lerp(_leftBoundary, _rightBoundary, normalizedTarget);
+        Vector3 targetPos = new(targetXPosition, transform.position.y, transform.position.z);
 
-        Vector3 targetPos = new (targetXPosition, transform.position.y, transform.position.z);
-
-        transform.position = Vector3.Lerp(transform.position, targetPos, _speed * Time.deltaTime);
+        if (_usePaddleSmoothing)
+        {
+            // Additional smoothing layer (can add lag)
+            transform.position = Vector3.Lerp(transform.position, targetPos, _speed * Time.deltaTime);
+        }
+        else
+        {
+            // Direct control - PitchTracker handles all smoothing
+            transform.position = targetPos;
+        }
     }
 }

@@ -2498,8 +2498,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 563289975}
-  - component: {fileID: 563289974}
   - component: {fileID: 563289976}
+  - component: {fileID: 563289977}
   m_Layer: 0
   m_Name: Microphone
   m_TagString: Untagged
@@ -2507,30 +2507,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &563289974
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 563289973}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89c07af63b3314f47b76903884522d03, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MicrophoneController
-  _minFrequency: 200
-  _maxFrequency: 300
-  _pitchSmoothingRate: 0.05
-  _microphoneDevice: 
-  _pitchDetectionThreshold: 0.001
-  _pitchConfidenceThreshold: 0.5
-  _autocorrelationSampleWindow: 2048
-  _minDetectionFrequency: 70
-  _maxDetectionFrequency: 800
-  _currentLoudness: 0
-  _currentRawPitch: 0
-  _currentNormalizedPosition: 0
 --- !u!4 &563289975
 Transform:
   m_ObjectHideFlags: 0
@@ -2643,6 +2619,39 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &563289977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 563289973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d7fb43b7c682481294b7f3d40739f55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PitchTracker
+  _pitchMapping:
+    minFrequency: 150
+    maxFrequency: 400
+    smoothingRate: 0.15
+  _microphoneSettings:
+    deviceName: 
+    pitchDetectionThreshold: 0.005
+    loudnessSampleWindow: 128
+  _detectionSettings:
+    confidenceThreshold: 0.65
+    sampleWindow: 2048
+    useAdaptiveWindow: 0
+    minDetectionFrequency: 70
+    maxDetectionFrequency: 800
+  _jitterSettings:
+    medianFilterSize: 3
+    maxPitchChangePerFrame: 150
+    movementDeadzone: 0.015
+  _currentLoudness: 0
+  _currentRawPitch: 0
+  _currentFilteredPitch: 0
 --- !u!4 &577152334 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6780897424503097281, guid: a3a02dab54f8d4c8f9227b91bc85ab62, type: 3}
@@ -7145,9 +7154,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26e550522553e40f6a84068ce1d1dbe8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PaddleController
-  _debugMode: 1
+  _debugMode: 0
   _leftBoundary: -5
   _rightBoundary: 5
+  _usePaddleSmoothing: 0
   _speed: 200
   _ballPrefab: {fileID: 5374123133602908995, guid: e369203036aca47b3a8dbc653dbdbaa2, type: 3}
 --- !u!1 &2089115487
