@@ -583,7 +583,7 @@ Transform:
   m_GameObject: {fileID: 112083492}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.6, z: 0}
+  m_LocalPosition: {x: 0, y: 0.15, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3137,9 +3137,7 @@ MonoBehaviour:
   _microphoneSettings:
     DeviceName: 
     SampleWindow: 256
-  _currentLoudness: 0
-  _currentVelocity: 0
-  _targetVelocity: 0
+  _currentVolume: 0
 --- !u!4 &577152334 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6780897424503097281, guid: a3a02dab54f8d4c8f9227b91bc85ab62, type: 3}
@@ -5653,7 +5651,7 @@ Transform:
   m_GameObject: {fileID: 1197108566}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.25, y: 4.7, z: 0}
+  m_LocalPosition: {x: -5.25, y: 4.7, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5770,7 +5768,7 @@ PrefabInstance:
     - target: {fileID: 5654492656517841618, guid: 925ae21b02ef84171947ee5a9ae12010, type: 3}
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
-      objectReference: {fileID: 2100000, guid: 3baf1a3968eae464793191394051531b, type: 2}
+      objectReference: {fileID: 2100000, guid: a0233f73be4a4408bba48439c3cf4984, type: 2}
     - target: {fileID: 5654492656517841618, guid: 925ae21b02ef84171947ee5a9ae12010, type: 3}
       propertyPath: 'm_Materials.Array.data[2]'
       value: 
@@ -9235,8 +9233,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 3, y: 0.5, z: 1}
+  m_Center: {x: 0, y: -0.25, z: 0}
 --- !u!23 &2081622849
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -9262,7 +9260,10 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 51040c805ce1b4ca5b37a40a1db2013f, type: 2}
+  - {fileID: 2100000, guid: 8e4a20ef2697a4baca44adc143714eb1, type: 2}
+  - {fileID: 2100000, guid: ed3a1bda7b4aa474f973228871c5d471, type: 2}
+  - {fileID: 2100000, guid: 6322804f1e2fa45f7a7d3c8d1b632295, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9292,7 +9293,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2081622847}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 8314571269056883277, guid: 0b3851a8db43e4abaab790bdd2d8441c, type: 3}
 --- !u!4 &2081622851
 Transform:
   m_ObjectHideFlags: 0
@@ -9302,8 +9303,8 @@ Transform:
   m_GameObject: {fileID: 2081622847}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -4, z: 0}
-  m_LocalScale: {x: 2, y: 0.5, z: 1}
+  m_LocalPosition: {x: 0, y: -3.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 112083493}
@@ -9321,9 +9322,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26e550522553e40f6a84068ce1d1dbe8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PaddleController
-  _debugMode: 0
-  _leftBoundary: -5
-  _rightBoundary: 5
+  _debugMode: 1
+  _leftBoundary: -4.5
+  _rightBoundary: 4.5
+  _speed: 10
   _ballPrefab: {fileID: 5374123133602908995, guid: e369203036aca47b3a8dbc653dbdbaa2, type: 3}
 --- !u!1 &2089115487
 GameObject:
