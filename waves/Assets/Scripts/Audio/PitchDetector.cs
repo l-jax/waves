@@ -1,15 +1,9 @@
 using UnityEngine;
 
-public class PitchDetector
+public class PitchDetector(PitchDetectionSettings settings)
 {
-    private readonly PitchDetectionSettings _settings;
-    private float[] _sampleBuffer;
-
-    public PitchDetector(PitchDetectionSettings settings)
-    {
-        _settings = settings;
-        _sampleBuffer = new float[settings.sampleWindow];
-    }
+    private readonly PitchDetectionSettings _settings = settings;
+    private float[] _sampleBuffer = new float[settings.sampleWindow];
 
     public float DetectPitch(MicrophoneInput microphone)
     {

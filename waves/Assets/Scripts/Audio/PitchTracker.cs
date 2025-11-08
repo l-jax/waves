@@ -42,17 +42,14 @@ public class PitchTracker : MonoBehaviour
     void Update()
     {
         _microphone.Update();
-        
+
         _currentLoudness = _microphone.GetLoudness();
+        _currentRawPitch = 0f;
         
         if (_currentLoudness > _microphoneSettings.pitchDetectionThreshold)
         {
             _currentRawPitch = _detector.DetectPitch(_microphone);
             _filter.AddSample(_currentRawPitch);
-        }
-        else
-        {
-            _currentRawPitch = 0f;
         }
 
         _currentFilteredPitch = _filter.GetFilteredPitch();
