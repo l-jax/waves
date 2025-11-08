@@ -1,24 +1,25 @@
 using UnityEngine;
 
-public class MicrophoneInput
+public class Input
 {
     private readonly AudioSource _audioSource;
     private readonly MicrophoneSettings _settings;
+    private readonly float[] _sampleBuffer;
     private AudioClip _microphoneClip;
     private string _currentDevice;
-    public int SampleRate { get; private set; }
 
-    public MicrophoneInput(AudioSource audioSource, MicrophoneSettings settings)
+    public Input(AudioSource audioSource, MicrophoneSettings settings)
     {
         _audioSource = audioSource;
         _settings = settings;
+        _sampleBuffer = new float[settings.SampleWindow];
     }
 
     public void Initialize()
     {
-        _currentDevice = string.IsNullOrEmpty(_settings.deviceName)
+        _currentDevice = string.IsNullOrEmpty(_settings.DeviceName)
             ? Microphone.devices[0]
-            : _settings.deviceName;
+            : _settings.DeviceName;
 
         StartRecording();
     }
@@ -39,11 +40,10 @@ public class MicrophoneInput
         }
 
         _microphoneClip = Microphone.Start(_currentDevice, true, 1, AudioSettings.outputSampleRate);
-        SampleRate = _microphoneClip.frequency;
 
         if (_microphoneClip == null)
         {
-            Debug.LogError($"Could not start microphone device: {_currentDevice}");
+            Debug.LogError($"Could not start microphone: {_currentDevice}");
             return;
         }
 
@@ -51,6 +51,7 @@ public class MicrophoneInput
         _audioSource.loop = true;
         _audioSource.mute = true;
 
+        // Wait for microphone to start
         while (!(Microphone.GetPosition(_currentDevice) > 0)) { }
         _audioSource.Play();
     }
@@ -60,32 +61,16 @@ public class MicrophoneInput
         if (_microphoneClip == null) return 0f;
 
         int micPosition = Microphone.GetPosition(_currentDevice);
-        if (micPosition < _settings.loudnessSampleWindow) return 0f;
+        if (micPosition < _settings.SampleWindow) return 0f;
 
-        float[] buffer = new float[_settings.loudnessSampleWindow];
-        _microphoneClip.GetData(buffer, micPosition - _settings.loudnessSampleWindow);
+        _microphoneClip.GetData(_sampleBuffer, micPosition - _settings.SampleWindow);
 
-        float totalLoudness = 0f;
-        for (int i = 0; i < _settings.loudnessSampleWindow; i++)
+        float sum = 0f;
+        for (int i = 0; i < _settings.SampleWindow; i++)
         {
-            totalLoudness += Mathf.Abs(buffer[i]);
+            sum += Mathf.Abs(_sampleBuffer[i]);
         }
 
-        return totalLoudness / _settings.loudnessSampleWindow;
-    }
-
-    public void GetAudioData(float[] buffer, int sampleCount)
-    {
-        if (_microphoneClip == null) return;
-
-        int micPosition = Microphone.GetPosition(_currentDevice);
-        if (micPosition < sampleCount) return;
-
-        _microphoneClip.GetData(buffer, micPosition - sampleCount);
-    }
-
-    public int GetCurrentPosition()
-    {
-        return Microphone.GetPosition(_currentDevice);
+        return sum / _settings.SampleWindow;
     }
 }

@@ -17,29 +17,21 @@ public class PaddleController : MonoBehaviour
     [SerializeField]
     private float _rightBoundary = 4f;
 
-    [Tooltip("Use additional smoothing in paddle movement (disable for direct control).")]
-    [SerializeField]
-    private bool _usePaddleSmoothing = false;
-
-    [Tooltip("The paddle's smoothing speed (only used if smoothing is enabled).")]
-    [SerializeField]
-    private float _speed = 15f;
-
     [Header("Visuals")]
     [SerializeField]
     private GameObject _ballPrefab;
 
-    private PitchTracker _pitchTracker;
+    private Tracker _tracker;
 
     void Start()
     {
         Vector3 ballPosition = transform.position + transform.up * 1.5f;
         Instantiate(_ballPrefab, ballPosition, Quaternion.identity);
 
-        _pitchTracker = GameObject.Find("Microphone").GetComponent<PitchTracker>();
-        if (_pitchTracker == null)
+        _tracker = GameObject.Find("Microphone").GetComponent<Tracker>();
+        if (_tracker == null)
         {
-            Debug.LogError("No PitchTracker found in the scene");
+            Debug.LogError("No Tracker found in the scene");
         }
     }
 
@@ -51,9 +43,9 @@ public class PaddleController : MonoBehaviour
             return;
         }
         
-        if (_pitchTracker == null) return;
+        if (_tracker == null) return;
 
-        float normalizedTarget = _pitchTracker.NormalizedPosition;
+        float normalizedTarget = _tracker.NormalizedPosition;
 
         MovePaddle(normalizedTarget);
     }
@@ -73,16 +65,6 @@ public class PaddleController : MonoBehaviour
     {
         float targetXPosition = Mathf.Lerp(_leftBoundary, _rightBoundary, normalizedTarget);
         Vector3 targetPos = new(targetXPosition, transform.position.y, transform.position.z);
-
-        if (_usePaddleSmoothing)
-        {
-            // Additional smoothing layer (can add lag)
-            transform.position = Vector3.Lerp(transform.position, targetPos, _speed * Time.deltaTime);
-        }
-        else
-        {
-            // Direct control - PitchTracker handles all smoothing
-            transform.position = targetPos;
-        }
+        transform.position = targetPos;
     }
 }
