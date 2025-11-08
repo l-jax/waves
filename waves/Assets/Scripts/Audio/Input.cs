@@ -73,4 +73,13 @@ public class Input
 
         return sum / _settings.SampleWindow;
     }
+
+    public float[] GetSpectrumData()
+    {
+        if (_microphoneClip == null) return new float[64];
+
+        float[] spectrumData = new float[64];
+        _audioSource.GetSpectrumData(spectrumData, 0, FFTWindow.BlackmanHarris);
+        return spectrumData;
+    }
 }
