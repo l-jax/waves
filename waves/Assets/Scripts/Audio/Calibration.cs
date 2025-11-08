@@ -73,8 +73,8 @@ public class Calibration : MonoBehaviour
         if (_volumeMeter == null || !_volumeMeter.gameObject.activeSelf) return;
         if (_tracker == null) return;
 
-        float loudness = _tracker.GetCurrentLoudness();
-        _volumeMeter.value = Mathf.Lerp(_volumeMeter.value, loudness * 1000f, 0.3f);
+        float volume = _tracker.GetCurrentVolume();
+        _volumeMeter.value = Mathf.Lerp(_volumeMeter.value, volume * 1000f, 0.3f);
     }
 
     private void OnNextClicked()
@@ -166,9 +166,9 @@ public class Calibration : MonoBehaviour
 
             case CalibrationStep.TuneSpeed:
                 _instructionText.text = "Try making quiet and loud sounds.\nAdjust the slider to control how fast the paddle moves.\n\n" +
-                    $"Silence: {_calibrationData.SilenceThreshold:F4}\n" +
-                    $"Quiet (left): {_calibrationData.MidpointLoudness:F4}\n" +
-                    $"Loud (right): {_calibrationData.MaxLoudness:F4}";
+                    $"Silence: {_calibrationData.MinVolume:F4}\n" +
+                    $"Quiet (left): {_calibrationData.MidVolume:F4}\n" +
+                    $"Loud (right): {_calibrationData.MaxVolume:F4}";
                 _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Next";
                 
                 // Initialize speed slider
@@ -202,38 +202,38 @@ public class Calibration : MonoBehaviour
     private void UpdateRecording()
     {
         _recordingTimer += Time.deltaTime;
-        float loudness = _tracker.GetCurrentLoudness();
+        float volume = _tracker.GetCurrentVolume();
         float remaining = _calibrationDuration - _recordingTimer;
 
         switch (_currentStep)
         {
             case CalibrationStep.CalibrateSilence:
-                _instructionText.text = $"Stay silent... {remaining:F1}s\n\nCurrent: {loudness:F4}";
+                _instructionText.text = $"Stay silent... {remaining:F1}s\n\nCurrent: {volume:F4}";
                 
                 // Track maximum silence level (we want the highest "silent" reading)
-                if (_recordingTimer == 0 || loudness > _calibrationData.SilenceThreshold)
+                if (_recordingTimer == 0 || volume > _calibrationData.MinVolume)
                 {
-                    _calibrationData.SilenceThreshold = loudness;
+                    _calibrationData.MinVolume = volume;
                 }
                 break;
 
             case CalibrationStep.CalibrateQuiet:
-                _instructionText.text = $"Quiet sound... {remaining:F1}s\n\nCurrent: {loudness:F4}";
+                _instructionText.text = $"Quiet sound... {remaining:F1}s\n\nCurrent: {volume:F4}";
                 
                 // Track average quiet level
-                if (loudness > _calibrationData.MidpointLoudness)
+                if (volume > _calibrationData.MidVolume)
                 {
-                    _calibrationData.MidpointLoudness = loudness;
+                    _calibrationData.MidVolume = volume;
                 }
                 break;
 
             case CalibrationStep.CalibrateLoud:
-                _instructionText.text = $"LOUD sound! {remaining:F1}s\n\nCurrent: {loudness:F4}";
+                _instructionText.text = $"LOUD sound! {remaining:F1}s\n\nCurrent: {volume:F4}";
                 
                 // Track maximum loud level
-                if (loudness > _calibrationData.MaxLoudness)
+                if (volume > _calibrationData.MaxVolume)
                 {
-                    _calibrationData.MaxLoudness = loudness;
+                    _calibrationData.MaxVolume = volume;
                 }
                 break;
         }
@@ -252,36 +252,36 @@ public class Calibration : MonoBehaviour
         switch (_currentStep)
         {
             case CalibrationStep.CalibrateSilence:
-                _calibrationData.SilenceThreshold *= _safetyMargin;
-                _instructionText.text = $"Silence threshold set: {_calibrationData.SilenceThreshold:F4}\n\nClick Next.";
+                _calibrationData.MinVolume *= _safetyMargin;
+                _instructionText.text = $"Silence threshold set: {_calibrationData.MinVolume:F4}\n\nClick Next.";
                 _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Next";
                 Invoke(nameof(GoToQuiet), 1.5f);
                 break;
 
             case CalibrationStep.CalibrateQuiet:
-                _calibrationData.MidpointLoudness *= _safetyMargin;
+                _calibrationData.MidVolume *= _safetyMargin;
                 
                 // Ensure it's above silence threshold
-                if (_calibrationData.MidpointLoudness <= _calibrationData.SilenceThreshold)
+                if (_calibrationData.MidVolume <= _calibrationData.MinVolume)
                 {
-                    _calibrationData.MidpointLoudness = _calibrationData.SilenceThreshold * 2f;
+                    _calibrationData.MidVolume = _calibrationData.MinVolume * 2f;
                 }
                 
-                _instructionText.text = $"Quiet level set: {_calibrationData.MidpointLoudness:F4}\n\nClick Next.";
+                _instructionText.text = $"Quiet level set: {_calibrationData.MidVolume:F4}\n\nClick Next.";
                 _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Next";
                 Invoke(nameof(GoToLoud), 1.5f);
                 break;
 
             case CalibrationStep.CalibrateLoud:
-                _calibrationData.MaxLoudness *= _safetyMargin;
+                _calibrationData.MaxVolume *= _safetyMargin;
                 
                 // Ensure valid hierarchy
-                if (_calibrationData.MaxLoudness <= _calibrationData.MidpointLoudness)
+                if (_calibrationData.MaxVolume <= _calibrationData.MidVolume)
                 {
-                    _calibrationData.MaxLoudness = _calibrationData.MidpointLoudness * 2f;
+                    _calibrationData.MaxVolume = _calibrationData.MidVolume * 2f;
                 }
                 
-                _instructionText.text = $"Loud level set: {_calibrationData.MaxLoudness:F4}\n\nClick Next.";
+                _instructionText.text = $"Loud level set: {_calibrationData.MaxVolume:F4}\n\nClick Next.";
                 _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Next";
                 Invoke(nameof(GoToSpeed), 1.5f);
                 break;
@@ -307,17 +307,17 @@ public class Calibration : MonoBehaviour
 
     private void ApplyDefaultCalibration()
     {
-        _calibrationData.SilenceThreshold = 0.005f;
-        _calibrationData.MidpointLoudness = 0.05f;
-        _calibrationData.MaxLoudness = 0.2f;
+        _calibrationData.MinVolume = 0.005f;
+        _calibrationData.MidVolume = 0.05f;
+        _calibrationData.MaxVolume = 0.2f;
         _calibrationData.Speed = 2f;
     }
 
     private void SaveCalibration()
     {
-        PlayerPrefs.SetFloat("VelCal_Silence", _calibrationData.SilenceThreshold);
-        PlayerPrefs.SetFloat("VelCal_Mid", _calibrationData.MidpointLoudness);
-        PlayerPrefs.SetFloat("VelCal_Max", _calibrationData.MaxLoudness);
+        PlayerPrefs.SetFloat("VelCal_Silence", _calibrationData.MinVolume);
+        PlayerPrefs.SetFloat("VelCal_Mid", _calibrationData.MidVolume);
+        PlayerPrefs.SetFloat("VelCal_Max", _calibrationData.MaxVolume);
         PlayerPrefs.SetFloat("VelCal_Speed", _calibrationData.Speed);
         PlayerPrefs.Save();
     }
@@ -326,9 +326,9 @@ public class Calibration : MonoBehaviour
     {
         if (PlayerPrefs.HasKey("VelCal_Silence"))
         {
-            _calibrationData.SilenceThreshold = PlayerPrefs.GetFloat("VelCal_Silence");
-            _calibrationData.MidpointLoudness = PlayerPrefs.GetFloat("VelCal_Mid");
-            _calibrationData.MaxLoudness = PlayerPrefs.GetFloat("VelCal_Max");
+            _calibrationData.MinVolume = PlayerPrefs.GetFloat("VelCal_Silence");
+            _calibrationData.MidVolume = PlayerPrefs.GetFloat("VelCal_Mid");
+            _calibrationData.MaxVolume = PlayerPrefs.GetFloat("VelCal_Max");
             _calibrationData.Speed = PlayerPrefs.GetFloat("VelCal_Speed");
             
             if (_tracker != null)

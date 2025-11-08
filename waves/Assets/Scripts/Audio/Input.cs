@@ -56,7 +56,7 @@ public class Input
         _audioSource.Play();
     }
 
-    public float GetLoudness()
+    public float GetVolume()
     {
         if (_microphoneClip == null) return 0f;
 

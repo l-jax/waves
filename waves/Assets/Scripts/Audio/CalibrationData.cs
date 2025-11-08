@@ -3,13 +3,13 @@ using System;
 [Serializable]
 public class CalibrationData
 {
-    public float SilenceThreshold;
-    public float MidpointLoudness;
-    public float MaxLoudness;
+    public float MinVolume;
+    public float MidVolume;
+    public float MaxVolume;
     public float Speed;
 
     public bool IsValid() => 
-        SilenceThreshold >= 0 && 
-        MidpointLoudness > SilenceThreshold && 
-        MaxLoudness > MidpointLoudness;
+        MinVolume >= 0 && 
+        MidVolume > MinVolume && 
+        MaxVolume > MidVolume;
 }

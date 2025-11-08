@@ -17,6 +17,10 @@ public class PaddleController : MonoBehaviour
     [SerializeField]
     private float _rightBoundary = 4f;
 
+    [Tooltip("The speed at which the paddle moves.")]
+    [SerializeField]
+    private float _speed = 10f;
+
     [Header("Visuals")]
     [SerializeField]
     private GameObject _ballPrefab;
@@ -42,29 +46,40 @@ public class PaddleController : MonoBehaviour
             HandleDebugInput();
             return;
         }
-        
+
         if (_tracker == null) return;
 
-        float normalizedTarget = _tracker.NormalizedPosition;
-
-        MovePaddle(normalizedTarget);
+        UpdateDirection(_tracker.CurrentDirection);
     }
 
     private void HandleDebugInput()
     {
         Keyboard keyboard = Keyboard.current;
         float moveInput = keyboard.aKey.isPressed ? -1 : keyboard.dKey.isPressed ? 1 : 0;
+        transform.position += moveInput * _speed * Time.deltaTime * transform.right;
 
-        transform.position += moveInput * 10f * Time.deltaTime * transform.right;
-
-        float clampedX = Mathf.Clamp(transform.position.x, _leftBoundary, _rightBoundary);
-        transform.position = new(clampedX, transform.position.y, transform.position.z);
+        ClampPosition();
     }
 
-    private void MovePaddle(float normalizedTarget)
+    private void UpdateDirection(Direction direction)
     {
-        float targetXPosition = Mathf.Lerp(_leftBoundary, _rightBoundary, normalizedTarget);
-        Vector3 targetPos = new(targetXPosition, transform.position.y, transform.position.z);
-        transform.position = targetPos;
+        switch (direction)
+        {
+            case Direction.Left:
+                transform.position += -_speed * Time.deltaTime * transform.right;
+                break;
+            case Direction.Right:
+                transform.position += _speed * Time.deltaTime * transform.right;
+                break;
+            case Direction.Stationary:
+                break;
+        }
+        ClampPosition();
+    }
+
+    private void ClampPosition()
+    {
+        float clampedX = Mathf.Clamp(transform.position.x, _leftBoundary, _rightBoundary);
+        transform.position = new(clampedX, transform.position.y, transform.position.z);
     }
 }
