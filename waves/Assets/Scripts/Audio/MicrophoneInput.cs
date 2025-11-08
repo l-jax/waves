@@ -1,12 +1,18 @@
 using UnityEngine;
 
-public class MicrophoneInput(AudioSource audioSource, MicrophoneSettings settings)
+public class MicrophoneInput
 {
-    private readonly AudioSource _audioSource = audioSource;
-    private readonly MicrophoneSettings _settings = settings;
+    private readonly AudioSource _audioSource;
+    private readonly MicrophoneSettings _settings;
     private AudioClip _microphoneClip;
     private string _currentDevice;
     public int SampleRate { get; private set; }
+
+    public MicrophoneInput(AudioSource audioSource, MicrophoneSettings settings)
+    {
+        _audioSource = audioSource;
+        _settings = settings;
+    }
 
     public void Initialize()
     {

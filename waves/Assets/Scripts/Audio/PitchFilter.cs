@@ -1,11 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PitchFilter(JitterReductionSettings settings)
+public class PitchFilter
 {
-    private readonly JitterReductionSettings _settings = settings;
-    private readonly Queue<float> _recentPitches = new Queue<float>();
-    private float _lastValidPitch = 0f;
+    private readonly JitterReductionSettings _settings;
+    private readonly Queue<float> _recentPitches;
+    private float _lastValidPitch;
+
+    public PitchFilter(JitterReductionSettings settings)
+    {
+        _settings = settings;
+        _recentPitches = new Queue<float>();
+        _lastValidPitch = 0f;
+    }
 
     public void AddSample(float pitch)
     {
@@ -33,7 +40,7 @@ public class PitchFilter(JitterReductionSettings settings)
     {
         if (_recentPitches.Count == 0) return 0f;
 
-        List<float> pitchList = [.. _recentPitches];
+        List<float> pitchList = new(_recentPitches);
         pitchList.Sort();
 
         int middleIndex = pitchList.Count / 2;
