@@ -16,6 +16,8 @@ public class BallController : MonoBehaviour
     private float _maxSpeed = 10f;
 
     private bool _isLaunched;
+    private bool _isMovementEnabled;
+
     private Vector3 _startPosition;
     private Rigidbody _rb;
 
@@ -42,7 +44,7 @@ public class BallController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!_isLaunched) return;
+        if (!_isLaunched || !_isMovementEnabled) return;
         if (_gravity <= 0) return;
         _rb.AddForce(Vector3.down * _gravity, ForceMode.Acceleration);
 
@@ -51,7 +53,7 @@ public class BallController : MonoBehaviour
     
     void Update()
     {
-        if (_isLaunched) return;
+        if (_isLaunched || !_isMovementEnabled) return;
 
         Keyboard keyboard = Keyboard.current;
         if (!keyboard.spaceKey.wasPressedThisFrame) return;
@@ -61,19 +63,30 @@ public class BallController : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
-        if (!_isLaunched) return;
+        if (!_isLaunched || !_isMovementEnabled) return;
 
         if (other.gameObject.CompareTag("OutOfBounds"))
         {
             ResetBall();
             return;
         }
-        
+
         PlayCollisionEffects(other);
 
         if (!other.gameObject.CompareTag("Player")) return;
 
         BounceOffPaddle(other.contacts[0].point, other.transform);
+    }
+    
+    public void EnableMovement()
+    {
+        _isMovementEnabled = true;
+    }
+
+    public void DisableMovement()
+    {
+        _isMovementEnabled = false;
+        ResetBall();
     }
 
     private void PlayCollisionEffects(Collision other)

@@ -6,15 +6,15 @@ public enum ControlSystem
 
 public class GameContext
 {
-    public GameState CurrentState { get; set; }
-
     public readonly PaddleController PaddleController;
+    public readonly BallController BallController;
 
     public GameContext(
-        PaddleController paddleController
+        PaddleController paddleController,
+        BallController ballController
     )
     {
-        CurrentState = GameState.Playing; // TODO: set properly
         PaddleController = paddleController;
+        BallController = ballController;
     }
 }

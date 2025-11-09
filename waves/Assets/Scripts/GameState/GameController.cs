@@ -4,6 +4,7 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     [SerializeField] private PaddleController _paddleController;
+    [SerializeField] private BallController _ballController;
 
     private GameStateMachine _stateMachine;
     private Dictionary<GameState, IGameStateHandler> _stateHandler;
@@ -14,6 +15,9 @@ public class GameController : MonoBehaviour
         InitializeStateMachine();
         InitializeGameStateHandlers();
         InitializeContext();
+
+        IGameStateHandler handler = _stateHandler[_stateMachine.CurrentState];
+        handler.OnEnter(_context);
     }
 
     void Update()
@@ -24,7 +28,7 @@ public class GameController : MonoBehaviour
 
     private void InitializeStateMachine()
     {
-        _stateMachine = new GameStateMachine();
+        _stateMachine = new GameStateMachine(GameState.Playing); //TODO: set properly
         _stateMachine.StateChanged += OnStateChanged;
     }
 
@@ -43,11 +47,15 @@ public class GameController : MonoBehaviour
 
     private void InitializeContext()
     {
-        _context = new GameContext(_paddleController);
+        _context = new GameContext(_paddleController, _ballController);
     }
 
     private void OnStateChanged(GameState previousState, GameState newState)
     {
-        Debug.Log($"Transitioned from {previousState} to {newState}");
+        IGameStateHandler previousHandler = _stateHandler[previousState];
+        previousHandler.OnExit(_context);
+
+        IGameStateHandler newHandler = _stateHandler[newState];
+        newHandler.OnEnter(_context);
     }
 }

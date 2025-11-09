@@ -94,7 +94,7 @@ public class PlayHandler : IGameStateHandler
     public void OnEnter(GameContext context)
     {
         context.PaddleController.EnableMovement();
-        // enable ball release
+        context.BallController.EnableMovement();
         // start game music
     }
 
@@ -106,7 +106,7 @@ public class PlayHandler : IGameStateHandler
     public void OnExit(GameContext context)
     {
         context.PaddleController.DisableMovement();
-        // disable ball release
+        context.BallController.DisableMovement();
         // pause game music
     }
 }

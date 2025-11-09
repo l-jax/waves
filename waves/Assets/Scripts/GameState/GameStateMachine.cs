@@ -16,7 +16,7 @@ public class GameStateMachine
     public event Action<GameState, GameState> StateChanged;
     private GameState _currentState;
 
-    public GameStateMachine(GameState initialState = GameState.MainMenu)
+    public GameStateMachine(GameState initialState)
     {
         _currentState = initialState;
     }
