@@ -7,6 +7,7 @@ public class CalibrationRecorder
     private float _duration;
     private float _elapsedTime;
     private float _accumulatedVolume;
+    private float _maxVolume;
     private int _sampleCount;
     private bool _isRecording;
     
@@ -29,28 +30,18 @@ public class CalibrationRecorder
         _sampleCount = 0;
         _isRecording = true;
     }
-    
+
     public void UpdateRecording(float deltaTime)
     {
         if (!_isRecording) return;
-        
+
         _elapsedTime += deltaTime;
         float currentVolume = _volumeProvider();
         _accumulatedVolume += currentVolume;
+        _maxVolume = Mathf.Max(_maxVolume, currentVolume);
         _sampleCount++;
     }
-    
-    public float GetAverageVolume()
-    {
-        if (_sampleCount == 0)
-        {
-            Debug.LogWarning("GetAverageVolume called with no samples");
-            return 0f;
-        }
-        
-        return _accumulatedVolume / _sampleCount;
-    }
-    
+
     public void StopRecording()
     {
         _isRecording = false;
@@ -60,7 +51,8 @@ public class CalibrationRecorder
     {
         return new RecordingResult
         {
-            AverageVolume = GetAverageVolume(),
+            AverageVolume = _sampleCount > 0 ? _accumulatedVolume / _sampleCount : 0f,
+            MaxVolume = _maxVolume,
             SampleCount = _sampleCount,
             Duration = _elapsedTime,
             WasCompleted = IsComplete
@@ -71,6 +63,7 @@ public class CalibrationRecorder
 public struct RecordingResult
 {
     public float AverageVolume;
+    public float MaxVolume;
     public int SampleCount;
     public float Duration;
     public bool WasCompleted;

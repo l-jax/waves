@@ -14,8 +14,6 @@ public class CalibrationContext
     public Action<string> SetButtonText { get; set; }
     public Action<bool> SetButtonEnabled { get; set; }
     public Action<bool> ShowVolumeMeter { get; set; }
-    public Action<bool> ShowSpeedSlider { get; set; }
-    public Action<float, float, float> SetSpeedSliderRange { get; set; } // min, max, value
     public Action<float> UpdateVolumeMeter { get; set; }
     public Action<string> ShowErrorMessage { get; set; }
     

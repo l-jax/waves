@@ -15,14 +15,6 @@ public class ControlSettings
     [Tooltip("Maximum loudness for speed scaling")]
     [Range(0f, 1f)]
     public float MaxLoudness = 0.2f;
-
-    [Tooltip("Maximum movement speed (units per second in normalized 0-1 space)")]
-    [Range(0.5f, 5f)]
-    public float MaxSpeed = 2f;
-
-    [Tooltip("Smoothing for velocity changes")]
-    [Range(0.05f, 1f)]
-    public float VelocitySmoothing = 0.3f;
 }
 
 [Serializable]

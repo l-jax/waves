@@ -12,7 +12,6 @@ public class Calibration : MonoBehaviour
     [SerializeField] private UnityEngine.UI.Button _nextButton;
     [SerializeField] private UnityEngine.UI.Button _skipButton;
     [SerializeField] private UnityEngine.UI.Button _backButton;
-    [SerializeField] private UnityEngine.UI.Slider _speedSlider;
     [SerializeField] private Tracker _tracker;
     [SerializeField] private float _calibrationDuration = 2f;
     
@@ -70,12 +69,6 @@ public class Calibration : MonoBehaviour
             SetButtonText = text => _nextButtonText.text = text,
             SetButtonEnabled = enabled => _nextButton.interactable = enabled,
             ShowVolumeMeter = show => _volumeMeter.gameObject.SetActive(show),
-            ShowSpeedSlider = show => _speedSlider.gameObject.SetActive(show),
-            SetSpeedSliderRange = (min, max, value) => {
-                _speedSlider.minValue = min;
-                _speedSlider.maxValue = max;
-                _speedSlider.value = value;
-            },
             UpdateVolumeMeter = volume => {
                 _volumeMeter.value = Mathf.Lerp(_volumeMeter.value, volume * 1000f, 0.3f);
             },
@@ -96,7 +89,6 @@ public class Calibration : MonoBehaviour
             [CalibrationStep.CalibrateSilence] = new RecordingCalibrationStepHandler(CalibrationStep.CalibrateSilence),
             [CalibrationStep.CalibrateQuiet] = new RecordingCalibrationStepHandler(CalibrationStep.CalibrateQuiet),
             [CalibrationStep.CalibrateLoud] = new RecordingCalibrationStepHandler(CalibrationStep.CalibrateLoud),
-            [CalibrationStep.AdjustSpeed] = new SpeedTuningStepHandler(),
             [CalibrationStep.Complete] = new CompleteStepHandler()
         };
     }
@@ -116,11 +108,6 @@ public class Calibration : MonoBehaviour
             {
                 TransitionToStep(_stateMachine.GoBack());
             }
-        });
-        
-        _speedSlider.onValueChanged.AddListener(value => {
-            _context.Data.Speed = value;
-            _tracker?.ApplyCalibration(_context.Data);
         });
     }
     

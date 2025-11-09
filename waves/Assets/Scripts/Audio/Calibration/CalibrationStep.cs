@@ -7,7 +7,6 @@ public enum CalibrationStep
     CalibrateSilence,
     CalibrateQuiet,
     CalibrateLoud,
-    AdjustSpeed,
     Complete
 }
 
@@ -16,7 +15,6 @@ public class StepInfo
     public string InstructionText;
     public string ButtonText;
     public bool ShowVolumeMeter;
-    public bool ShowSpeedSlider;
 }
 
 public interface ICalibrationStepHandler
@@ -43,7 +41,6 @@ public class WelcomeStepHandler : ICalibrationStepHandler
         context.SetButtonText("Start");
         context.SetButtonEnabled(true);
         context.ShowVolumeMeter(false);
-        context.ShowSpeedSlider(false);
     }
 
     public void OnUpdate(CalibrationContext context)
@@ -95,7 +92,6 @@ public class RecordingCalibrationStepHandler : ICalibrationStepHandler
         context.SetButtonText("Start");
         context.SetButtonEnabled(true);
         context.ShowVolumeMeter(true);
-        context.ShowSpeedSlider(false);
     }
 
     public void OnUpdate(CalibrationContext context)
@@ -150,90 +146,29 @@ public class RecordingCalibrationStepHandler : ICalibrationStepHandler
 
     private void FinishRecording(CalibrationContext context)
     {
-        float averageVolume = context.Recorder.GetAverageVolume();
+        context.Recorder.StopRecording();
+        RecordingResult result = context.Recorder.GetResult();
+
         switch (_step)
         {
             case CalibrationStep.CalibrateSilence:
-                context.Data.BackgroundVolume = averageVolume;
+                context.Data.BackgroundVolume = result.MaxVolume;
                 break;
             case CalibrationStep.CalibrateQuiet:
-                context.Data.MinVolume = averageVolume;
+                context.Data.MinVolume = result.MaxVolume;
                 break;
             case CalibrationStep.CalibrateLoud:
-                context.Data.MaxVolume = averageVolume;
+                context.Data.MaxVolume = result.AverageVolume;
                 break;
         }
 
         context.SetInstructionText(
-            $"Your volume is {averageVolume:F4}\n\n"
+            $"Your volume is {result.AverageVolume:F4}\n\n"
         );
 
         context.SetButtonText("Next");
         context.SetButtonEnabled(true);
     }
-}
-
-public class SpeedTuningStepHandler : ICalibrationStepHandler
-{
-    private bool _hasInteracted = false;
-
-    public void OnEnter(CalibrationContext context)
-    {
-        context.SetInstructionText(
-            "Make some sounds to see how it feels\n\n" +
-            "Use the slider to adjust how fast the paddle moves\n\n" +
-            "When you're happy with the speed, click NEXT"
-        );
-
-        context.SetButtonText("Next");
-        context.SetButtonEnabled(true);
-        context.ShowVolumeMeter(true);
-        context.ShowSpeedSlider(true);
-
-        float currentSpeed = context.Data.Speed > 0 ? context.Data.Speed : 2f;
-        context.SetSpeedSliderRange(0.5f, 5f, currentSpeed);
-
-        _hasInteracted = false;
-    }
-
-    public void OnUpdate(CalibrationContext context)
-    {
-        float currentVolume = context.GetCurrentVolume();
-        context.UpdateVolumeMeter(currentVolume);
-
-        if (!_hasInteracted && currentVolume > context.Data.BackgroundVolume * 2f)
-        {
-            _hasInteracted = true;
-        }
-    }
-
-    public void OnExit(CalibrationContext context)
-    {
-        // Speed value is already saved to context.Data via slider callback
-    }
-
-    public void OnNextClicked(CalibrationContext context)
-    {
-        if (!_hasInteracted)
-        {
-            // Could show a confirmation dialog
-            // For now, just proceed
-        }
-
-        context.TransitionToStep(CalibrationStep.Complete);
-    }
-
-    // This would be called by the slider's onValueChanged callback
-    public void OnSpeedChanged(CalibrationContext context, float newSpeed)
-    {
-        context.Data.Speed = newSpeed;
-        _hasInteracted = true;
-
-        // Optionally apply immediately so user can test
-        // This requires access to the Tracker, which might need to be in context
-    }
-
-    public bool CanSkip => true;
 }
 
 public class CompleteStepHandler : ICalibrationStepHandler
@@ -254,7 +189,6 @@ public class CompleteStepHandler : ICalibrationStepHandler
         context.SetButtonText("Play");
         context.SetButtonEnabled(true);
         context.ShowVolumeMeter(false);
-        context.ShowSpeedSlider(false);
     }
     
     public void OnUpdate(CalibrationContext context)

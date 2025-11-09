@@ -52,8 +52,7 @@ public class CalibrationStateMachine
             CalibrationStep.Welcome => CalibrationStep.CalibrateSilence,
             CalibrationStep.CalibrateSilence => CalibrationStep.CalibrateQuiet,
             CalibrationStep.CalibrateQuiet => CalibrationStep.CalibrateLoud,
-            CalibrationStep.CalibrateLoud => CalibrationStep.AdjustSpeed,
-            CalibrationStep.AdjustSpeed => CalibrationStep.Complete,
+            CalibrationStep.CalibrateLoud => CalibrationStep.Complete,
             CalibrationStep.Complete => CalibrationStep.Complete, // Terminal state
             _ => throw new ArgumentOutOfRangeException()
         };
