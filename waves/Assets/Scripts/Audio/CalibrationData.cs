@@ -16,7 +16,7 @@ public class CalibrationData
 
     public void ApplyDefaults()
     {
-        BackgroundVolume = 0.01f;
+        BackgroundVolume = 0.002f;
         MinVolume = 0.05f;
         MaxVolume = 0.2f;
         Speed = 1.0f;
