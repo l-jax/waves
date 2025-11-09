@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum SoundEffect
+public enum Effect
 {
     Break,
     Bounce
@@ -13,7 +13,13 @@ public class EffectsPlayer : MonoBehaviour
     private AudioClip _breakSound;
 
     [SerializeField]
+    private ParticleSystem _breakParticles;
+
+    [SerializeField]
     private AudioClip _bounceSound;
+
+    [SerializeField]
+    private ParticleSystem _bounceParticles;
 
     private AudioSource _audioSource;
 
@@ -22,33 +28,67 @@ public class EffectsPlayer : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
     }
 
-    public void PlaySound(SoundEffect soundEffect)
+    public void PlayEffect(Effect effect, Vector3 position, Quaternion rotation)
     {
         if (_audioSource == null)
         {
             Debug.LogError("AudioSource component is missing.");
             return;
         }
-        
-        switch (soundEffect)
+
+        switch (effect)
         {
-            case SoundEffect.Break:
-                if (_breakSound == null) {
-                    Debug.LogWarning("Break sound not assigned.");
-                    return;
-                }
-                _audioSource.PlayOneShot(_breakSound);
+            case Effect.Break:
+                PlayBreakEffect(position, rotation);
                 break;
-            case SoundEffect.Bounce:
-                if (_bounceSound == null) {
-                    Debug.LogWarning("Bounce sound not assigned.");
-                    return;
-                }
-                _audioSource.PlayOneShot(_bounceSound);
+            case Effect.Bounce:
+                PlayBounceEffect(position, rotation);
                 break;
             default:
-                Debug.LogWarning("Unknown sound effect: " + soundEffect);
+                Debug.LogWarning("Unknown sound effect: " + effect);
                 break;
+        }
+    }
+
+    private void PlayBreakEffect(Vector3 position, Quaternion rotation)
+    {
+        if (_breakSound == null)
+        {
+            Debug.LogWarning("Break sound not assigned.");
+        }
+        else
+        {
+            _audioSource.PlayOneShot(_breakSound);
+        }
+
+        if (_breakParticles == null)
+        {
+            Debug.LogWarning("Break particles not assigned.");
+        }
+        else
+        {
+            Instantiate(_breakParticles, position, rotation);
+        }
+    }
+
+    private void PlayBounceEffect(Vector3 position, Quaternion rotation)
+    {
+        if (_bounceSound == null)
+        {
+            Debug.LogWarning("Bounce sound not assigned.");
+        }
+        else
+        {
+            _audioSource.PlayOneShot(_bounceSound);
+        }
+
+        if (_bounceParticles == null)
+        {
+            Debug.LogWarning("Bounce particles not assigned.");
+        }
+        else
+        {
+            Instantiate(_bounceParticles, position, rotation);
         }
     }
 }

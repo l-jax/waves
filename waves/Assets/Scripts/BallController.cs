@@ -34,9 +34,6 @@ public class BallController : MonoBehaviour
     private float _stretchToNormalTime = 0.08f;
 
     [Header("Effects")]
-    [Tooltip("The particle effect prefab to spawn on collision.")]
-    [SerializeField]
-    private ParticleSystem _bounceParticlesPrefab;
 
     [Tooltip("Camera shake duration on bounce.")]
     [SerializeField]
@@ -46,7 +43,7 @@ public class BallController : MonoBehaviour
     [SerializeField]
     private float _shakeMagnitudeBounce = 0.05f;
 
-        [Tooltip("Camera shake duration on block break.")]
+    [Tooltip("Camera shake duration on block break.")]
     [SerializeField]
     private float _shakeDurationBlock = 0.1f;
 
@@ -125,14 +122,7 @@ public class BallController : MonoBehaviour
             _cameraController.TriggerShake(_shakeDurationBounce, _shakeMagnitudeBounce);
         }
 
-        _effectsPlayer.PlaySound(SoundEffect.Bounce);
-
-        if (_bounceParticlesPrefab != null)
-        {
-            ContactPoint contact = other.contacts[0];
-            Quaternion particleRotation = Quaternion.LookRotation(contact.normal);
-            Instantiate(_bounceParticlesPrefab, contact.point, particleRotation);
-        }
+        _effectsPlayer.PlayEffect(Effect.Bounce, other.contacts[0].point, Quaternion.LookRotation(other.contacts[0].normal));
 
         if (_squashStretchCoroutine != null)
         {
