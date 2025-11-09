@@ -24,7 +24,7 @@ a repeating pattern of motion, energy, or sound
 - [x] add microphone input with volume and pitch detection
 - [ ] add lives and game over
 - [ ] calibrate paddle controls
-- [ ] create paddle, brick, and ball assets
+- [x] create paddle, brick, and ball assets
 - [ ] create title and game over screens
 - [ ] create 2D assets for screens and HUD
 - [ ] add sound effects for bounce, break, and out-of-bounds
@@ -33,8 +33,8 @@ a repeating pattern of motion, energy, or sound
 - [x] add camera shake on bounce and break
 - [ ] create eight-track background music
 - [ ] add audio clip processing
-- [ ] add visual equaliser
-- [ ] connect equaliser to blocks
+- [x] add visual equalizer
+- [ ] connect equalizer to blocks
 
 ## Credits 
 
