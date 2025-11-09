@@ -61,12 +61,17 @@ public class Tracker : MonoBehaviour
 
     public void ApplyCalibration(CalibrationData data)
     {
-        _controlSettings.SilenceThreshold = data.MinVolume;
-        _controlSettings.MidpointLoudness = data.MidVolume;
+        _controlSettings.SilenceThreshold = data.BackgroundVolume;
+        _controlSettings.MidpointLoudness = data.MinVolume;
         _controlSettings.MaxLoudness = data.MaxVolume;
         _controlSettings.MaxSpeed = data.Speed;
-        
-        Debug.Log($"Calibration applied: Silence={data.MinVolume:F4}, " +
-                  $"Mid={data.MidVolume:F4}, Max={data.MaxVolume:F4}, Speed={data.Speed:F2}");
+
+        Debug.Log(
+            $"Calibration applied: " +
+            $"Silence ={_controlSettings.SilenceThreshold:F4}, " +
+            $"Mid={_controlSettings.MidpointLoudness:F4}, " +
+            $"Max={_controlSettings.MaxLoudness:F4}, " +
+            $"Speed={_controlSettings.MaxSpeed:F2}"
+        );
     }
 }

@@ -16,7 +16,6 @@ public class Calibration : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private float _calibrationDuration = 2f;
-    [SerializeField] private float _safetyMargin = 1.2f;
 
     private enum CalibrationStep
     {
@@ -111,10 +110,7 @@ public class Calibration : MonoBehaviour
     private void OnSpeedChanged(float value)
     {
         _calibrationData.Speed = value;
-        if (_tracker != null)
-        {
-            _tracker.ApplyCalibration(_calibrationData);
-        }
+        _tracker?.ApplyCalibration(_calibrationData);
     }
 
     private void StartStep(CalibrationStep step)
@@ -123,55 +119,48 @@ public class Calibration : MonoBehaviour
         _isRecording = false;
         _recordingTimer = 0f;
 
-        // Hide/show UI elements
-        if (_volumeMeter != null) 
-            _volumeMeter.gameObject.SetActive(
-                step != CalibrationStep.Welcome && 
-                step != CalibrationStep.Complete
-            );
-        if (_speedSlider != null) 
-            _speedSlider.gameObject.SetActive(step == CalibrationStep.TuneSpeed);
+        _volumeMeter?.gameObject.SetActive(step != CalibrationStep.Welcome && step != CalibrationStep.Complete);
+        _speedSlider?.gameObject.SetActive(step == CalibrationStep.TuneSpeed);
 
         switch (step)
         {
             case CalibrationStep.Welcome:
-                _instructionText.text = "Welcome! Let's set up your voice control.\n\n" +
-                    "You'll make 3 sounds:\n" +
-                    "• Silence (stop)\n" +
-                    "• Quiet sound (move left)\n" +
-                    "• Loud sound (move right)\n\n" +
-                    "Takes 20 seconds!";
+                _instructionText.text =
+                "Let's set up your voice control.\n\n" +
+                "Silence makes the paddle stop\n" +
+                "Quiet sounds move left\n" +
+                "Loud sounds move right\n\n";
                 _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start";
                 break;
 
             case CalibrationStep.CalibrateSilence:
-                _instructionText.text = "Click START and stay completely SILENT for 2 seconds.\n\n" +
-                    "This lets the paddle STOP when you're quiet.";
+                _instructionText.text =
+                "First, we need to measure the background noise\n\n" +
+                "Click START and stay SILENT for 2 seconds\n\n"; ;
                 _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start";
                 break;
 
             case CalibrationStep.CalibrateQuiet:
-                _instructionText.text = "Click START and make a QUIET sound for 2 seconds.\n\n" +
-                    "(Whisper, soft hum, gentle 'shhh')\n\n" +
-                    "This will move the paddle LEFT.";
+                _instructionText.text =
+                "Now, we'll measure your quiet sounds\n\n" +
+                "Click START and whisper, hum, or make a soft sound for 2 seconds\n\n";
                 _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start";
                 break;
 
             case CalibrationStep.CalibrateLoud:
-                _instructionText.text = "Click START and make a LOUD sound for 2 seconds!\n\n" +
-                    "(Talk loudly, shout, clap)\n\n" +
-                    "This will move the paddle RIGHT.";
+                _instructionText.text =
+                "Finally, let's measure your loud sounds\n\n" +
+                "Click START and speak, shout, or make a loud sound for 2 seconds\n\n";
                 _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start";
                 break;
 
             case CalibrationStep.TuneSpeed:
-                _instructionText.text = "Try making quiet and loud sounds.\nAdjust the slider to control how fast the paddle moves.\n\n" +
-                    $"Silence: {_calibrationData.MinVolume:F4}\n" +
-                    $"Quiet (left): {_calibrationData.MidVolume:F4}\n" +
-                    $"Loud (right): {_calibrationData.MaxVolume:F4}";
+                _instructionText.text =
+                "Make some sounds to see how it feels\n\n" +
+                "Use the slider to adjust how fast the paddle moves\n\n" +
+                "When you're happy with the speed, click NEXT";
                 _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Next";
                 
-                // Initialize speed slider
                 if (_speedSlider != null)
                 {
                     _speedSlider.minValue = 0.5f;
@@ -181,13 +170,8 @@ public class Calibration : MonoBehaviour
                 break;
 
             case CalibrationStep.Complete:
-                _instructionText.text = "Perfect! Your controls:\n\n" +
-                    "• Silence = STOP\n" +
-                    "• Quiet sounds = Move LEFT\n" +
-                    "• Loud sounds = Move RIGHT\n" +
-                    "• Louder = Faster!\n\n" +
-                    "Ready to play!";
-                _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Play!";
+                _instructionText.text = "All done\n\nClick PLAY to start the game";
+                _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Play";
                 break;
         }
     }
@@ -208,38 +192,36 @@ public class Calibration : MonoBehaviour
         switch (_currentStep)
         {
             case CalibrationStep.CalibrateSilence:
-                _instructionText.text = $"Stay silent... {remaining:F1}s\n\nCurrent: {volume:F4}";
-                
-                // Track maximum silence level (we want the highest "silent" reading)
-                if (_recordingTimer == 0 || volume > _calibrationData.MinVolume)
-                {
-                    _calibrationData.MinVolume = volume;
-                }
+                _instructionText.text = $"Stay silent for two seconds {remaining:F1}s\n\nCurrent: {volume:F4}";
+                _calibrationData.BackgroundVolume += volume;
                 break;
 
             case CalibrationStep.CalibrateQuiet:
-                _instructionText.text = $"Quiet sound... {remaining:F1}s\n\nCurrent: {volume:F4}";
-                
-                // Track average quiet level
-                if (volume > _calibrationData.MidVolume)
-                {
-                    _calibrationData.MidVolume = volume;
-                }
+                _instructionText.text = $"Make a quiet sound for two seconds {remaining:F1}s\n\nCurrent: {volume:F4}";
+                _calibrationData.MinVolume += volume;
                 break;
 
             case CalibrationStep.CalibrateLoud:
-                _instructionText.text = $"LOUD sound! {remaining:F1}s\n\nCurrent: {volume:F4}";
-                
-                // Track maximum loud level
-                if (volume > _calibrationData.MaxVolume)
-                {
-                    _calibrationData.MaxVolume = volume;
-                }
+                _instructionText.text = $"Make a loud sound for two seconds {remaining:F1}s\n\nCurrent: {volume:F4}";
+                _calibrationData.MaxVolume += volume;
                 break;
         }
 
         if (_recordingTimer >= _calibrationDuration)
         {
+            int frameCount = Mathf.RoundToInt(_calibrationDuration / Time.deltaTime);
+            switch (_currentStep)
+            {
+                case CalibrationStep.CalibrateSilence:
+                    _calibrationData.BackgroundVolume /= frameCount;
+                    break;
+                case CalibrationStep.CalibrateQuiet:
+                    _calibrationData.MinVolume /= frameCount;
+                    break;
+                case CalibrationStep.CalibrateLoud:
+                    _calibrationData.MaxVolume /= frameCount;
+                    break;
+            }
             FinishRecording();
         }
     }
@@ -252,36 +234,27 @@ public class Calibration : MonoBehaviour
         switch (_currentStep)
         {
             case CalibrationStep.CalibrateSilence:
-                _calibrationData.MinVolume *= _safetyMargin;
-                _instructionText.text = $"Silence threshold set: {_calibrationData.MinVolume:F4}\n\nClick Next.";
+                _instructionText.text = $"Your background volume is {_calibrationData.BackgroundVolume:F4}\n\nClick Next to keep calibrating";
                 _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Next";
                 Invoke(nameof(GoToQuiet), 1.5f);
                 break;
 
             case CalibrationStep.CalibrateQuiet:
-                _calibrationData.MidVolume *= _safetyMargin;
-                
-                // Ensure it's above silence threshold
-                if (_calibrationData.MidVolume <= _calibrationData.MinVolume)
+                if (_calibrationData.MinVolume <= _calibrationData.BackgroundVolume)
                 {
-                    _calibrationData.MidVolume = _calibrationData.MinVolume * 2f;
+                    _calibrationData.MinVolume = _calibrationData.BackgroundVolume * 2f;
                 }
-                
-                _instructionText.text = $"Quiet level set: {_calibrationData.MidVolume:F4}\n\nClick Next.";
+                _instructionText.text = $"Your quiet volume is {_calibrationData.MinVolume:F4}\n\nClick Next to keep calibrating";
                 _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Next";
                 Invoke(nameof(GoToLoud), 1.5f);
                 break;
 
             case CalibrationStep.CalibrateLoud:
-                _calibrationData.MaxVolume *= _safetyMargin;
-                
-                // Ensure valid hierarchy
-                if (_calibrationData.MaxVolume <= _calibrationData.MidVolume)
+                if (_calibrationData.MaxVolume <= _calibrationData.MinVolume)
                 {
-                    _calibrationData.MaxVolume = _calibrationData.MidVolume * 2f;
+                    _calibrationData.MaxVolume = _calibrationData.MinVolume * 2f;
                 }
-                
-                _instructionText.text = $"Loud level set: {_calibrationData.MaxVolume:F4}\n\nClick Next.";
+                _instructionText.text = $"Your loud volume is {_calibrationData.MaxVolume:F4}\n\nClick Next to keep calibrating";
                 _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Next";
                 Invoke(nameof(GoToSpeed), 1.5f);
                 break;
@@ -307,16 +280,16 @@ public class Calibration : MonoBehaviour
 
     private void ApplyDefaultCalibration()
     {
-        _calibrationData.MinVolume = 0.005f;
-        _calibrationData.MidVolume = 0.05f;
+        _calibrationData.BackgroundVolume = 0.005f;
+        _calibrationData.MinVolume = 0.05f;
         _calibrationData.MaxVolume = 0.2f;
         _calibrationData.Speed = 2f;
     }
 
     private void SaveCalibration()
     {
-        PlayerPrefs.SetFloat("VelCal_Silence", _calibrationData.MinVolume);
-        PlayerPrefs.SetFloat("VelCal_Mid", _calibrationData.MidVolume);
+        PlayerPrefs.SetFloat("VelCal_Silence", _calibrationData.BackgroundVolume);
+        PlayerPrefs.SetFloat("VelCal_Min", _calibrationData.MinVolume);
         PlayerPrefs.SetFloat("VelCal_Max", _calibrationData.MaxVolume);
         PlayerPrefs.SetFloat("VelCal_Speed", _calibrationData.Speed);
         PlayerPrefs.Save();
@@ -326,8 +299,8 @@ public class Calibration : MonoBehaviour
     {
         if (PlayerPrefs.HasKey("VelCal_Silence"))
         {
-            _calibrationData.MinVolume = PlayerPrefs.GetFloat("VelCal_Silence");
-            _calibrationData.MidVolume = PlayerPrefs.GetFloat("VelCal_Mid");
+            _calibrationData.BackgroundVolume = PlayerPrefs.GetFloat("VelCal_Silence");
+            _calibrationData.MinVolume = PlayerPrefs.GetFloat("VelCal_Min");
             _calibrationData.MaxVolume = PlayerPrefs.GetFloat("VelCal_Max");
             _calibrationData.Speed = PlayerPrefs.GetFloat("VelCal_Speed");
             

@@ -594,7 +594,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EffectsPlayer
   _breakSound: {fileID: 8300000, guid: bd13b73c845844ade9d9a3bf34058b22, type: 3}
+  _breakParticles: {fileID: 0}
   _bounceSound: {fileID: 0}
+  _bounceParticles: {fileID: 0}
 --- !u!82 &90551713
 AudioSource:
   m_ObjectHideFlags: 0
@@ -739,7 +741,6 @@ MonoBehaviour:
   _speedSlider: {fileID: 1571434686}
   _tracker: {fileID: 563289977}
   _calibrationDuration: 2
-  _safetyMargin: 1.2
 --- !u!4 &122040578
 Transform:
   m_ObjectHideFlags: 0
@@ -11238,7 +11239,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5757747437257263895, guid: 21a9e97e7d7314e0298edf6034fc2111, type: 3}
       propertyPath: _debugMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
