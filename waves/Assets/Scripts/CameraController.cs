@@ -28,7 +28,7 @@ public class CameraController : MonoBehaviour
     private Vector3 _originalPos = new(0, 1, -10);
     private Coroutine _shakeCoroutine;
 
-    public void TriggerShake(ShakeType size)
+    public void Shake(ShakeType size)
     {
         if (_shakeCoroutine != null)
         {

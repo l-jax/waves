@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
 public class BallController : MonoBehaviour
@@ -74,21 +73,27 @@ public class BallController : MonoBehaviour
 
         if (!other.gameObject.CompareTag("Player")) return;
 
-        HitPaddle(other.contacts[0].point, other.transform);
+        BounceOffPaddle(other.contacts[0].point, other.transform);
     }
 
     private void PlayCollisionEffects(Collision other)
     {
-        if (other.gameObject.CompareTag("Block"))
-        {
-            _cameraController.TriggerShake(ShakeType.Large);
-        }
-        else
-        {
-            _cameraController.TriggerShake(ShakeType.Small);
-        }
+        ShakeType shakeType = other.gameObject.CompareTag("Block") ? ShakeType.Large : ShakeType.Small;
+        _cameraController.Shake(shakeType);
 
         _effectsPlayer.PlayEffect(Effect.Bounce, other.contacts[0].point, Quaternion.LookRotation(other.contacts[0].normal));
+    }
+
+    private void BounceOffPaddle(Vector3 collisionPoint, Transform paddleTransform)
+    {
+        float paddleWidth = paddleTransform.GetComponent<Collider>().bounds.size.x;
+        float hitFactor = (collisionPoint.x - paddleTransform.position.x) / (paddleWidth / 2f);
+        hitFactor = Mathf.Clamp(hitFactor, -1f, 1f);
+
+        Vector3 newDirection = new Vector3(hitFactor, 1, 0).normalized;
+        float currentSpeed = _rb.linearVelocity.magnitude;
+        _rb.linearVelocity = newDirection * currentSpeed;
+        ClampSpeed(_rb.linearVelocity.magnitude);
     }
 
     private void ClampSpeed(float currentSpeed)
@@ -118,17 +123,5 @@ public class BallController : MonoBehaviour
         transform.parent = _paddle;
 
         transform.GetComponent<TrailRenderer>().enabled = false;
-    }
-
-    private void HitPaddle(Vector3 collisionPoint, Transform paddleTransform)
-    {
-        float paddleWidth = paddleTransform.GetComponent<Collider>().bounds.size.x;
-        float hitFactor = (collisionPoint.x - paddleTransform.position.x) / (paddleWidth / 2f);
-        hitFactor = Mathf.Clamp(hitFactor, -1f, 1f);
-
-        Vector3 newDirection = new Vector3(hitFactor, 1, 0).normalized;
-        float currentSpeed = _rb.linearVelocity.magnitude;
-        _rb.linearVelocity = newDirection * currentSpeed;
-        ClampSpeed(_rb.linearVelocity.magnitude);
     }
 }
