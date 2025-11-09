@@ -21,19 +21,12 @@ public class PaddleController : MonoBehaviour
     [SerializeField]
     private float _speed = 10f;
 
-    [Header("Visuals")]
-    [SerializeField]
-    private GameObject _ballPrefab;
-
     private Tracker _tracker;
 
     private bool _isMovementEnabled = true;
 
     void Start()
     {
-        Vector3 ballPosition = transform.position + transform.up * 1.5f;
-        Instantiate(_ballPrefab, ballPosition, Quaternion.identity);
-
         _tracker = GameObject.Find("Microphone").GetComponent<Tracker>();
         if (_tracker == null)
         {

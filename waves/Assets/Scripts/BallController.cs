@@ -33,38 +33,23 @@ public class BallController : MonoBehaviour
     [SerializeField]
     private float _stretchToNormalTime = 0.08f;
 
-    [Header("Effects")]
-
-    [Tooltip("Camera shake duration on bounce.")]
-    [SerializeField]
-    private float _shakeDurationBounce = 0.05f;
-
-    [Tooltip("Camera shake magnitude on bounce.")]
-    [SerializeField]
-    private float _shakeMagnitudeBounce = 0.05f;
-
-    [Tooltip("Camera shake duration on block break.")]
-    [SerializeField]
-    private float _shakeDurationBlock = 0.1f;
-
-    [Tooltip("Camera shake magnitude on block break.")]
-    [SerializeField]
-    private float _shakeMagnitudeBlock = 0.1f;
-
     private bool _isLaunched;
     private Rigidbody _rb;
-    private Transform _start;
+
+    private Transform _paddle;
+    private Vector3 _startPosition;
     private Vector3 _originalScale = new (0.3f, 0.3f, 0.3f);
     private Coroutine _squashStretchCoroutine;
     private CameraController _cameraController;
     private EffectsPlayer _effectsPlayer;
 
-    void Start()
+    void Awake()
     {
+        _paddle = GameObject.FindGameObjectWithTag("Player").transform;
         _rb = GetComponent<Rigidbody>();
         _cameraController = Camera.main.GetComponent<CameraController>();
         _effectsPlayer = GameObject.Find("EffectsPlayer").GetComponent<EffectsPlayer>();
-        _start = GameObject.FindGameObjectWithTag("Player").transform.GetChild(0).transform;
+        _startPosition = transform.position;
 
         _rb.useGravity = false;
         _rb.linearDamping = 0;
@@ -112,14 +97,13 @@ public class BallController : MonoBehaviour
 
     private void PlayCollisionEffects(Collision other)
     {
-
         if (other.gameObject.CompareTag("Block"))
         {
-            _cameraController.TriggerShake(_shakeDurationBlock, _shakeMagnitudeBlock);
+            _cameraController.TriggerShake(ShakeType.Large);
         }
         else
         {
-            _cameraController.TriggerShake(_shakeDurationBounce, _shakeMagnitudeBounce);
+            _cameraController.TriggerShake(ShakeType.Small);
         }
 
         _effectsPlayer.PlayEffect(Effect.Bounce, other.contacts[0].point, Quaternion.LookRotation(other.contacts[0].normal));
@@ -180,7 +164,7 @@ public class BallController : MonoBehaviour
         _isLaunched = false;
         _rb.linearVelocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;
-        transform.position = _start.position;
+        transform.position = _startPosition;
 
         if (_squashStretchCoroutine != null)
         {
@@ -193,7 +177,7 @@ public class BallController : MonoBehaviour
 
         _cameraController.StopShake();
 
-        transform.parent = _start;
+        transform.parent = _paddle;
     }
 
     private void HitPaddle(Vector3 collisionPoint, Transform paddleTransform)

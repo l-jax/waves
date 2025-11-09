@@ -1,24 +1,49 @@
 using UnityEngine;
 using System.Collections;
 
+public enum ShakeType
+{
+    Small,
+    Large
+}
+
 public class CameraController : MonoBehaviour
 {
-    private Vector3 _originalPos;
+    [Tooltip("Camera shake duration on bounce.")]
+    [SerializeField]
+    private float _smallShakeDuration = 0.05f;
+
+    [Tooltip("Camera shake magnitude on bounce.")]
+    [SerializeField]
+    private float _smallShakeMagnitude = 0.05f;
+
+    [Tooltip("Camera shake duration on block break.")]
+    [SerializeField]
+    private float _largeShakeDuration = 0.1f;
+
+    [Tooltip("Camera shake magnitude on block break.")]
+    [SerializeField]
+    private float _largeShakeMagnitudes = 0.1f;
+
+    private Vector3 _originalPos = new(0, 1, -10);
     private Coroutine _shakeCoroutine;
 
-    void Start()
-    {
-        _originalPos = transform.localPosition;
-    }
-
-    public void TriggerShake(float duration, float magnitude)
+    public void TriggerShake(ShakeType size)
     {
         if (_shakeCoroutine != null)
         {
             StopCoroutine(_shakeCoroutine);
         }
 
-        _shakeCoroutine = StartCoroutine(Shake(duration, magnitude));
+        switch (size)
+        {
+            case ShakeType.Small:
+                _shakeCoroutine = StartCoroutine(Shake(_smallShakeDuration, _smallShakeMagnitude));
+                break;
+            case ShakeType.Large:
+                _shakeCoroutine = StartCoroutine(Shake(_largeShakeDuration, _largeShakeMagnitudes));
+                break;
+        }
     }
 
     public void StopShake()
@@ -27,7 +52,7 @@ public class CameraController : MonoBehaviour
         {
             StopCoroutine(_shakeCoroutine);
         }
-        
+
         transform.localPosition = _originalPos;
     }
 
@@ -47,10 +72,10 @@ public class CameraController : MonoBehaviour
                 randomOffset.y * magnitude * decay,
                 0f
             );
-            
+
             elapsedTime += Time.deltaTime;
-            
-            yield return null; 
+
+            yield return null;
         }
 
         transform.localPosition = _originalPos;
