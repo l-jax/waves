@@ -5,6 +5,7 @@ public class GameController : MonoBehaviour
 {
     [SerializeField] private PaddleController _paddleController;
     [SerializeField] private BallController _ballController;
+    [SerializeField] private EffectsPlayer _effectsPlayer;
 
     private GameStateMachine _stateMachine;
     private Dictionary<GameState, IGameStateHandler> _stateHandler;
@@ -47,7 +48,11 @@ public class GameController : MonoBehaviour
 
     private void InitializeContext()
     {
-        _context = new GameContext(_paddleController, _ballController);
+        _context = new GameContext(
+            _paddleController,
+            _ballController,
+            _effectsPlayer
+        );
     }
 
     private void OnStateChanged(GameState previousState, GameState newState)

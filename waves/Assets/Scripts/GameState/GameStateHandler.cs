@@ -115,8 +115,10 @@ public class GameOverHandler : IGameStateHandler
 {
     public void OnEnter(GameContext context)
     {
+        // conditional effect
+        context.EffectsPlayer.PlayEffect(Effect.Win, Vector3.zero, Quaternion.identity);
         // show game over UI
-        // start game music
+        // play game over music
     }
 
     public void OnUpdate(GameContext context)

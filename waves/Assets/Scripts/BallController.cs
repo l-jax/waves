@@ -27,7 +27,7 @@ public class BallController : MonoBehaviour
 
     void Awake()
     {
-        _startPosition = transform.position;
+        _startPosition = transform.localPosition;
 
         _paddle = GameObject.FindGameObjectWithTag("Player").transform;
         _effectsPlayer = GameObject.Find("EffectsPlayer").GetComponent<EffectsPlayer>();
@@ -67,6 +67,7 @@ public class BallController : MonoBehaviour
 
         if (other.gameObject.CompareTag("OutOfBounds"))
         {
+            _effectsPlayer.PlayEffect(Effect.OutOfBounds, transform.position, Quaternion.identity);
             ResetBall();
             return;
         }
@@ -132,8 +133,8 @@ public class BallController : MonoBehaviour
         _rb.linearVelocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;
 
-        transform.position = _startPosition;
         transform.parent = _paddle;
+        transform.localPosition = _startPosition;
 
         transform.GetComponent<TrailRenderer>().enabled = false;
     }
