@@ -5,9 +5,9 @@ using UnityEngine.InputSystem;
 public class PaddleController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    [Tooltip("Is debug mode enabled? If true, keyboard controls replace microphone input.")]
+    [Tooltip("Control with keyboard or voice?")]
     [SerializeField]
-    private bool _debugMode = false;
+    private ControlSystem _controlSystem = ControlSystem.Keyboard;
 
     [Tooltip("The left limit of the paddle's movement.")]
     [SerializeField]
@@ -27,6 +27,8 @@ public class PaddleController : MonoBehaviour
 
     private Tracker _tracker;
 
+    private bool _isMovementEnabled = true;
+
     void Start()
     {
         Vector3 ballPosition = transform.position + transform.up * 1.5f;
@@ -41,28 +43,46 @@ public class PaddleController : MonoBehaviour
 
     void Update()
     {
-        if (_debugMode)
+        if (!_isMovementEnabled) return;
+
+        switch (_controlSystem)
         {
-            HandleDebugInput();
-            return;
+            case ControlSystem.Keyboard:
+                HandleKeyboardInput();
+                break;
+            case ControlSystem.Voice:
+                HandleVoiceInput();
+                break;
         }
-
-        if (_tracker == null) return;
-
-        UpdateDirection(_tracker.CurrentDirection);
+        ClampPosition();
     }
 
-    private void HandleDebugInput()
+    public void SetControlSystem(ControlSystem controlSystem)
+    {
+        _controlSystem = controlSystem;
+    }
+
+    public void EnableMovement()
+    {
+        _isMovementEnabled = true;
+    }
+
+    public void DisableMovement()
+    {
+        _isMovementEnabled = false;
+    }
+
+    private void HandleKeyboardInput()
     {
         Keyboard keyboard = Keyboard.current;
         float moveInput = keyboard.aKey.isPressed ? -1 : keyboard.dKey.isPressed ? 1 : 0;
         transform.position += moveInput * _speed * Time.deltaTime * transform.right;
-
-        ClampPosition();
     }
 
-    private void UpdateDirection(Direction direction)
+    private void HandleVoiceInput()
     {
+        if (_tracker == null) return;
+        Direction direction = _tracker.CurrentDirection;
         switch (direction)
         {
             case Direction.Left:
@@ -74,7 +94,6 @@ public class PaddleController : MonoBehaviour
             case Direction.Stationary:
                 break;
         }
-        ClampPosition();
     }
 
     private void ClampPosition()
