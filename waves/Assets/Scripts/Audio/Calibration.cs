@@ -1,5 +1,7 @@
 using TMPro;
 using UnityEngine;
+using System.Collections;
+using System;
 
 public class Calibration : MonoBehaviour
 {
@@ -17,41 +19,26 @@ public class Calibration : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private float _calibrationDuration = 2f;
 
-    private enum CalibrationStep
-    {
-        Welcome,
-        CalibrateSilence,
-        CalibrateQuiet,
-        CalibrateLoud,
-        TuneSpeed,
-        Complete
-    }
-
     private readonly CalibrationData _calibrationData = new();
     private CalibrationStep _currentStep = CalibrationStep.Welcome;
     private bool _isRecording = false;
     private float _recordingTimer = 0f;
 
+    private CalibrationRecorder _recorder;
+    private ICalibrationPersistence _calibrationPersistence;
+
     void Start()
     {
+        _calibrationPersistence = new PlayerPrefsCalibrationPersistence();
+        _recorder = new CalibrationRecorder(() => _tracker.GetCurrentVolume());
+
         SetupButtons();
-        LoadPreviousCalibration();
-
         OpenCalibration();
-
-        // // Auto-open if never calibrated
-        // if (!PlayerPrefs.HasKey("VelCal_Silence"))
-        // {
-        //     OpenCalibration();
-        // }
     }
 
     void Update()
     {
         UpdateVolumeMeter();
-
-        if (!_isRecording) return;
-        UpdateRecording();
     }
 
     private void SetupButtons()
@@ -84,15 +71,15 @@ public class Calibration : MonoBehaviour
                 StartStep(CalibrationStep.CalibrateSilence);
                 break;
             case CalibrationStep.CalibrateSilence:
-                if (!_isRecording) StartRecording();
+                StartCoroutine(Record());
                 break;
             case CalibrationStep.CalibrateQuiet:
-                if (!_isRecording) StartRecording();
+                StartCoroutine(Record());
                 break;
             case CalibrationStep.CalibrateLoud:
-                if (!_isRecording) StartRecording();
+                StartCoroutine(Record());
                 break;
-            case CalibrationStep.TuneSpeed:
+            case CalibrationStep.AdjustSpeed:
                 StartStep(CalibrationStep.Complete);
                 break;
             case CalibrationStep.Complete:
@@ -103,7 +90,6 @@ public class Calibration : MonoBehaviour
 
     private void OnSkipClicked()
     {
-        ApplyDefaultCalibration();
         CompleteCalibration();
     }
 
@@ -115,119 +101,68 @@ public class Calibration : MonoBehaviour
 
     private void StartStep(CalibrationStep step)
     {
+        _instructionText.text = CalibrationStepConfig.Steps[step].InstructionText;
+        _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = CalibrationStepConfig.Steps[step].ButtonText;
+
+        if (_volumeMeter != null)
+        {
+            _volumeMeter.gameObject.SetActive(CalibrationStepConfig.Steps[step].ShowVolumeMeter);
+        }
+
+        if (_speedSlider != null)
+        {
+            _speedSlider.gameObject.SetActive(CalibrationStepConfig.Steps[step].ShowSpeedSlider);
+        }
+
         _currentStep = step;
         _isRecording = false;
         _recordingTimer = 0f;
-
-        _volumeMeter?.gameObject.SetActive(step != CalibrationStep.Welcome && step != CalibrationStep.Complete);
-        _speedSlider?.gameObject.SetActive(step == CalibrationStep.TuneSpeed);
-
-        switch (step)
-        {
-            case CalibrationStep.Welcome:
-                _instructionText.text =
-                "Let's set up your voice control.\n\n" +
-                "Silence makes the paddle stop\n" +
-                "Quiet sounds move left\n" +
-                "Loud sounds move right\n\n";
-                _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start";
-                break;
-
-            case CalibrationStep.CalibrateSilence:
-                _instructionText.text =
-                "First, we need to measure the background noise\n\n" +
-                "Click START and stay SILENT for 2 seconds\n\n"; ;
-                _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start";
-                break;
-
-            case CalibrationStep.CalibrateQuiet:
-                _instructionText.text =
-                "Now, we'll measure your quiet sounds\n\n" +
-                "Click START and whisper, hum, or make a soft sound for 2 seconds\n\n";
-                _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start";
-                break;
-
-            case CalibrationStep.CalibrateLoud:
-                _instructionText.text =
-                "Finally, let's measure your loud sounds\n\n" +
-                "Click START and speak, shout, or make a loud sound for 2 seconds\n\n";
-                _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start";
-                break;
-
-            case CalibrationStep.TuneSpeed:
-                _instructionText.text =
-                "Make some sounds to see how it feels\n\n" +
-                "Use the slider to adjust how fast the paddle moves\n\n" +
-                "When you're happy with the speed, click NEXT";
-                _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Next";
-                
-                if (_speedSlider != null)
-                {
-                    _speedSlider.minValue = 0.5f;
-                    _speedSlider.maxValue = 5f;
-                    _speedSlider.value = _calibrationData.Speed > 0 ? _calibrationData.Speed : 2f;
-                }
-                break;
-
-            case CalibrationStep.Complete:
-                _instructionText.text = "All done\n\nClick PLAY to start the game";
-                _nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Play";
-                break;
-        }
     }
 
-    private void StartRecording()
+    private IEnumerator Record()
     {
         _isRecording = true;
         _recordingTimer = 0f;
         _nextButton.interactable = false;
-    }
-
-    private void UpdateRecording()
-    {
-        _recordingTimer += Time.deltaTime;
-        float volume = _tracker.GetCurrentVolume();
-        float remaining = _calibrationDuration - _recordingTimer;
+        _recorder.StartRecording();
 
         switch (_currentStep)
         {
             case CalibrationStep.CalibrateSilence:
-                _instructionText.text = $"Stay silent for two seconds {remaining:F1}s\n\nCurrent: {volume:F4}";
-                _calibrationData.BackgroundVolume += volume;
+                _instructionText.text = "Stay silent for two seconds\n\nCurrent: 0.0000";
                 break;
 
             case CalibrationStep.CalibrateQuiet:
-                _instructionText.text = $"Make a quiet sound for two seconds {remaining:F1}s\n\nCurrent: {volume:F4}";
-                _calibrationData.MinVolume += volume;
+                _instructionText.text = "Make a quiet sound for two seconds\n\nCurrent: 0.0000";
                 break;
 
             case CalibrationStep.CalibrateLoud:
-                _instructionText.text = $"Make a loud sound for two seconds {remaining:F1}s\n\nCurrent: {volume:F4}";
-                _calibrationData.MaxVolume += volume;
+                _instructionText.text = "Make a loud sound for two seconds\n\nCurrent: 0.0000";
                 break;
         }
 
-        if (_recordingTimer >= _calibrationDuration)
+        while (_recordingTimer < _calibrationDuration)
         {
-            int frameCount = Mathf.RoundToInt(_calibrationDuration / Time.deltaTime);
-            switch (_currentStep)
-            {
-                case CalibrationStep.CalibrateSilence:
-                    _calibrationData.BackgroundVolume /= frameCount;
-                    break;
-                case CalibrationStep.CalibrateQuiet:
-                    _calibrationData.MinVolume /= frameCount;
-                    break;
-                case CalibrationStep.CalibrateLoud:
-                    _calibrationData.MaxVolume /= frameCount;
-                    break;
-            }
-            FinishRecording();
+            _recorder.UpdateRecording();
+            _recordingTimer += Time.deltaTime;
+            yield return null;
         }
-    }
 
-    private void FinishRecording()
-    {
+        float result = _recorder.GetResult();
+
+        switch (_currentStep)
+        {
+            case CalibrationStep.CalibrateSilence:
+                _calibrationData.BackgroundVolume = result;
+                break;
+            case CalibrationStep.CalibrateQuiet:
+                _calibrationData.MinVolume = result;
+                break;
+            case CalibrationStep.CalibrateLoud:
+                _calibrationData.MaxVolume = result;
+                break;
+        }
+
         _isRecording = false;
         _nextButton.interactable = true;
 
@@ -263,56 +198,19 @@ public class Calibration : MonoBehaviour
 
     private void GoToQuiet() => StartStep(CalibrationStep.CalibrateQuiet);
     private void GoToLoud() => StartStep(CalibrationStep.CalibrateLoud);
-    private void GoToSpeed() => StartStep(CalibrationStep.TuneSpeed);
+    private void GoToSpeed() => StartStep(CalibrationStep.AdjustSpeed);
 
     private void CompleteCalibration()
     {
+        _calibrationData.Sanitize();
         if (!_calibrationData.IsValid())
         {
             Debug.LogWarning("Invalid calibration, using defaults");
-            ApplyDefaultCalibration();
+            _calibrationData.ApplyDefaults();
         }
 
         _tracker.ApplyCalibration(_calibrationData);
-        SaveCalibration();
-        CloseCalibration();
-    }
-
-    private void ApplyDefaultCalibration()
-    {
-        _calibrationData.BackgroundVolume = 0.005f;
-        _calibrationData.MinVolume = 0.05f;
-        _calibrationData.MaxVolume = 0.2f;
-        _calibrationData.Speed = 2f;
-    }
-
-    private void SaveCalibration()
-    {
-        PlayerPrefs.SetFloat("VelCal_Silence", _calibrationData.BackgroundVolume);
-        PlayerPrefs.SetFloat("VelCal_Min", _calibrationData.MinVolume);
-        PlayerPrefs.SetFloat("VelCal_Max", _calibrationData.MaxVolume);
-        PlayerPrefs.SetFloat("VelCal_Speed", _calibrationData.Speed);
-        PlayerPrefs.Save();
-    }
-
-    private void LoadPreviousCalibration()
-    {
-        if (PlayerPrefs.HasKey("VelCal_Silence"))
-        {
-            _calibrationData.BackgroundVolume = PlayerPrefs.GetFloat("VelCal_Silence");
-            _calibrationData.MinVolume = PlayerPrefs.GetFloat("VelCal_Min");
-            _calibrationData.MaxVolume = PlayerPrefs.GetFloat("VelCal_Max");
-            _calibrationData.Speed = PlayerPrefs.GetFloat("VelCal_Speed");
-            
-            if (_tracker != null)
-            {
-                _tracker.ApplyCalibration(_calibrationData);
-            }
-        }
-    }
-
-    private void CloseCalibration()
-    {
+        _calibrationPersistence.Save(_calibrationData);
         _calibrationPanel.SetActive(false);
     }
 
