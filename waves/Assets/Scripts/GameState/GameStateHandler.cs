@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public interface IGameStateHandler
 {
@@ -11,7 +12,10 @@ public class TitleScreenHandler : IGameStateHandler
 {
     public void OnEnter(GameContext context)
     {
-        // show UI
+        context.TitleScreenUI.SetActive(true);
+        context.TitleScreenUI.GetComponentInChildren<Button>().onClick.AddListener(() => {
+            context.StateMachine.TransitionTo(GameState.MainMenu);
+        });
         // play title music
     }
 
@@ -22,7 +26,7 @@ public class TitleScreenHandler : IGameStateHandler
 
     public void OnExit(GameContext context)
     {
-        // hide UI
+        context.TitleScreenUI.SetActive(false);
         // stop title music
     }
 }
@@ -31,7 +35,14 @@ public class MainMenuHandler : IGameStateHandler
 {
     public void OnEnter(GameContext context)
     {
-        // show UI
+        context.MainMenuUI.SetActive(true);
+        Button[] buttons = context.MainMenuUI.GetComponentsInChildren<Button>();
+        buttons[0].onClick.AddListener(() => {
+            context.StateMachine.TransitionTo(GameState.KeyboardSetup);
+        });
+        buttons[1].onClick.AddListener(() => {
+            context.StateMachine.TransitionTo(GameState.VoiceCalibration);
+        });
         // play menu music
     }
 
@@ -42,7 +53,7 @@ public class MainMenuHandler : IGameStateHandler
 
     public void OnExit(GameContext context)
     {
-        // hide UI
+        context.MainMenuUI.SetActive(false);
         // pause menu music
     }
 }
@@ -51,7 +62,11 @@ public class KeyboardSetupHandler : IGameStateHandler
 {
     public void OnEnter(GameContext context)
     {
+        context.KeyboardSetupUI.SetActive(true);
         context.PaddleController.SetControlSystem(ControlSystem.Keyboard);
+        context.KeyboardSetupUI.GetComponentInChildren<Button>().onClick.AddListener(() => {
+            context.StateMachine.TransitionTo(GameState.Playing);
+        });
         // start menu music
     }
 
@@ -62,7 +77,7 @@ public class KeyboardSetupHandler : IGameStateHandler
 
     public void OnExit(GameContext context)
     {
-        // hide UI
+        context.KeyboardSetupUI.SetActive(false);
         // pause menu music
 
     }
@@ -72,6 +87,7 @@ public class VoiceCalibrationHandler : IGameStateHandler
 {
     public void OnEnter(GameContext context)
     {
+        context.VoiceCalibrationUI.SetActive(true);
         context.PaddleController.SetControlSystem(ControlSystem.Voice);
         // start menu music
     }
@@ -83,7 +99,7 @@ public class VoiceCalibrationHandler : IGameStateHandler
 
     public void OnExit(GameContext context)
     {
-        // disable paddle controller
+        context.VoiceCalibrationUI.SetActive(false);
         // pause menu music
     }
 }
@@ -117,7 +133,11 @@ public class GameOverHandler : IGameStateHandler
     {
         // conditional effect
         context.EffectsPlayer.PlayEffect(Effect.Win, Vector3.zero, Quaternion.identity);
-        // show game over UI
+        
+        context.GameOverUI.SetActive(true);
+        context.GameOverUI.GetComponentInChildren<Button>().onClick.AddListener(() => {
+            context.StateMachine.TransitionTo(GameState.MainMenu);
+        });
         // play game over music
     }
 
@@ -128,7 +148,7 @@ public class GameOverHandler : IGameStateHandler
 
     public void OnExit(GameContext context)
     {
-        // hide game over UI
+        context.GameOverUI.SetActive(false);
         // stop game music
     }
 }

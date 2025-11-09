@@ -6,6 +6,11 @@ public class GameController : MonoBehaviour
     [SerializeField] private PaddleController _paddleController;
     [SerializeField] private BallController _ballController;
     [SerializeField] private EffectsPlayer _effectsPlayer;
+    [SerializeField] private GameObject _titleScreenUI;
+    [SerializeField] private GameObject _mainMenuUI;
+    [SerializeField] private GameObject _keyboardSetupUI;
+    [SerializeField] private GameObject _voiceCalibrationUI;
+    [SerializeField] private GameObject _gameOverUI;
 
     private GameStateMachine _stateMachine;
     private Dictionary<GameState, IGameStateHandler> _stateHandler;
@@ -29,7 +34,7 @@ public class GameController : MonoBehaviour
 
     private void InitializeStateMachine()
     {
-        _stateMachine = new GameStateMachine(GameState.Playing); //TODO: set properly
+        _stateMachine = new GameStateMachine(GameState.TitleScreen);
         _stateMachine.StateChanged += OnStateChanged;
     }
 
@@ -49,9 +54,15 @@ public class GameController : MonoBehaviour
     private void InitializeContext()
     {
         _context = new GameContext(
+            _stateMachine,
             _paddleController,
             _ballController,
-            _effectsPlayer
+            _effectsPlayer,
+            _titleScreenUI,
+            _mainMenuUI,
+            _keyboardSetupUI,
+            _voiceCalibrationUI,
+            _gameOverUI
         );
     }
 

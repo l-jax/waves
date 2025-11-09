@@ -34,7 +34,6 @@ public class Calibration : MonoBehaviour
     {
         SetupButtons();
         LoadPreviousCalibration();
-        OpenCalibration();
     }
     
     void Update()
