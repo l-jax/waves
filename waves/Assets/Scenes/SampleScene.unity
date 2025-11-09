@@ -594,9 +594,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EffectsPlayer
   _breakSound: {fileID: 8300000, guid: bd13b73c845844ade9d9a3bf34058b22, type: 3}
-  _breakParticles: {fileID: 0}
+  _breakParticles: {fileID: 7992277016241461058, guid: 5e22fbd4b7b664aaa8f56c6151ac5312, type: 3}
   _bounceSound: {fileID: 0}
-  _bounceParticles: {fileID: 0}
+  _bounceParticles: {fileID: 86423232036158362, guid: 89b92c4524b0d43919767f79a5343800, type: 3}
 --- !u!82 &90551713
 AudioSource:
   m_ObjectHideFlags: 0
@@ -738,7 +738,7 @@ MonoBehaviour:
   _volumeMeter: {fileID: 1012682246}
   _nextButton: {fileID: 37187863}
   _skipButton: {fileID: 1985404785}
-  _backButton: {fileID: 0}
+  _backButton: {fileID: 463357171}
   _speedSlider: {fileID: 1571434686}
   _tracker: {fileID: 563289977}
   _calibrationDuration: 2
