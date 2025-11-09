@@ -14,6 +14,12 @@ public class GameController : MonoBehaviour
         InitializeContext();
     }
 
+    void Update()
+    {
+        IGameStateHandler handler = _stateHandler[_stateMachine.CurrentState];
+        handler.OnUpdate(_context);
+    }
+
     private void InitializeStateMachine()
     {
         _stateMachine = new GameStateMachine();
