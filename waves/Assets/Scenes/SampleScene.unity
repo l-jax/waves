@@ -522,6 +522,10 @@ MonoBehaviour:
   _breakParticles: {fileID: 7992277016241461058, guid: 5e22fbd4b7b664aaa8f56c6151ac5312, type: 3}
   _bounceSound: {fileID: 0}
   _bounceParticles: {fileID: 86423232036158362, guid: 89b92c4524b0d43919767f79a5343800, type: 3}
+  _outOfBoundsSound: {fileID: 0}
+  _outOfBoundsParticles: {fileID: 0}
+  _winSound: {fileID: 0}
+  _winParticles: {fileID: 0}
 --- !u!82 &90551713
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1890,6 +1894,53 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6780897424503097281, guid: a3a02dab54f8d4c8f9227b91bc85ab62, type: 3}
   m_PrefabInstance: {fileID: 1834125257}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &364081572
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 364081574}
+  - component: {fileID: 364081573}
+  m_Layer: 0
+  m_Name: GameController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &364081573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 364081572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c97d48551988d4fa0b3c7a17ced9abff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameController
+  _paddleController: {fileID: 1469887080}
+  _ballController: {fileID: 1178395841}
+  _effectsPlayer: {fileID: 90551712}
+--- !u!4 &364081574
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 364081572}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &364642439 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6780897424503097281, guid: a3a02dab54f8d4c8f9227b91bc85ab62, type: 3}
@@ -6288,6 +6339,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a3a02dab54f8d4c8f9227b91bc85ab62, type: 3}
+--- !u!114 &1178395841 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2757508332592396325, guid: e369203036aca47b3a8dbc653dbdbaa2, type: 3}
+  m_PrefabInstance: {fileID: 1796790695}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 090b5c92478b34a07ad2ed35ffb10b38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BallController
 --- !u!4 &1178395845 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6208744868221906322, guid: e369203036aca47b3a8dbc653dbdbaa2, type: 3}
@@ -7646,6 +7708,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a3a02dab54f8d4c8f9227b91bc85ab62, type: 3}
+--- !u!114 &1469887080 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5757747437257263895, guid: 21a9e97e7d7314e0298edf6034fc2111, type: 3}
+  m_PrefabInstance: {fileID: 738218603556702354}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26e550522553e40f6a84068ce1d1dbe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PaddleController
 --- !u!4 &1469887084 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2094418921904309313, guid: 21a9e97e7d7314e0298edf6034fc2111, type: 3}
@@ -10938,3 +11011,4 @@ SceneRoots:
   - {fileID: 1152558501}
   - {fileID: 1516593423}
   - {fileID: 738218603556702354}
+  - {fileID: 364081574}
