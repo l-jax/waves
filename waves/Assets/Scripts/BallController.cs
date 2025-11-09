@@ -16,41 +16,23 @@ public class BallController : MonoBehaviour
     [SerializeField]
     private float _maxSpeed = 10f;
 
-    [Header("Squash & Stretch")]
-    [Tooltip("How 'wide' the ball gets on squash (e.g., 1.2 = 120% width).")]
-    [SerializeField]
-    private float _squashAmount = 1.2f;
-
-    [Tooltip("How 'tall' the ball gets on stretch (e.g., 1.2 = 120% height).")]
-    [SerializeField]
-    private float _stretchAmount = 1.2f;
-
-    [Tooltip("How fast the ball goes from squash to stretch.")]
-    [SerializeField]
-    private float _squashToStretchTime = 0.08f;
-
-    [Tooltip("How fast the ball goes from stretch back to normal.")]
-    [SerializeField]
-    private float _stretchToNormalTime = 0.08f;
-
     private bool _isLaunched;
+    private Vector3 _startPosition;
     private Rigidbody _rb;
 
     private Transform _paddle;
-    private Vector3 _startPosition;
-    private Vector3 _originalScale = new (0.3f, 0.3f, 0.3f);
-    private Coroutine _squashStretchCoroutine;
-    private CameraController _cameraController;
     private EffectsPlayer _effectsPlayer;
+    private CameraController _cameraController;
 
     void Awake()
     {
-        _paddle = GameObject.FindGameObjectWithTag("Player").transform;
-        _rb = GetComponent<Rigidbody>();
-        _cameraController = Camera.main.GetComponent<CameraController>();
-        _effectsPlayer = GameObject.Find("EffectsPlayer").GetComponent<EffectsPlayer>();
         _startPosition = transform.position;
 
+        _paddle = GameObject.FindGameObjectWithTag("Player").transform;
+        _effectsPlayer = GameObject.Find("EffectsPlayer").GetComponent<EffectsPlayer>();
+        _cameraController = Camera.main.GetComponent<CameraController>();
+
+        _rb = GetComponent<Rigidbody>();
         _rb.useGravity = false;
         _rb.linearDamping = 0;
         _rb.angularDamping = 0;
@@ -107,40 +89,6 @@ public class BallController : MonoBehaviour
         }
 
         _effectsPlayer.PlayEffect(Effect.Bounce, other.contacts[0].point, Quaternion.LookRotation(other.contacts[0].normal));
-
-        if (_squashStretchCoroutine != null)
-        {
-            StopCoroutine(_squashStretchCoroutine);
-        }
-        _squashStretchCoroutine = StartCoroutine(AnimateSquashStretch());
-    }
-
-    private IEnumerator AnimateSquashStretch()
-    {
-        Vector3 squashScale = new (_originalScale.x * _squashAmount, _originalScale.y / _squashAmount, _originalScale.z);
-        Vector3 stretchScale = new (_originalScale.x / _stretchAmount, _originalScale.y * _stretchAmount, _originalScale.z);
-
-        float timer = 0f;
-
-        transform.localScale = squashScale;
-
-        while (timer < _squashToStretchTime)
-        {
-            transform.localScale = Vector3.Lerp(squashScale, stretchScale, timer / _squashToStretchTime);
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        transform.localScale = stretchScale;
-
-        while (timer < _stretchToNormalTime)
-        {
-            transform.localScale = Vector3.Lerp(stretchScale, _originalScale, timer / _stretchToNormalTime);
-            timer += Time.deltaTime;
-            yield return null;
-        }
-
-        transform.localScale = _originalScale;
-        _squashStretchCoroutine = null;
     }
 
     private void ClampSpeed(float currentSpeed)
@@ -162,22 +110,14 @@ public class BallController : MonoBehaviour
     private void ResetBall()
     {
         _isLaunched = false;
+
         _rb.linearVelocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;
-        transform.position = _startPosition;
 
-        if (_squashStretchCoroutine != null)
-        {
-            StopCoroutine(_squashStretchCoroutine);
-            _squashStretchCoroutine = null;
-        }
-        transform.localScale = _originalScale;
+        transform.position = _startPosition;
+        transform.parent = _paddle;
 
         transform.GetComponent<TrailRenderer>().enabled = false;
-
-        _cameraController.StopShake();
-
-        transform.parent = _paddle;
     }
 
     private void HitPaddle(Vector3 collisionPoint, Transform paddleTransform)
