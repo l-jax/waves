@@ -1,13 +1,13 @@
 using UnityEngine;
 using System.Collections;
 
-public class Equaliser : MonoBehaviour
+[RequireComponent(typeof(EightTrackPlayer))]
+public class Equalizer : MonoBehaviour
 {
     [SerializeField] private GameObject _backgroundModel;
-
-    [SerializeField] private GameObject[][] _tracks;
-    [SerializeField] private Tracker _tracker;
-
+    
+    private GameObject[][] _tracks;
+    private EightTrackPlayer _eightTrackPlayer;
 
     public void Start()
     {
@@ -17,10 +17,10 @@ public class Equaliser : MonoBehaviour
             return;
         }
 
-        _tracker = GameObject.Find("Microphone").GetComponent<Tracker>();
-        if (_tracker == null)
+        _eightTrackPlayer = GetComponent<EightTrackPlayer>();
+        if (_eightTrackPlayer == null)
         {
-            Debug.LogError("No Tracker found in the scene");
+            Debug.LogError("No EightTrackPlayer found in the scene");
         }
 
         // ignore the back plate
@@ -35,17 +35,11 @@ public class Equaliser : MonoBehaviour
             }
         }
 
-        StartCoroutine(RandomiseBarsCoroutine());
+        //StartCoroutine(RandomizeBarsCoroutine());
+        StartCoroutine(UpdateBarsCoroutine());
     }
 
-    // void Update()
-    // {
-    //     int[] equaliserBands = _tracker.GetEqualiserBands();
-    //     UpdateBars(equaliserBands);
-
-    // }
-
-    public IEnumerator RandomiseBarsCoroutine()
+    public IEnumerator RandomizeBarsCoroutine()
     {
         while (true)
         {
@@ -60,20 +54,24 @@ public class Equaliser : MonoBehaviour
                 }
             }
             yield return new WaitForSeconds(1f);
-        }   
+        }
     }
 
-    private void UpdateBars(int[] bands)
+    public IEnumerator UpdateBarsCoroutine()
     {
-        if (_tracks == null || _tracks.Length == 0) return;
-
-        for (int i = 0; i < _tracks.Length; i++)
+        while (true)
         {
-            int activeBars = Mathf.Clamp(bands[i], 0, _tracks[i].Length);
-            for (int j = 0; j < _tracks[i].Length; j++)
+            int[] displayVolumes = _eightTrackPlayer.DisplayVolumes;
+            if (_tracks == null || _tracks.Length == 0) yield return null;
+
+            for (int i = 0; i < _tracks.Length; i++)
             {
-                _tracks[i][j].SetActive(j < activeBars);
+                for (int j = 0; j < _tracks[i].Length; j++)
+                {
+                    _tracks[i][j].SetActive(j <= displayVolumes[i]);
+                }
             }
+            yield return new WaitForSeconds(1f);
         }
     }
 }
