@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    [SerializeField] private PaddleController _paddleController;
+
     private GameStateMachine _stateMachine;
     private Dictionary<GameState, IGameStateHandler> _stateHandler;
     private GameContext _context;
@@ -41,11 +43,7 @@ public class GameController : MonoBehaviour
 
     private void InitializeContext()
     {
-        _context = new GameContext
-        {
-            CurrentState = _stateMachine.CurrentState,
-            CurrentControlSystem = ControlSystem.Keyboard
-        };
+        _context = new GameContext(_paddleController);
     }
 
     private void OnStateChanged(GameState previousState, GameState newState)

@@ -51,7 +51,7 @@ public class KeyboardSetupHandler : IGameStateHandler
 {
     public void OnEnter(GameContext context)
     {
-        // show UI
+        context.PaddleController.SetControlSystem(ControlSystem.Keyboard);
         // start menu music
     }
 
@@ -64,6 +64,7 @@ public class KeyboardSetupHandler : IGameStateHandler
     {
         // hide UI
         // pause menu music
+
     }
 }
 
@@ -71,7 +72,7 @@ public class VoiceCalibrationHandler : IGameStateHandler
 {
     public void OnEnter(GameContext context)
     {
-        // enable paddle controller
+        context.PaddleController.SetControlSystem(ControlSystem.Voice);
         // start menu music
     }
 
@@ -92,7 +93,7 @@ public class PlayHandler : IGameStateHandler
 
     public void OnEnter(GameContext context)
     {
-        // enable paddle controller
+        context.PaddleController.EnableMovement();
         // enable ball release
         // start game music
     }
@@ -104,7 +105,7 @@ public class PlayHandler : IGameStateHandler
 
     public void OnExit(GameContext context)
     {
-        // disable paddle controller
+        context.PaddleController.DisableMovement();
         // disable ball release
         // pause game music
     }
