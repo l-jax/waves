@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - OutOfBounds
+  - Block
   layers:
   - Default
   - TransparentFX

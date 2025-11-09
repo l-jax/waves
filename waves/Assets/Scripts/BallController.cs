@@ -3,7 +3,6 @@ using UnityEngine.InputSystem;
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(AudioSource))]
 public class BallController : MonoBehaviour
 {
     [Header("Movement")]
@@ -16,18 +15,6 @@ public class BallController : MonoBehaviour
 
     [SerializeField]
     private float _maxSpeed = 10f;
-
-    [Header("Audio")]
-    [SerializeField]
-    private AudioClip _bounceSound;
-
-    [Tooltip("Minimum random pitch for the bounce sound.")]
-    [SerializeField]
-    private float _minPitch = 0.9f;
-
-    [Tooltip("Maximum random pitch for the bounce sound.")]
-    [SerializeField]
-    private float _maxPitch = 1.1f;
 
     [Header("Squash & Stretch")]
     [Tooltip("How 'wide' the ball gets on squash (e.g., 1.2 = 120% width).")]
@@ -69,17 +56,17 @@ public class BallController : MonoBehaviour
 
     private bool _isLaunched;
     private Rigidbody _rb;
-    private AudioSource _audioSource;
     private Transform _start;
     private Vector3 _originalScale = new (0.3f, 0.3f, 0.3f);
     private Coroutine _squashStretchCoroutine;
     private CameraController _cameraController;
+    private EffectsPlayer _effectsPlayer;
 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        _audioSource = GetComponent<AudioSource>();
         _cameraController = Camera.main.GetComponent<CameraController>();
+        _effectsPlayer = GameObject.Find("EffectsPlayer").GetComponent<EffectsPlayer>();
         _start = GameObject.FindGameObjectWithTag("Player").transform.GetChild(0).transform;
 
         _rb.useGravity = false;
@@ -138,15 +125,7 @@ public class BallController : MonoBehaviour
             _cameraController.TriggerShake(_shakeDurationBounce, _shakeMagnitudeBounce);
         }
 
-        if (_bounceSound != null)
-        {
-            _audioSource.pitch = Random.Range(_minPitch, _maxPitch);
-            _audioSource.PlayOneShot(_bounceSound);
-        }
-        else
-        {
-            Debug.LogWarning("Bounce sound not assigned.");
-        }
+        _effectsPlayer.PlaySound(SoundEffect.Bounce);
 
         if (_bounceParticlesPrefab != null)
         {
