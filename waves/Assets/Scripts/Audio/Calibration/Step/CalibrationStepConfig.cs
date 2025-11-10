@@ -15,33 +15,38 @@ public static class CalibrationStepConfig
     public static StepConfig CalibrateSilenceStep = new()
     {
         InstructionText =
-        "Please remain silent for two seconds.\n\n" +
-        "Your silence will set the baseline volume.",
-        ButtonText = "Recording...",
+        "Press start and keep quiet for two seconds\n\n" +
+        "We need to measure your background noise",
+        ButtonText = "Start",
         ShowVolumeMeter = true
     };
 
     public static StepConfig CalibrateQuietStep = new()
     {
         InstructionText =
-        "Please make quiet sounds for two seconds.\n\n" +
-        "Your quiet sounds will set the minimum volume.",
-        ButtonText = "Recording...",
+        "Press start and make a quiet sound for two seconds\n\n" +
+        "Try a whisper or a soft hum",
+        ButtonText = "Start",
         ShowVolumeMeter = true
     };
 
     public static StepConfig CalibrateLoudStep = new()
     {
         InstructionText =
-        "Please make loud sounds for two seconds.\n\n" +
-        "Your loud sounds will set the maximum volume.",
-        ButtonText = "Recording...",
+        "Press start and make a loud sound for two seconds\n\n" +
+        "You could shout, sing, or hum loudly",
+        ButtonText = "Start",
         ShowVolumeMeter = true
     };
 
     public static StepConfig CompleteStep = new()
     {
-        InstructionText = "All done!\n\nClick PLAY to start the game",
+        InstructionText =
+        "Try moving the paddle\n" +
+        "Does it move left when you make a quiet sound?\n\n" +
+        "And right when you make a loud sound?" +
+        "\n\n" +
+        "Yes? Press Play to start the game",
         ButtonText = "Play",
         ShowVolumeMeter = false
     };
