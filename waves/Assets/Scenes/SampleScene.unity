@@ -1673,6 +1673,7 @@ MonoBehaviour:
   _skipButton: {fileID: 1985404785}
   _backButton: {fileID: 463357171}
   _tracker: {fileID: 563289977}
+  _gameController: {fileID: 364081573}
 --- !u!4 &364642439 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6780897424503097281, guid: a3a02dab54f8d4c8f9227b91bc85ab62, type: 3}
