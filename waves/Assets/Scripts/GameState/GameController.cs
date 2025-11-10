@@ -9,7 +9,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject _titleScreenUI;
     [SerializeField] private GameObject _mainMenuUI;
     [SerializeField] private GameObject _keyboardSetupUI;
-    [SerializeField] private GameObject _voiceCalibrationUI;
+    [SerializeField] private GameObject _calibrationUI;
     [SerializeField] private GameObject _gameOverUI;
 
     private GameStateMachine _stateMachine;
@@ -61,7 +61,7 @@ public class GameController : MonoBehaviour
             _titleScreenUI,
             _mainMenuUI,
             _keyboardSetupUI,
-            _voiceCalibrationUI,
+            _calibrationUI,
             _gameOverUI
         );
     }

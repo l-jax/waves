@@ -27,6 +27,7 @@ public class CalibrationRecorder
         _duration = duration;
         _elapsedTime = 0f;
         _accumulatedVolume = 0f;
+        _maxVolume = 0f;
         _sampleCount = 0;
         _isRecording = true;
     }

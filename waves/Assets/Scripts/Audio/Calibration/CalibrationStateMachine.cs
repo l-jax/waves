@@ -3,29 +3,28 @@ using System.Collections.Generic;
 
 public class CalibrationStateMachine
 {
+    public CalibrationStep CurrentStep => _currentStep;
+    public bool CanGoBack => _stepHistory.Count > 0;
+    public event Action<CalibrationStep, CalibrationStep> StepChanged;
     private CalibrationStep _currentStep;
     private readonly Stack<CalibrationStep> _stepHistory = new();
     
-    public CalibrationStep CurrentStep => _currentStep;
-    public bool CanGoBack => _stepHistory.Count > 0;
-    public bool IsInRecordingStep => IsRecordingStep(_currentStep);
-    
-    public event Action<CalibrationStep, CalibrationStep> StepChanged;
-    
-    public CalibrationStateMachine(CalibrationStep initialStep = CalibrationStep.Welcome)
+    public CalibrationStateMachine(CalibrationStep initialStep)
     {
         _currentStep = initialStep;
     }
     
-    public void TransitionTo(CalibrationStep nextStep, bool trackHistory = true)
+    public void TransitionTo(CalibrationStep nextStep)
     {
-        var previousStep = _currentStep;
-        
-        if (trackHistory && _currentStep != nextStep)
+        CalibrationStep previousStep = _currentStep;
+        if (_currentStep == nextStep) return;
+
+        if (!CanTransitionTo(nextStep))
         {
-            _stepHistory.Push(_currentStep);
+            throw new InvalidOperationException($"Cannot transition from {_currentStep} to {nextStep}");
         }
         
+        _stepHistory.Push(_currentStep);
         _currentStep = nextStep;
         StepChanged?.Invoke(previousStep, nextStep);
     }
@@ -36,38 +35,24 @@ public class CalibrationStateMachine
         {
             throw new InvalidOperationException("Cannot go back - no history available");
         }
+
+        CalibrationStep previousStep = _stepHistory.Pop();
+        CalibrationStep currentStep = _currentStep;
         
-        var previousStep = _stepHistory.Pop();
-        var currentStep = _currentStep;
         _currentStep = previousStep;
-        
         StepChanged?.Invoke(currentStep, previousStep);
         return previousStep;
     }
     
-    public CalibrationStep GetNextStep()
+    public bool CanTransitionTo(CalibrationStep nextStep)
     {
         return _currentStep switch
         {
-            CalibrationStep.Welcome => CalibrationStep.CalibrateSilence,
-            CalibrationStep.CalibrateSilence => CalibrationStep.CalibrateQuiet,
-            CalibrationStep.CalibrateQuiet => CalibrationStep.CalibrateLoud,
-            CalibrationStep.CalibrateLoud => CalibrationStep.Complete,
-            CalibrationStep.Complete => CalibrationStep.Complete, // Terminal state
-            _ => throw new ArgumentOutOfRangeException()
+            CalibrationStep.Welcome => nextStep == CalibrationStep.CalibrateSilence,
+            CalibrationStep.CalibrateSilence => nextStep == CalibrationStep.CalibrateQuiet,
+            CalibrationStep.CalibrateQuiet => nextStep == CalibrationStep.CalibrateLoud,
+            CalibrationStep.CalibrateLoud => nextStep == CalibrationStep.Complete,
+            _ => false
         };
-    }
-    
-    public void Reset()
-    {
-        _stepHistory.Clear();
-        _currentStep = CalibrationStep.Welcome;
-    }
-    
-    private static bool IsRecordingStep(CalibrationStep step)
-    {
-        return step is CalibrationStep.CalibrateSilence 
-                    or CalibrationStep.CalibrateQuiet 
-                    or CalibrationStep.CalibrateLoud;
     }
 }

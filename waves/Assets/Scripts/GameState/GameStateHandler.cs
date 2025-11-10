@@ -87,7 +87,7 @@ public class VoiceCalibrationHandler : IGameStateHandler
 {
     public void OnEnter(GameContext context)
     {
-        context.VoiceCalibrationUI.SetActive(true);
+        context.CalibrationUI.SetActive(true);
         context.PaddleController.SetControlSystem(ControlSystem.Voice);
         // start menu music
     }
@@ -99,8 +99,8 @@ public class VoiceCalibrationHandler : IGameStateHandler
 
     public void OnExit(GameContext context)
     {
-        context.VoiceCalibrationUI.SetActive(false);
-        // pause menu music
+        context.CalibrationUI.SetActive(false);
+        // pause menu music     
     }
 }
 

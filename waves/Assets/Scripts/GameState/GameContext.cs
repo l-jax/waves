@@ -15,7 +15,7 @@ public class GameContext
     public readonly GameObject TitleScreenUI;
     public readonly GameObject MainMenuUI;
     public readonly GameObject KeyboardSetupUI;
-    public readonly GameObject VoiceCalibrationUI;
+    public readonly GameObject CalibrationUI;
     public readonly GameObject GameOverUI;
 
     public GameContext(
@@ -26,7 +26,7 @@ public class GameContext
         GameObject titleScreenUI,
         GameObject mainMenuUI,
         GameObject keyboardSetupUI,
-        GameObject voiceCalibrationUI,
+        GameObject calibrationUI,
         GameObject gameOverUI
     ) {
         StateMachine = stateMachine;
@@ -36,7 +36,7 @@ public class GameContext
         TitleScreenUI = titleScreenUI;
         MainMenuUI = mainMenuUI;
         KeyboardSetupUI = keyboardSetupUI;
-        VoiceCalibrationUI = voiceCalibrationUI;
+        CalibrationUI = calibrationUI;
         GameOverUI = gameOverUI;
     }
 }
