@@ -32,6 +32,11 @@ public class GameController : MonoBehaviour
         handler.OnUpdate(_context);
     }
 
+    public void StartGame()
+    {
+        _stateMachine.TransitionTo(GameState.Playing);
+    }
+
     private void InitializeStateMachine()
     {
         _stateMachine = new GameStateMachine(GameState.TitleScreen);

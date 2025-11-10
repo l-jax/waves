@@ -22,11 +22,14 @@ public class CalibrationContext
     public readonly Func<float> GetCurrentVolume;
     
     public Action<CalibrationStep> TransitionToStep { get; set; }
+
+    public Action StartGame { get; set; }
     
     public float DeltaTime { get; set; }
 
     public CalibrationContext(
-        CalibrationStateMachine stateMachine,
+        GameController gameController,
+        CalibrationStateMachine calibrationStateMachine,
         Tracker tracker,
         GameObject calibrationPanel,
         CalibrationRecorder recorder,
@@ -55,7 +58,9 @@ public class CalibrationContext
 
         GetCurrentVolume = () => tracker.GetCurrentVolume();
 
-        TransitionToStep = step => stateMachine.TransitionTo(step);
+        TransitionToStep = step => calibrationStateMachine.TransitionTo(step);
+
+        StartGame = () => gameController.StartGame();
 
         Data = new CalibrationData();
     }

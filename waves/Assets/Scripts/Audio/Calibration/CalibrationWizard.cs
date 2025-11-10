@@ -12,6 +12,7 @@ public class CalibrationWizard : MonoBehaviour
     [SerializeField] private UnityEngine.UI.Button _skipButton;
     [SerializeField] private UnityEngine.UI.Button _backButton;
     [SerializeField] private Tracker _tracker;
+    [SerializeField] private GameController _gameController;
     
     private CalibrationStateMachine _stateMachine;
     private Dictionary<CalibrationStep, ICalibrationStepHandler> _stepHandlers;
@@ -77,6 +78,7 @@ public class CalibrationWizard : MonoBehaviour
     private void InitializeContext()
     {
         _context = new CalibrationContext(
+            _gameController,
             _stateMachine,
             _tracker,
             _calibrationPanel,

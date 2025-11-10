@@ -9,6 +9,7 @@ public abstract class RecordingCalibrationStepHandler : ICalibrationStepHandler
 
     public void OnEnter(CalibrationContext context)
     {
+        _isComplete = false;
         StepConfig stepConfig = StepConfig();
         context.SetInstructionText(stepConfig.InstructionText);
         context.SetButtonText(stepConfig.ButtonText);
@@ -68,10 +69,10 @@ public abstract class RecordingCalibrationStepHandler : ICalibrationStepHandler
 
     public void OnExit(CalibrationContext context)
     {
-        if (context.Recorder.IsRecording)
-        {
-            context.Recorder.StopRecording();
-        }
+        _isComplete = false;
+        if (!context.Recorder.IsRecording) return;
+        
+        context.Recorder.StopRecording();
     }
 
     public bool CanSkip => true;

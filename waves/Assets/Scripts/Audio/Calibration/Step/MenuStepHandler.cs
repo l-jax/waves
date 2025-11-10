@@ -51,6 +51,7 @@ public class CompleteStepHandler : ICalibrationStepHandler
     public void OnNextClicked(CalibrationContext context)
     {
         context.CalibrationPanel.SetActive(false);
+        context.StartGame();
     }
     
     public bool CanSkip => false;
