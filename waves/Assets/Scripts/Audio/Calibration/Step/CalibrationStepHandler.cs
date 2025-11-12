@@ -1,12 +1,3 @@
-public enum CalibrationStep
-{
-    Welcome,
-    CalibrateSilence,
-    CalibrateQuiet,
-    CalibrateLoud,
-    Complete
-}
-
 public interface ICalibrationStepHandler
 {
     void OnEnter(CalibrationContext context);

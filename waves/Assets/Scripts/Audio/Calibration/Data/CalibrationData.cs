@@ -1,29 +1,33 @@
 using System;
-using UnityEngine;
 
 [Serializable]
 public class CalibrationData
 {
-    public float BackgroundVolume;
-    public float MinVolume;
-    public float MaxVolume;
+    public float MaxRecordedBackground;
+    public float AvgRecordedQuiet;
+    public float AvgRecordedLoud;
 
-    public bool IsValid() =>
-        BackgroundVolume >= 0 &&
-        MinVolume > BackgroundVolume &&
-        MaxVolume > MinVolume;
+    private const float _defaultMaxRecordedBackground = 0.002f;
+    private const float _defaultMidVolume = 0.05f;
+    private const float _safetyMargin = 1.2f;
 
-    public void ApplyDefaults()
+    public float GetBackgroundVolume()
     {
-        BackgroundVolume = 0.002f;
-        MinVolume = 0.05f;
-        MaxVolume = 0.2f;
+        if (MaxRecordedBackground <= 0)
+        {
+            return _defaultMaxRecordedBackground;
+        }
+
+        return MaxRecordedBackground * _safetyMargin;
     }
-    
-    public void Sanitize()
+
+    public float GetMidVolume()
     {
-        BackgroundVolume = Mathf.Max(0f, BackgroundVolume);
-        MinVolume = Mathf.Max(BackgroundVolume * 1.5f, MinVolume);
-        MaxVolume = Mathf.Max(MinVolume * 1.5f, MaxVolume);
+        if (AvgRecordedQuiet <= MaxRecordedBackground || AvgRecordedLoud <= AvgRecordedQuiet)
+        {
+            return _defaultMidVolume;
+        }
+
+        return (AvgRecordedQuiet + AvgRecordedLoud) / 2f;
     }
 }

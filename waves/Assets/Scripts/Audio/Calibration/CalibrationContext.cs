@@ -8,7 +8,6 @@ public class CalibrationContext
     public CalibrationData Data { get; set; }
 
     public readonly float RecordingDuration = 2.0f;
-    public readonly Tracker Tracker;
     public readonly GameObject CalibrationPanel;
     public readonly CalibrationRecorder Recorder;
     public readonly ICalibrationPersistence Persistence;
@@ -22,6 +21,7 @@ public class CalibrationContext
     public readonly Func<float> GetCurrentVolume;
     
     public Action<CalibrationStep> TransitionToStep { get; set; }
+    public Action<CalibrationData> ApplyCalibrationData { get; set; }
 
     public Action StartGame { get; set; }
     
@@ -30,7 +30,7 @@ public class CalibrationContext
     public CalibrationContext(
         GameController gameController,
         CalibrationStateMachine calibrationStateMachine,
-        Tracker tracker,
+        PaddleController paddleController,
         GameObject calibrationPanel,
         CalibrationRecorder recorder,
         ICalibrationPersistence persistence,
@@ -38,7 +38,6 @@ public class CalibrationContext
         TextMeshProUGUI instructionText,
         Button button
     ) {
-        Tracker = tracker;
         CalibrationPanel = calibrationPanel;
         Recorder = recorder;
         Persistence = persistence;
@@ -56,7 +55,9 @@ public class CalibrationContext
             volumeMeter.value = Mathf.Lerp(volumeMeter.value, volume * 1000f, 0.3f);
         };
 
-        GetCurrentVolume = () => tracker.GetCurrentVolume();
+        GetCurrentVolume = () => paddleController.CurrentVolume;
+
+        ApplyCalibrationData = data => paddleController.ApplyCalibrationData(data);
 
         TransitionToStep = step => calibrationStateMachine.TransitionTo(step);
 

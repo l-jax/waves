@@ -11,18 +11,16 @@ public class CalibrationWizard : MonoBehaviour
     [SerializeField] private UnityEngine.UI.Button _nextButton;
     [SerializeField] private UnityEngine.UI.Button _skipButton;
     [SerializeField] private UnityEngine.UI.Button _backButton;
-    [SerializeField] private Tracker _tracker;
+    [SerializeField] private PaddleController _paddleController;
     [SerializeField] private GameController _gameController;
     
     private CalibrationStateMachine _stateMachine;
     private Dictionary<CalibrationStep, ICalibrationStepHandler> _stepHandlers;
     private CalibrationContext _context;
-    
-    private TextMeshProUGUI _nextButtonText;
+
 
     void Awake()
     {
-        _nextButtonText = _nextButton.GetComponentInChildren<TextMeshProUGUI>();
         InitializeStateMachine();
         InitializeContext();
         InitializeStepHandlers();
@@ -80,7 +78,7 @@ public class CalibrationWizard : MonoBehaviour
         _context = new CalibrationContext(
             _gameController,
             _stateMachine,
-            _tracker,
+            _paddleController,
             _calibrationPanel,
             new CalibrationRecorder(),
             new PlayerPrefsCalibrationPersistence(),

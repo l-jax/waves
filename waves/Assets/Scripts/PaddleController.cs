@@ -2,8 +2,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(BoxCollider))]
+[RequireComponent(typeof(AudioSource))]
 public class PaddleController : MonoBehaviour
 {
+    public float CurrentVolume => _microphoneAdaptor == null ? 0f : _microphoneAdaptor.GetCurrentVolume();
+
     [Header("Movement Settings")]
     [Tooltip("Control with keyboard or voice?")]
     [SerializeField]
@@ -21,17 +24,13 @@ public class PaddleController : MonoBehaviour
     [SerializeField]
     private float _speed = 10f;
 
-    private Tracker _tracker;
+    private MicrophoneAdaptor _microphoneAdaptor;
 
     private bool _isMovementEnabled = true;
 
     void Start()
     {
-        _tracker = GameObject.Find("Microphone").GetComponent<Tracker>();
-        if (_tracker == null)
-        {
-            Debug.LogError("No Tracker found in the scene");
-        }
+        _microphoneAdaptor = new MicrophoneAdaptor(GetComponent<AudioSource>(), new CalibrationData());
     }
 
     void Update()
@@ -44,6 +43,7 @@ public class PaddleController : MonoBehaviour
                 HandleKeyboardInput();
                 break;
             case ControlSystem.Voice:
+                _microphoneAdaptor.Update();
                 HandleVoiceInput();
                 break;
         }
@@ -65,6 +65,11 @@ public class PaddleController : MonoBehaviour
         _isMovementEnabled = false;
     }
 
+    public void ApplyCalibrationData(CalibrationData calibrationData)
+    {
+        _microphoneAdaptor = new MicrophoneAdaptor(GetComponent<AudioSource>(), calibrationData);
+    }
+
     private void HandleKeyboardInput()
     {
         Keyboard keyboard = Keyboard.current;
@@ -74,8 +79,8 @@ public class PaddleController : MonoBehaviour
 
     private void HandleVoiceInput()
     {
-        if (_tracker == null) return;
-        Direction direction = _tracker.CurrentDirection;
+        if (_microphoneAdaptor == null) return;
+        Direction direction = _microphoneAdaptor.GetDirection();
         switch (direction)
         {
             case Direction.Left:

@@ -84,7 +84,7 @@ public class SilenceCalibrationStepHandler : RecordingCalibrationStepHandler
 
     protected override void SaveResult(CalibrationContext context, RecordingResult result)
     {
-        context.Data.BackgroundVolume = result.MaxVolume;
+        context.Data.MaxRecordedBackground = result.MaxVolume;
     }
 
     protected override CalibrationStep GetNextStep() => CalibrationStep.CalibrateQuiet;
@@ -96,7 +96,7 @@ public class QuietCalibrationStepHandler : RecordingCalibrationStepHandler
 
     protected override void SaveResult(CalibrationContext context, RecordingResult result)
     {
-        context.Data.MinVolume = result.MaxVolume;
+        context.Data.AvgRecordedQuiet = result.AverageVolume;
     }
 
     protected override CalibrationStep GetNextStep() => CalibrationStep.CalibrateLoud;
@@ -108,7 +108,7 @@ public class LoudCalibrationStepHandler : RecordingCalibrationStepHandler
 
     protected override void SaveResult(CalibrationContext context, RecordingResult result)
     {
-        context.Data.MaxVolume = result.MaxVolume;
+        context.Data.AvgRecordedLoud = result.AverageVolume;
     }
 
     protected override CalibrationStep GetNextStep() => CalibrationStep.Complete;

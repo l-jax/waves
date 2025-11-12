@@ -1,26 +1,22 @@
 using UnityEngine;
 
-public class Input
+public class MicrophoneInput
 {
+    private const int _sampleWindow = 256;
     private readonly AudioSource _audioSource;
-    private readonly MicrophoneSettings _settings;
     private readonly float[] _sampleBuffer;
     private AudioClip _microphoneClip;
     private string _currentDevice;
 
-    public Input(AudioSource audioSource, MicrophoneSettings settings)
+    public MicrophoneInput(AudioSource audioSource)
     {
         _audioSource = audioSource;
-        _settings = settings;
-        _sampleBuffer = new float[settings.SampleWindow];
+        _sampleBuffer = new float[_sampleWindow];
     }
 
     public void Initialize()
     {
-        _currentDevice = string.IsNullOrEmpty(_settings.DeviceName)
-            ? Microphone.devices[0]
-            : _settings.DeviceName;
-
+        _currentDevice = Microphone.devices[0];
         StartRecording();
     }
 
@@ -61,16 +57,16 @@ public class Input
         if (_microphoneClip == null) return 0f;
 
         int micPosition = Microphone.GetPosition(_currentDevice);
-        if (micPosition < _settings.SampleWindow) return 0f;
+        if (micPosition < _sampleWindow) return 0f;
 
-        _microphoneClip.GetData(_sampleBuffer, micPosition - _settings.SampleWindow);
+        _microphoneClip.GetData(_sampleBuffer, micPosition - _sampleWindow);
 
         float sum = 0f;
-        for (int i = 0; i < _settings.SampleWindow; i++)
+        for (int i = 0; i < _sampleWindow; i++)
         {
             sum += Mathf.Abs(_sampleBuffer[i]);
         }
 
-        return sum / _settings.SampleWindow;
+        return sum / _sampleWindow;
     }
 }

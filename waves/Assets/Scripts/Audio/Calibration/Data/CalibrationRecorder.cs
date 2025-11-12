@@ -14,8 +14,7 @@ public class CalibrationRecorder
     public bool IsRecording => _isRecording;
     public bool IsComplete => _isRecording && _elapsedTime >= _duration;
     public float ElapsedTime => _elapsedTime;
-    public float Progress => _duration > 0 ? Mathf.Clamp01(_elapsedTime / _duration) : 0f;
-    
+
     public void StartRecording(Func<float> volumeProvider, float duration)
     {
         if (_isRecording)
@@ -54,9 +53,6 @@ public class CalibrationRecorder
         {
             AverageVolume = _sampleCount > 0 ? _accumulatedVolume / _sampleCount : 0f,
             MaxVolume = _maxVolume,
-            SampleCount = _sampleCount,
-            Duration = _elapsedTime,
-            WasCompleted = IsComplete
         };
     }
 }
@@ -65,7 +61,4 @@ public struct RecordingResult
 {
     public float AverageVolume;
     public float MaxVolume;
-    public int SampleCount;
-    public float Duration;
-    public bool WasCompleted;
 }

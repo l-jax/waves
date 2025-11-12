@@ -18,29 +18,20 @@ public class WelcomeStepHandler : ICalibrationStepHandler
         if (context.Persistence.HasSavedData())
         {
             context.Data = context.Persistence.Load();
-            context.Data.Sanitize();
-
-        } else
-        {
-            context.Data.ApplyDefaults();
         }
+
         context.TransitionToStep(CalibrationStep.Complete);
     }
+    
+    public bool CanSkip => false;
 }
 
 public class CompleteStepHandler : ICalibrationStepHandler
 {
     public void OnEnter(CalibrationContext context)
     {
-        context.Data.Sanitize();
-
-        if (!context.Data.IsValid())
-        {
-            context.Data.ApplyDefaults();
-        }
-
         context.Persistence.Save(context.Data);
-        context.Tracker.ApplyCalibration(context.Data);
+        context.ApplyCalibrationData(context.Data);
 
         context.SetInstructionText(CalibrationStepConfig.CompleteStep.InstructionText);
         context.SetButtonText(CalibrationStepConfig.CompleteStep.ButtonText);
