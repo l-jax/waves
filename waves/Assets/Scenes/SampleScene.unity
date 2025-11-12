@@ -1672,7 +1672,7 @@ MonoBehaviour:
   _nextButton: {fileID: 37187863}
   _skipButton: {fileID: 1985404785}
   _backButton: {fileID: 463357171}
-  _tracker: {fileID: 563289977}
+  _paddleController: {fileID: 1469887080}
   _gameController: {fileID: 364081573}
 --- !u!4 &364642439 stripped
 Transform:
@@ -3114,14 +3114,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eabd66360c364565a52891d25d9fd92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tracker
-  _controlSettings:
-    SilenceThreshold: 0.005
-    MidpointLoudness: 0.05
-    MaxLoudness: 0.1
-  _microphoneSettings:
-    DeviceName: 
-    SampleWindow: 256
-  _currentVolume: 0
 --- !u!4 &577152334 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6780897424503097281, guid: a3a02dab54f8d4c8f9227b91bc85ab62, type: 3}
