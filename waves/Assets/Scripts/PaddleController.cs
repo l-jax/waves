@@ -7,6 +7,10 @@ public class PaddleController : MonoBehaviour
 {
     public float CurrentVolume => _microphoneAdaptor == null ? 0f : _microphoneAdaptor.GetCurrentVolume();
 
+
+    [SerializeField]
+    private LineRenderer _volumeVisualizer;
+
     [Header("Movement Settings")]
     [Tooltip("Control with keyboard or voice?")]
     [SerializeField]
@@ -30,7 +34,11 @@ public class PaddleController : MonoBehaviour
 
     void Start()
     {
-        _microphoneAdaptor = new MicrophoneAdaptor(GetComponent<AudioSource>(), new CalibrationData());
+        _microphoneAdaptor = new MicrophoneAdaptor(
+            _volumeVisualizer,
+            GetComponent<AudioSource>(),
+            new CalibrationData()
+        );
     }
 
     void Update()
@@ -67,7 +75,7 @@ public class PaddleController : MonoBehaviour
 
     public void ApplyCalibrationData(CalibrationData calibrationData)
     {
-        _microphoneAdaptor = new MicrophoneAdaptor(GetComponent<AudioSource>(), calibrationData);
+        _microphoneAdaptor = new MicrophoneAdaptor(_volumeVisualizer, GetComponent<AudioSource>(), calibrationData);
     }
 
     private void HandleKeyboardInput()

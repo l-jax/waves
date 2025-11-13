@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class MicrophoneInput
 {
+    public float[] SampleBuffer => _sampleBuffer;
     private const int _sampleWindow = 256;
     private readonly AudioSource _audioSource;
     private readonly float[] _sampleBuffer;
