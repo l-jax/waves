@@ -161,6 +161,6 @@ MonoBehaviour:
   _lineColor: {r: 0.1, g: 0.8, b: 1, a: 0.7}
   _startWidth: 0.1
   _endWidth: 0.1
-  _lineMaterial: {fileID: 2100000, guid: 51040c805ce1b4ca5b37a40a1db2013f, type: 2}
+  _lineMaterial: {fileID: 2100000, guid: 0cbbd54aaef1246769fbc2e51cc2e79b, type: 2}
   _waveformStartX: -7
   _waveformWidth: 14
