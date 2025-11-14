@@ -5,11 +5,9 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(AudioSource))]
 public class PaddleController : MonoBehaviour
 {
-    public float CurrentVolume => _microphoneAdaptor == null ? 0f : _microphoneAdaptor.GetCurrentVolume();
+    public float CurrentVolume => _microphoneAdaptor == null ? 0f : _microphoneAdaptor.CurrentVolume;
 
-
-    [SerializeField]
-    private LineRenderer _volumeVisualizer;
+    [SerializeField] private GameObject _waveformPrefab;
 
     [Header("Movement Settings")]
     [Tooltip("Control with keyboard or voice?")]
@@ -31,14 +29,16 @@ public class PaddleController : MonoBehaviour
     private MicrophoneAdaptor _microphoneAdaptor;
 
     private bool _isMovementEnabled = true;
+    private WaveformVisualizer _waveformVisualizer;
 
     void Start()
     {
-        _microphoneAdaptor = new MicrophoneAdaptor(
-            _volumeVisualizer,
-            GetComponent<AudioSource>(),
-            new CalibrationData()
-        );
+        _microphoneAdaptor = new MicrophoneAdaptor(GetComponent<AudioSource>(),new CalibrationData());
+        if (_waveformPrefab != null)
+        {
+            GameObject visualizerObj = Instantiate(_waveformPrefab);
+            _waveformVisualizer = visualizerObj.GetComponent<WaveformVisualizer>();
+        }
     }
 
     void Update()
@@ -56,6 +56,11 @@ public class PaddleController : MonoBehaviour
                 break;
         }
         ClampPosition();
+
+        if (_waveformVisualizer != null)
+        {
+            _waveformVisualizer.UpdateWaveform(_microphoneAdaptor.SampleBuffer);
+        }
     }
 
     public void SetControlSystem(ControlSystem controlSystem)
@@ -75,7 +80,7 @@ public class PaddleController : MonoBehaviour
 
     public void ApplyCalibrationData(CalibrationData calibrationData)
     {
-        _microphoneAdaptor = new MicrophoneAdaptor(_volumeVisualizer, GetComponent<AudioSource>(), calibrationData);
+        _microphoneAdaptor = new MicrophoneAdaptor(GetComponent<AudioSource>(), calibrationData);
     }
 
     private void HandleKeyboardInput()
