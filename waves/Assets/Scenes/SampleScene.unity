@@ -1816,7 +1816,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 2
-  m_Color: {r: 0.7107568, g: 0, b: 1, a: 1}
+  m_Color: {r: 0.7735849, g: 0.729693, b: 0.52910286, a: 1}
   m_Intensity: 500
   m_Range: 20
   m_SpotAngle: 30
@@ -5151,7 +5151,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 2
-  m_Color: {r: 0, g: 0.54118204, b: 1, a: 1}
+  m_Color: {r: 0.4488697, g: 0.6819167, b: 0.7264151, a: 1}
   m_Intensity: 500
   m_Range: 20
   m_SpotAngle: 30
@@ -6432,7 +6432,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1197108567
 Transform:
   m_ObjectHideFlags: 0

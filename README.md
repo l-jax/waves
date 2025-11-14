@@ -23,7 +23,7 @@ a repeating pattern of motion, energy, or sound
 - [x] implement basic breakout clone
 - [x] add microphone input with volume and pitch detection
 - [ ] add lives and game over
-- [ ] calibrate paddle controls
+- [x] calibrate paddle controls
 - [x] create paddle, brick, and ball assets
 - [ ] create title and game over screens
 - [ ] create 2D assets for screens and HUD
