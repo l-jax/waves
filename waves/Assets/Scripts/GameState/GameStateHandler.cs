@@ -63,7 +63,7 @@ public class KeyboardSetupHandler : IGameStateHandler
     public void OnEnter(GameContext context)
     {
         context.KeyboardSetupUI.SetActive(true);
-        context.PaddleController.SetControlSystem(ControlSystem.Keyboard);
+        context.SetControlSystem(ControlSystem.Keyboard);
         context.KeyboardSetupUI.GetComponentInChildren<Button>().onClick.AddListener(() => {
             context.StateMachine.TransitionTo(GameState.Playing);
         });
@@ -88,7 +88,7 @@ public class VoiceCalibrationHandler : IGameStateHandler
     public void OnEnter(GameContext context)
     {
         context.CalibrationUI.SetActive(true);
-        context.PaddleController.SetControlSystem(ControlSystem.Voice);
+        context.SetControlSystem(ControlSystem.Voice);
         // start menu music
     }
 
@@ -109,8 +109,7 @@ public class PlayHandler : IGameStateHandler
 
     public void OnEnter(GameContext context)
     {
-        context.PaddleController.EnableMovement();
-        context.BallController.EnableMovement();
+        context.EnableMovement(true);
         // start game music
     }
 
@@ -121,8 +120,7 @@ public class PlayHandler : IGameStateHandler
 
     public void OnExit(GameContext context)
     {
-        context.PaddleController.DisableMovement();
-        context.BallController.DisableMovement();
+        context.EnableMovement(false);
         // pause game music
     }
 }
@@ -131,8 +129,7 @@ public class GameOverHandler : IGameStateHandler
 {
     public void OnEnter(GameContext context)
     {
-        // conditional effect
-        context.EffectsPlayer.PlayEffect(Effect.Win, Vector3.zero, Quaternion.identity);
+        context.EndGame();
         
         context.GameOverUI.SetActive(true);
         context.GameOverUI.GetComponentInChildren<Button>().onClick.AddListener(() => {

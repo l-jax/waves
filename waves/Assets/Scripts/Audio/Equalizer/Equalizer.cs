@@ -42,12 +42,23 @@ public class Equalizer : MonoBehaviour
                 _tracks[i][j] = _backgroundModel.transform.GetChild(i + 1).GetChild(j).gameObject;
             }
         }
-
-        //StartCoroutine(UpdateBarsCoroutine());
-        StartCoroutine(DisplayMicrophoneDataCoroutine());
     }
 
-    public IEnumerator UpdateBarsCoroutine()
+    public void SetControlSystem(ControlSystem controlSystem)
+    {
+        StopAllCoroutines();
+        switch (controlSystem)
+        {
+            case ControlSystem.Keyboard:
+                StartCoroutine(DisplayEightTrackDataCoroutine());
+                break;
+            case ControlSystem.Voice:
+                StartCoroutine(DisplayMicrophoneDataCoroutine());
+                break;
+        }
+    }
+
+    private IEnumerator DisplayEightTrackDataCoroutine()
     {
         while (true)
         {
@@ -65,7 +76,7 @@ public class Equalizer : MonoBehaviour
         }
     }
 
-    public IEnumerator DisplayMicrophoneDataCoroutine()
+    private IEnumerator DisplayMicrophoneDataCoroutine()
     {
         while (true)
         {

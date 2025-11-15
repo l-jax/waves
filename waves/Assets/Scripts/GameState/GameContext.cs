@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public enum ControlSystem
@@ -9,20 +10,22 @@ public enum ControlSystem
 public class GameContext
 {
     public readonly GameStateMachine StateMachine;
-    public readonly PaddleController PaddleController;
-    public readonly BallController BallController;
-    public readonly EffectsPlayer EffectsPlayer;
     public readonly GameObject TitleScreenUI;
     public readonly GameObject MainMenuUI;
     public readonly GameObject KeyboardSetupUI;
     public readonly GameObject CalibrationUI;
     public readonly GameObject GameOverUI;
 
+    public readonly Action<ControlSystem> SetControlSystem;
+    public readonly Action<bool> EnableMovement;
+    public readonly Action EndGame;
+
     public GameContext(
         GameStateMachine stateMachine,
         PaddleController paddleController,
         BallController ballController,
         EffectsPlayer effectsPlayer,
+        Equalizer equalizer,
         GameObject titleScreenUI,
         GameObject mainMenuUI,
         GameObject keyboardSetupUI,
@@ -30,13 +33,31 @@ public class GameContext
         GameObject gameOverUI
     ) {
         StateMachine = stateMachine;
-        PaddleController = paddleController;
-        BallController = ballController;
-        EffectsPlayer = effectsPlayer;
         TitleScreenUI = titleScreenUI;
         MainMenuUI = mainMenuUI;
         KeyboardSetupUI = keyboardSetupUI;
         CalibrationUI = calibrationUI;
         GameOverUI = gameOverUI;
+
+        SetControlSystem = controlSystem => {
+            paddleController.SetControlSystem(controlSystem);
+            equalizer.SetControlSystem(controlSystem);
+        };
+
+        EnableMovement = enable => {
+            if (enable)
+            {
+                paddleController.EnableMovement();
+                ballController.EnableMovement();
+            }
+            else
+            {
+                paddleController.DisableMovement();
+                ballController.DisableMovement();
+            }
+        };
+
+        // TODO: make it possible to lose
+        EndGame = () => effectsPlayer.PlayEffect(Effect.Win, Vector3.zero, Quaternion.identity);
     }
 }
