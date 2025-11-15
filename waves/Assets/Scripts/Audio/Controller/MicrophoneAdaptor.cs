@@ -65,14 +65,7 @@ public class MicrophoneAdaptor : MonoBehaviour
     {
         float[] eightBandData = new float[8];
         int[] bandLimits = new int[] {
-            2,     // Sub Bass/Bass (0-43 Hz)
-            4,     // Mid Bass (43-86 Hz)
-            8,     // Low Midrange (86-172 Hz)
-            16,    // Midrange (172-344 Hz)
-            32,    // High Midrange (344-689 Hz)
-            64,    // Low Treble (689-1378 Hz)
-            128,   // Mid Treble (1378-2756 Hz)
-            256,   // High Treble/Air (2756-5512 Hz)
+            2, 4, 8, 16, 32, 64, 128, 256
         };
 
         for (int i = 0; i < 8; i++)
@@ -88,11 +81,12 @@ public class MicrophoneAdaptor : MonoBehaviour
                 averagePower += spectrum[j];
             }
 
-            // Calculate the average power and scale it
-            // We use logarithm to compress the wide dynamic range of audio power.
             averagePower /= bandWidth;
-            eightBandData[i] = Mathf.Clamp(averagePower * 10f, 0f, 1f); // Simple scaling/clamping
+            float scaledPower = averagePower * 50f; // Multiply for visibility
+            float logPower = Mathf.Log10(scaledPower + 1f); // Add 1 to avoid Log(0)
+            eightBandData[i] = Mathf.Clamp(logPower, 0f, 1f);
         }
+        
         return eightBandData;
     }
 }

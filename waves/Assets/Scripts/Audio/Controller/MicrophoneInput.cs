@@ -48,7 +48,6 @@ public class MicrophoneInput
         _audioSource.loop = true;
         _audioSource.mute = true;
 
-        // Wait for microphone to start
         while (!(Microphone.GetPosition(_currentDevice) > 0)) { }
         _audioSource.Play();
     }
@@ -73,8 +72,19 @@ public class MicrophoneInput
 
     public float[] GetSpectrumData()
     {
-        float[] spectrum = new float[_sampleWindow];
-        AudioListener.GetSpectrumData(spectrum, 0, FFTWindow.Blackman);
-        return spectrum;
+        if (_microphoneClip == null) return new float[_sampleWindow];
+
+        int micPosition = Microphone.GetPosition(_currentDevice);
+        if (micPosition < _sampleWindow) return new float[_sampleWindow];
+
+        float[] samples = new float[_sampleWindow];
+        _microphoneClip.GetData(samples, micPosition - _sampleWindow);
+
+        for (int i = 0; i < samples.Length; i++)
+        {
+            samples[i] = Mathf.Abs(samples[i]);
+        }
+
+        return samples;
     }
 }
