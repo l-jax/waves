@@ -70,4 +70,11 @@ public class MicrophoneInput
 
         return sum / _sampleWindow;
     }
+
+    public float[] GetSpectrumData()
+    {
+        float[] spectrum = new float[_sampleWindow];
+        AudioListener.GetSpectrumData(spectrum, 0, FFTWindow.Blackman);
+        return spectrum;
+    }
 }

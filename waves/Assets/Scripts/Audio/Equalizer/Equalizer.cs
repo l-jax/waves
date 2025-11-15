@@ -5,9 +5,14 @@ using System.Collections;
 public class Equalizer : MonoBehaviour
 {
     [SerializeField] private GameObject _backgroundModel;
-    
+    private MicrophoneAdaptor _microphoneAdaptor;
     private GameObject[][] _tracks;
     private EightTrackPlayer _eightTrackPlayer;
+
+    public void Awake()
+    {
+        _microphoneAdaptor = FindFirstObjectByType<MicrophoneAdaptor>();
+    }
 
     public void Start()
     {
@@ -72,6 +77,26 @@ public class Equalizer : MonoBehaviour
                 }
             }
             yield return new WaitForSeconds(1f);
+        }
+    }
+
+    public IEnumerator UpdateBarsEightBandCoroutine()
+    {
+        while (true)
+        {
+            float[] bandPowers = _microphoneAdaptor.GetEightBandSpectrum();
+            for (int i = 0; i < _tracks.Length; i++)
+            {
+                float bandPower = bandPowers[i];
+                int activeBlocks = Mathf.CeilToInt(bandPower * 11); 
+                activeBlocks = Mathf.Min(activeBlocks, 11);
+
+                for (int j = 0; j < _tracks[i].Length; j++)
+                {
+                    _tracks[i][j].SetActive(j <= activeBlocks);
+                }
+            }
+            yield return new WaitForSeconds(0.1f);
         }
     }
 }

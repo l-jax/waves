@@ -14,16 +14,19 @@ public class WaveformVisualizer : MonoBehaviour
     [SerializeField] private float _waveformStartX = -7f;
     [SerializeField] private float _waveformWidth = 14f;
 
+    private MicrophoneAdaptor _microphoneAdaptor;
     private LineRenderer _lineRenderer;
 
     void Awake()
     {
+        _microphoneAdaptor = FindFirstObjectByType<MicrophoneAdaptor>();
         _lineRenderer = GetComponent<LineRenderer>();
         SetupLineRenderer();
     }
 
-    public void UpdateWaveform(float[] samples)
+    public void Update()
     {
+        float[] samples = _microphoneAdaptor.SampleBuffer;
         _lineRenderer.positionCount = samples.Length;
         for (int i = 0; i < samples.Length; i++)
         {

@@ -7,8 +7,6 @@ public class PaddleController : MonoBehaviour
 {
     public float CurrentVolume => _microphoneAdaptor == null ? 0f : _microphoneAdaptor.CurrentVolume;
 
-    [SerializeField] private GameObject _waveformPrefab;
-
     [Header("Movement Settings")]
     [Tooltip("Control with keyboard or voice?")]
     [SerializeField]
@@ -26,19 +24,12 @@ public class PaddleController : MonoBehaviour
     [SerializeField]
     private float _speed = 10f;
 
+    private bool _isMovementEnabled = true;
     private MicrophoneAdaptor _microphoneAdaptor;
 
-    private bool _isMovementEnabled = true;
-    private WaveformVisualizer _waveformVisualizer;
-
-    void Start()
+    void Awake()
     {
-        _microphoneAdaptor = new MicrophoneAdaptor(GetComponent<AudioSource>(),new CalibrationData());
-        if (_waveformPrefab != null)
-        {
-            GameObject visualizerObj = Instantiate(_waveformPrefab);
-            _waveformVisualizer = visualizerObj.GetComponent<WaveformVisualizer>();
-        }
+        _microphoneAdaptor = FindFirstObjectByType<MicrophoneAdaptor>();
     }
 
     void Update()
@@ -56,11 +47,6 @@ public class PaddleController : MonoBehaviour
                 break;
         }
         ClampPosition();
-
-        if (_waveformVisualizer != null)
-        {
-            _waveformVisualizer.UpdateWaveform(_microphoneAdaptor.SampleBuffer);
-        }
     }
 
     public void SetControlSystem(ControlSystem controlSystem)
@@ -76,11 +62,6 @@ public class PaddleController : MonoBehaviour
     public void DisableMovement()
     {
         _isMovementEnabled = false;
-    }
-
-    public void ApplyCalibrationData(CalibrationData calibrationData)
-    {
-        _microphoneAdaptor = new MicrophoneAdaptor(GetComponent<AudioSource>(), calibrationData);
     }
 
     private void HandleKeyboardInput()

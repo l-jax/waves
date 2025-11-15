@@ -11,7 +11,7 @@ public class CalibrationWizard : MonoBehaviour
     [SerializeField] private UnityEngine.UI.Button _nextButton;
     [SerializeField] private UnityEngine.UI.Button _skipButton;
     [SerializeField] private UnityEngine.UI.Button _backButton;
-    [SerializeField] private PaddleController _paddleController;
+    [SerializeField] private MicrophoneAdaptor _microphoneAdaptor;
     [SerializeField] private GameController _gameController;
     
     private CalibrationStateMachine _stateMachine;
@@ -78,7 +78,7 @@ public class CalibrationWizard : MonoBehaviour
         _context = new CalibrationContext(
             _gameController,
             _stateMachine,
-            _paddleController,
+            _microphoneAdaptor,
             _calibrationPanel,
             new CalibrationRecorder(),
             new PlayerPrefsCalibrationPersistence(),

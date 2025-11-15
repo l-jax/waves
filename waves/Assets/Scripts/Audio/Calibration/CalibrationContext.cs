@@ -30,7 +30,7 @@ public class CalibrationContext
     public CalibrationContext(
         GameController gameController,
         CalibrationStateMachine calibrationStateMachine,
-        PaddleController paddleController,
+        MicrophoneAdaptor microphoneAdaptor,
         GameObject calibrationPanel,
         CalibrationRecorder recorder,
         ICalibrationPersistence persistence,
@@ -55,9 +55,9 @@ public class CalibrationContext
             volumeMeter.value = Mathf.Lerp(volumeMeter.value, volume * 1000f, 0.3f);
         };
 
-        GetCurrentVolume = () => paddleController.CurrentVolume;
+        GetCurrentVolume = () => microphoneAdaptor.CurrentVolume;
 
-        ApplyCalibrationData = data => paddleController.ApplyCalibrationData(data);
+        ApplyCalibrationData = data => microphoneAdaptor.SetVolumeThresholds(data.GetBackgroundVolume(), data.GetMidVolume());
 
         TransitionToStep = step => calibrationStateMachine.TransitionTo(step);
 
