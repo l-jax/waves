@@ -7112,6 +7112,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Equaliser
   _backgroundModel: {fileID: 1632730412}
+  _eightTrackSources:
+  - {fileID: 881901665}
+  - {fileID: 1784159707}
+  - {fileID: 723981273}
+  - {fileID: 726784645}
+  - {fileID: 1634201128}
+  - {fileID: 1624522052}
+  - {fileID: 841374221}
+  - {fileID: 983436380}
 --- !u!114 &1250290450
 MonoBehaviour:
   m_ObjectHideFlags: 0

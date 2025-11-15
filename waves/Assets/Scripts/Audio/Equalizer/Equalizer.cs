@@ -5,6 +5,7 @@ using System.Collections;
 public class Equalizer : MonoBehaviour
 {
     [SerializeField] private GameObject _backgroundModel;
+    [SerializeField] private AudioSource[] _eightTrackSources = new AudioSource[8];
     private MicrophoneAdaptor _microphoneAdaptor;
     private GameObject[][] _tracks;
     private EightTrackPlayer _eightTrackPlayer;
@@ -62,18 +63,56 @@ public class Equalizer : MonoBehaviour
     {
         while (true)
         {
-            int[] displayVolumes = _eightTrackPlayer.DisplayVolumes;
-            if (_tracks == null || _tracks.Length == 0) yield return null;
-
-            for (int i = 0; i < _tracks.Length; i++)
-            {
-                for (int j = 0; j < _tracks[i].Length; j++)
-                {
-                    _tracks[i][j].SetActive(j <= displayVolumes[i]);
-                }
-            }
-            yield return new WaitForSeconds(1f);
+            float[] bandPowers = GetEightTrackAmplitudes();
+            DisplayBars(bandPowers);
+            yield return new WaitForSeconds(0.1f);
         }
+    }
+
+    private float[] GetEightTrackAmplitudes()
+    {
+        float[] amplitudes = new float[8];
+        
+        for (int i = 0; i < 8; i++)
+        {
+            if (_eightTrackSources != null && i < _eightTrackSources.Length && _eightTrackSources[i] != null)
+            {
+                amplitudes[i] = GetAudioSourceAmplitude(_eightTrackSources[i]);
+            }
+            else
+            {
+                amplitudes[i] = 0f;
+            }
+        }
+        
+        return amplitudes;
+    }
+
+    private float GetAudioSourceAmplitude(AudioSource source)
+    {
+        if (source.clip == null || !source.isPlaying)
+        {
+            return 0f;
+        }
+
+        float[] samples = new float[256];
+        int samplePosition = source.timeSamples;
+        
+        if (samplePosition < 256)
+        {
+            return 0f;
+        }
+        
+        source.clip.GetData(samples, samplePosition - 256);
+
+        float sum = 0f;
+        for (int i = 0; i < samples.Length; i++)
+        {
+            sum += samples[i] * samples[i];
+        }
+
+        float rms = Mathf.Sqrt(sum / samples.Length);
+        return Mathf.Clamp01(rms * 5f);
     }
 
     private IEnumerator DisplayMicrophoneDataCoroutine()
@@ -81,38 +120,42 @@ public class Equalizer : MonoBehaviour
         while (true)
         {
             float[] bandPowers = _microphoneAdaptor.GetEightBandSpectrum();
-        
-            for (int i = 0; i < _tracks.Length; i++)
+            DisplayBars(bandPowers);
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    private void DisplayBars(float[] bandPowers)
+    {
+        for (int i = 0; i < _tracks.Length; i++)
+        {
+            _targetHeight[i] = bandPowers[i];
+
+            if (_currentVisualHeight[i] < _targetHeight[i])
             {
-                _targetHeight[i] = bandPowers[i];
-                
-                if (_currentVisualHeight[i] < _targetHeight[i])
+                // Instant rise
+                _currentVisualHeight[i] = _targetHeight[i];
+            }
+            else
+            {
+                // Exponential decay
+                float decayRate = 0.95f;
+                _currentVisualHeight[i] *= decayRate;
+
+                // Clamp to target if very close
+                if (_currentVisualHeight[i] < _targetHeight[i] + 0.01f)
                 {
-                    // Instant rise
                     _currentVisualHeight[i] = _targetHeight[i];
                 }
-                else
-                {
-                    // Exponential decay
-                    float decayRate = 0.95f;
-                    _currentVisualHeight[i] *= decayRate;
-                    
-                    // Clamp to target if very close
-                    if (_currentVisualHeight[i] < _targetHeight[i] + 0.01f)
-                    {
-                        _currentVisualHeight[i] = _targetHeight[i];
-                    }
-                }
-                
-                int idx = Mathf.CeilToInt(_currentVisualHeight[i] * (_tracks[i].Length - 1));
-                idx = Mathf.Clamp(idx, 0, _tracks[i].Length - 1);
-                
-                for (int j = 0; j < _tracks[i].Length; j++)
-                {
-                    _tracks[i][j].SetActive(j <= idx);
-                }
             }
-            yield return new WaitForSeconds(0.1f); 
+
+            int idx = Mathf.CeilToInt(_currentVisualHeight[i] * (_tracks[i].Length - 1));
+            idx = Mathf.Clamp(idx, 0, _tracks[i].Length - 1);
+
+            for (int j = 0; j < _tracks[i].Length; j++)
+            {
+                _tracks[i][j].SetActive(j <= idx);
+            }
         }
     }
 }
