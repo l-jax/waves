@@ -10,7 +10,6 @@ public class Equalizer : MonoBehaviour
     
     private MicrophoneAdaptor _microphoneAdaptor;
     private GameObject[][] _tracks;
-    private EightTrackPlayer _eightTrackPlayer;
     private BlockTracker _blockTracker;
 
     private readonly float[] _currentVisualHeight = new float[8];
@@ -24,7 +23,6 @@ public class Equalizer : MonoBehaviour
 
     public void Start()
     {
-        _eightTrackPlayer = GetComponent<EightTrackPlayer>();
         _blockTracker.Initialize();
 
         // ignore the back plate

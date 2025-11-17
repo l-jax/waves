@@ -7157,15 +7157,8 @@ MonoBehaviour:
   - {fileID: 1624522052}
   - {fileID: 841374221}
   - {fileID: 983436380}
-  _userVolumes:
-  - 11
-  - 11
-  - 11
-  - 11
-  - 11
-  - 11
-  - 11
-  - 11
+  _minVolumeMultiplier: 0.5
+  _volumeCurveExponent: 1
 --- !u!114 &1250290451
 MonoBehaviour:
   m_ObjectHideFlags: 0

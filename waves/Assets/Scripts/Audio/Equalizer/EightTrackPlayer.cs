@@ -10,10 +10,12 @@ public class EightTrackPlayer : MonoBehaviour
 
     [Tooltip("The 8 AudioSource components playing the tracks.")]
     [SerializeField] private AudioSource[] _trackSources = new AudioSource[8];
-
-    [Header("Volume Control")]
-    [Tooltip("The base volume parameters that the user controls (0-11 scale).")]
-    [SerializeField] private float[] _userVolumes = new float[8] { 11f, 11f, 11f, 11f, 11f, 11f, 11f, 11f };
+    
+    [Tooltip("Minimum volume multiplier when one block is revealed (0-1). e.g., 0.3 = 30% volume at 1 block.")]
+    [SerializeField] private float _minVolumeMultiplier = 0.5f;
+    
+    [Tooltip("Curve exponent for volume scaling. 1.0=linear, 2.0=quadratic, 0.5=square root.")]
+    [SerializeField] private float _volumeCurveExponent = 1.0f;
 
     private readonly string[] volumeParamNames = new string[8]
     {
@@ -21,7 +23,6 @@ public class EightTrackPlayer : MonoBehaviour
         "VolTrack5", "VolTrack6", "VolTrack7", "VolTrack8"
     };
 
-    private readonly int[] _displayVolumes = new int[8];
     private Equalizer _equalizer;
     
     private const float MinDB = -80f;
@@ -49,28 +50,25 @@ public class EightTrackPlayer : MonoBehaviour
         {
             if (_mixer.GetFloat(volumeParamNames[i], out _))
             {
-                float desiredElevenValue = _userVolumes[i];
+                // if no blocks are revealed, silence the track
+                if (maxRevealedHeights[i] == 0)
+                {
+                    _mixer.SetFloat(volumeParamNames[i], MinDB);
+                    continue;
+                }
+
+                float desiredElevenValue = 11f;
                 
-                if (maxRevealedHeights != null && i < maxRevealedHeights.Length)
-                {
-                    float maxAllowedElevenValue = maxRevealedHeights[i];
-                    float scaledElevenValue = desiredElevenValue * (maxAllowedElevenValue / MaxEleven);
-                    
-                    // Convert to dB
-                    float targetDb = ConvertElevenToDb(scaledElevenValue);
-                    
-                    // Apply to mixer
-                    _mixer.SetFloat(volumeParamNames[i], targetDb);
-                    
-                    _displayVolumes[i] = Mathf.RoundToInt(scaledElevenValue);
-                }
-                else
-                {
-                    // No block tracker, use full volume
-                    float targetDb = ConvertElevenToDb(desiredElevenValue);
-                    _mixer.SetFloat(volumeParamNames[i], targetDb);
-                    _displayVolumes[i] = Mathf.RoundToInt(desiredElevenValue);
-                }
+                float maxAllowedElevenValue = maxRevealedHeights[i];
+                
+                float revealPercent = (maxAllowedElevenValue - 1f) / (MaxEleven - 1f);
+
+                float curvedPercent = Mathf.Pow(revealPercent, _volumeCurveExponent);
+                float volumeMultiplier = Mathf.Lerp(_minVolumeMultiplier, 1.0f, curvedPercent);
+                float scaledElevenValue = desiredElevenValue * volumeMultiplier;
+                
+                float targetDb = ConvertElevenToDb(scaledElevenValue);                
+                _mixer.SetFloat(volumeParamNames[i], targetDb);
             }
             else
             {
@@ -78,12 +76,11 @@ public class EightTrackPlayer : MonoBehaviour
             }
         }
     }
-    
+
     private float ConvertElevenToDb(float elevenValue)
     {
         float clampedEleven = Mathf.Clamp(elevenValue, 0, MaxEleven);
-        float normalizedValue = clampedEleven / MaxEleven;
-        float dB = MinDB + (normalizedValue * (MaxDB - MinDB));
+        float dB = MinDB + (clampedEleven * ((MaxDB - MinDB) / MaxEleven));
         return dB;
     }
 }
