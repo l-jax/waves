@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum ControlSystem
@@ -18,7 +19,9 @@ public class GameContext
 
     public readonly Action<ControlSystem> SetControlSystem;
     public readonly Action<bool> EnableMovement;
-    public readonly Action EndGame;
+    public readonly Action WinGame;
+    public readonly Action LoseLife;
+    private int _lives = 3;
 
     public GameContext(
         GameStateMachine stateMachine,
@@ -57,7 +60,15 @@ public class GameContext
             }
         };
 
-        // TODO: make it possible to lose
-        EndGame = () => effectsPlayer.PlayEffect(Effect.Win, Vector3.zero, Quaternion.identity);
+        ballController.OnOutOfBounds = () => {
+            _lives--;
+            if (_lives >0) return;
+            StateMachine.TransitionTo(GameState.GameOver);
+        };
+
+        WinGame = () => {
+            if (_lives <= 0) return;
+            effectsPlayer.PlayEffect(Effect.Win, Vector3.zero, Quaternion.identity);
+        };
     }
 }

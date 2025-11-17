@@ -4,7 +4,6 @@ using UnityEngine.UI;
 public interface IGameStateHandler
 {
     void OnEnter(GameContext context);
-    void OnUpdate(GameContext context);
     void OnExit(GameContext context);
 }
 
@@ -17,11 +16,6 @@ public class TitleScreenHandler : IGameStateHandler
             context.StateMachine.TransitionTo(GameState.MainMenu);
         });
         // play title music
-    }
-
-    public void OnUpdate(GameContext context)
-    {
-
     }
 
     public void OnExit(GameContext context)
@@ -46,11 +40,6 @@ public class MainMenuHandler : IGameStateHandler
         // play menu music
     }
 
-    public void OnUpdate(GameContext context)
-    {
-
-    }
-
     public void OnExit(GameContext context)
     {
         context.MainMenuUI.SetActive(false);
@@ -70,11 +59,6 @@ public class KeyboardSetupHandler : IGameStateHandler
         // start menu music
     }
 
-    public void OnUpdate(GameContext context)
-    {
-
-    }
-
     public void OnExit(GameContext context)
     {
         context.KeyboardSetupUI.SetActive(false);
@@ -90,11 +74,6 @@ public class VoiceCalibrationHandler : IGameStateHandler
         context.CalibrationUI.SetActive(true);
         context.SetControlSystem(ControlSystem.Voice);
         // start menu music
-    }
-
-    public void OnUpdate(GameContext context)
-    {
-
     }
 
     public void OnExit(GameContext context)
@@ -113,11 +92,6 @@ public class PlayHandler : IGameStateHandler
         // start game music
     }
 
-    public void OnUpdate(GameContext context)
-    {
-
-    }
-
     public void OnExit(GameContext context)
     {
         context.EnableMovement(false);
@@ -129,18 +103,12 @@ public class GameOverHandler : IGameStateHandler
 {
     public void OnEnter(GameContext context)
     {
-        context.EndGame();
-        
+        context.WinGame();        
         context.GameOverUI.SetActive(true);
         context.GameOverUI.GetComponentInChildren<Button>().onClick.AddListener(() => {
             context.StateMachine.TransitionTo(GameState.MainMenu);
         });
         // play game over music
-    }
-
-    public void OnUpdate(GameContext context)
-    {
-
     }
 
     public void OnExit(GameContext context)

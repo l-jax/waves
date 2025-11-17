@@ -1,9 +1,12 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
 public class BallController : MonoBehaviour
 {
+    public Action OnOutOfBounds;
+
     [Header("Movement")]
     [Tooltip("A small constant downward force to apply every physics step.")]
     [SerializeField]
@@ -68,6 +71,7 @@ public class BallController : MonoBehaviour
         if (other.gameObject.CompareTag("OutOfBounds"))
         {
             _effectsPlayer.PlayEffect(Effect.OutOfBounds, transform.position, Quaternion.identity);
+            OnOutOfBounds?.Invoke();
             ResetBall();
             return;
         }
@@ -121,7 +125,7 @@ public class BallController : MonoBehaviour
     private void LaunchBall()
     {
         transform.parent = null;
-        _rb.linearVelocity = Quaternion.Euler(0, 0, Random.Range(-45f, 45f)) * transform.up * _minSpeed;
+        _rb.linearVelocity = Quaternion.Euler(0, 0, UnityEngine.Random.Range(-45f, 45f)) * transform.up * _minSpeed;
         transform.GetComponent<TrailRenderer>().enabled = true;
         _isLaunched = true;
     }

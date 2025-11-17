@@ -27,12 +27,6 @@ public class GameController : MonoBehaviour
         handler.OnEnter(_context);
     }
 
-    void Update()
-    {
-        IGameStateHandler handler = _stateHandler[_stateMachine.CurrentState];
-        handler.OnUpdate(_context);
-    }
-
     public void StartGame()
     {
         _stateMachine.TransitionTo(GameState.Playing);
