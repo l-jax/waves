@@ -1639,6 +1639,7 @@ MonoBehaviour:
   _paddleController: {fileID: 1469887080}
   _ballController: {fileID: 1178395841}
   _effectsPlayer: {fileID: 90551712}
+  _blocksContainer: {fileID: 1197108566}
   _equalizer: {fileID: 1250290449}
   _titleScreenUI: {fileID: 1205089192}
   _mainMenuUI: {fileID: 1835959705}

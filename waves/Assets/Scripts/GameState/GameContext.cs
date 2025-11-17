@@ -1,5 +1,4 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public enum ControlSystem
@@ -20,7 +19,7 @@ public class GameContext
     public readonly Action<ControlSystem> SetControlSystem;
     public readonly Action<bool> EnableMovement;
     public readonly Action WinGame;
-    public readonly Action LoseLife;
+    public readonly Action Reset;
     private int _lives = 3;
 
     public GameContext(
@@ -28,6 +27,7 @@ public class GameContext
         PaddleController paddleController,
         BallController ballController,
         EffectsPlayer effectsPlayer,
+        GameObject blocksContainer,
         Equalizer equalizer,
         GameObject titleScreenUI,
         GameObject mainMenuUI,
@@ -69,6 +69,17 @@ public class GameContext
         WinGame = () => {
             if (_lives <= 0) return;
             effectsPlayer.PlayEffect(Effect.Win, Vector3.zero, Quaternion.identity);
+        };
+
+        Reset = () => {   
+            _lives = 3;
+            foreach (Transform column in blocksContainer.transform)
+            {
+                foreach (Transform block in column)
+                {
+                    block.gameObject.SetActive(true);
+                }
+            }
         };
     }
 }

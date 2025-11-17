@@ -114,6 +114,7 @@ public class GameOverHandler : IGameStateHandler
     public void OnExit(GameContext context)
     {
         context.GameOverUI.SetActive(false);
-        // stop game music
+        context.Reset();
+        // stop game over music
     }
 }
