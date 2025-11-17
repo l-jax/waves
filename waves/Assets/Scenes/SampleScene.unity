@@ -7082,6 +7082,7 @@ GameObject:
   - component: {fileID: 1250290448}
   - component: {fileID: 1250290449}
   - component: {fileID: 1250290450}
+  - component: {fileID: 1250290451}
   m_Layer: 0
   m_Name: Equalizer
   m_TagString: Untagged
@@ -7134,6 +7135,7 @@ MonoBehaviour:
   - {fileID: 1624522052}
   - {fileID: 841374221}
   - {fileID: 983436380}
+  _blocksContainer: {fileID: 1197108566}
 --- !u!114 &1250290450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7146,16 +7148,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e917b84ba90304ac3b1ef723b9d3e71f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EightTrackPlayer
-  mixer: {fileID: 24100000, guid: 1b53687284fad4829b15072918b7d29a, type: 2}
-  trackSources:
-  - {fileID: 881901665}
-  - {fileID: 1784159707}
-  - {fileID: 723981273}
-  - {fileID: 726784645}
-  - {fileID: 1634201128}
-  - {fileID: 1624522052}
-  - {fileID: 841374221}
-  - {fileID: 983436380}
+  _blocksContainer: {fileID: 1197108566}
+  _mixer: {fileID: 24100000, guid: 1b53687284fad4829b15072918b7d29a, type: 2}
+  _trackSources:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+--- !u!114 &1250290451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1250290446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ecefddbd2b314d8aa3ed216f6858825, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BlockTracker
 --- !u!1001 &1264471678
 PrefabInstance:
   m_ObjectHideFlags: 0

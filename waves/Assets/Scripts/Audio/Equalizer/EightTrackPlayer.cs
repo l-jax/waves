@@ -1,15 +1,15 @@
 using UnityEngine;
 using UnityEngine.Audio;
 
+[RequireComponent(typeof(Equalizer))]
 public class EightTrackPlayer : MonoBehaviour
 {
-    public int[] DisplayVolumes => displayVolumes;
     [Header("Audio Setup")]
     [Tooltip("The main AudioMixer asset used to control the tracks.")]
-    public AudioMixer mixer;
+    [SerializeField] private AudioMixer _mixer;
 
     [Tooltip("The 8 AudioSource components playing the tracks.")]
-    public AudioSource[] trackSources = new AudioSource[8];
+    [SerializeField] private AudioSource[] _trackSources = new AudioSource[8];
 
     private readonly string[] volumeParamNames = new string[8]
     {
@@ -17,40 +17,52 @@ public class EightTrackPlayer : MonoBehaviour
         "VolTrack5", "VolTrack6", "VolTrack7", "VolTrack8"
     };
 
-    private int[] displayVolumes = new int[8];
+    private readonly int[] _displayVolumes = new int[8];
+    private Equalizer _equalizer;
+    
     private const float MinDB = -80f;
     private const float MaxDB = 0f;
     private const float MaxEleven = 11f;
 
     private void Start()
     {
-        if (mixer == null)
-        {
-            Debug.LogError("AudioMixer not assigned. Please assign the mixer asset.");
-            return;
-        }
-        if (trackSources.Length != 8)
-        {
-            Debug.LogError($"Expected 8 AudioSources, found {trackSources.Length}. Please ensure the array size is 8.");
-            return;
-        }
+        _equalizer = GetComponent<Equalizer>();
 
-        for (int i = 0; i < trackSources.Length; i++)
+        for (int i = 0; i < _trackSources.Length; i++)
         {
-            if (trackSources[i] != null && trackSources[i].clip != null)
+            if (_trackSources[i] != null && _trackSources[i].clip != null)
             {
-                trackSources[i].Play();
+                _trackSources[i].Play();
             }
         }
     }
 
     private void Update()
     {
+        int[] maxRevealedHeights = _equalizer.GetMaxRevealedHeights();
+
         for (int i = 0; i < volumeParamNames.Length; i++)
         {
-            if (mixer.GetFloat(volumeParamNames[i], out float currentDbVolume))
+            if (_mixer.GetFloat(volumeParamNames[i], out float currentDbVolume))
             {
-                displayVolumes[i] = ConvertDbToEleven(currentDbVolume);
+                float limitedDbVolume = currentDbVolume;
+                
+                if (maxRevealedHeights != null && i < maxRevealedHeights.Length)
+                {
+                    // Convert the max revealed height (0-11) to a max dB value
+                    float maxAllowedDb = ConvertElevenToDb(maxRevealedHeights[i]);
+                    
+                    // Clamp the current volume to not exceed the revealed maximum
+                    limitedDbVolume = Mathf.Min(currentDbVolume, maxAllowedDb);
+                    
+                    // Set the limited volume back to the mixer
+                    if (limitedDbVolume != currentDbVolume)
+                    {
+                        _mixer.SetFloat(volumeParamNames[i], limitedDbVolume);
+                    }
+                }
+                
+                _displayVolumes[i] = ConvertDbToEleven(limitedDbVolume);
             }
             else
             {
@@ -65,5 +77,13 @@ public class EightTrackPlayer : MonoBehaviour
         float normalizedValue = (clampedDb - MinDB) / (MaxDB - MinDB);
         int scaledValue = Mathf.RoundToInt(normalizedValue * MaxEleven);
         return scaledValue;
+    }
+
+    private float ConvertElevenToDb(int elevenValue)
+    {
+        float clampedEleven = Mathf.Clamp(elevenValue, 0, MaxEleven);
+        float normalizedValue = clampedEleven / MaxEleven;
+        float dB = MinDB + (normalizedValue * (MaxDB - MinDB));
+        return dB;
     }
 }

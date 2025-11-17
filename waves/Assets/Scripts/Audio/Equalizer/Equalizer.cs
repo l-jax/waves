@@ -2,13 +2,16 @@ using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(EightTrackPlayer))]
+[RequireComponent(typeof(BlockTracker))]
 public class Equalizer : MonoBehaviour
 {
     [SerializeField] private GameObject _backgroundModel;
     [SerializeField] private AudioSource[] _eightTrackSources = new AudioSource[8];
+    
     private MicrophoneAdaptor _microphoneAdaptor;
     private GameObject[][] _tracks;
     private EightTrackPlayer _eightTrackPlayer;
+    private BlockTracker _blockTracker;
 
     private readonly float[] _currentVisualHeight = new float[8];
     private readonly float[] _targetHeight = new float[8];
@@ -16,21 +19,13 @@ public class Equalizer : MonoBehaviour
     public void Awake()
     {
         _microphoneAdaptor = FindFirstObjectByType<MicrophoneAdaptor>();
+        _blockTracker = GetComponent<BlockTracker>();
     }
 
     public void Start()
     {
-        if (_backgroundModel == null)
-        {
-            Debug.LogError("Background model is not assigned.");
-            return;
-        }
-
         _eightTrackPlayer = GetComponent<EightTrackPlayer>();
-        if (_eightTrackPlayer == null)
-        {
-            Debug.LogError("No EightTrackPlayer found in the scene");
-        }
+        _blockTracker.Initialize();
 
         // ignore the back plate
         _tracks = new GameObject[_backgroundModel.transform.childCount - 1][];
@@ -149,13 +144,26 @@ public class Equalizer : MonoBehaviour
                 }
             }
 
+            // Get the maximum revealed height for this track
+            int maxRevealedHeight = _blockTracker.GetMaxRevealedHeight(i);
+            
+            // Calculate the index, but cap it at the maximum revealed height
             int idx = Mathf.CeilToInt(_currentVisualHeight[i] * (_tracks[i].Length - 1));
-            idx = Mathf.Clamp(idx, 0, _tracks[i].Length - 1);
+            idx = Mathf.Clamp(idx, 0, Mathf.Min(maxRevealedHeight, _tracks[i].Length - 1));
 
             for (int j = 0; j < _tracks[i].Length; j++)
             {
                 _tracks[i][j].SetActive(j <= idx);
             }
         }
+    }
+
+    public int[] GetMaxRevealedHeights()
+    {
+        if (_blockTracker != null)
+        {
+            return _blockTracker.GetAllMaxRevealedHeights();
+        }
+        return new int[8];
     }
 }
