@@ -22,7 +22,7 @@ a repeating pattern of motion, energy, or sound
 ## ToDo
 - [x] implement basic breakout clone
 - [x] add microphone input with volume and pitch detection
-- [ ] add lives and game over
+- [x] add lives and game over
 - [x] calibrate paddle controls
 - [x] create paddle, brick, and ball assets
 - [ ] create title and game over screens
@@ -31,8 +31,8 @@ a repeating pattern of motion, energy, or sound
 - [x] create particle effects for bounce and break
 - [x] add squash and stretch to ball
 - [x] add camera shake on bounce and break
-- [ ] create eight-track background music
-- [ ] add audio clip processing
+- [x] create eight-track background music
+- [x] add audio clip processing
 - [x] add visual equalizer
 - [ ] connect equalizer to blocks
 
