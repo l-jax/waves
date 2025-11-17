@@ -6,6 +6,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private PaddleController _paddleController;
     [SerializeField] private BallController _ballController;
     [SerializeField] private EffectsPlayer _effectsPlayer;
+    [SerializeField] private WaveformVisualizer _waveformVisualizer;
     [SerializeField] private GameObject _blocksContainer;
     [SerializeField] private Equalizer _equalizer;
     [SerializeField] private GameObject _titleScreenUI;
@@ -59,6 +60,7 @@ public class GameController : MonoBehaviour
             _paddleController,
             _ballController,
             _effectsPlayer,
+            _waveformVisualizer,
             _blocksContainer,
             _equalizer,
             _titleScreenUI,

@@ -3,7 +3,6 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class WaveformVisualizer : MonoBehaviour
 {
-
     [SerializeField] private float _waveformScale = 5f;
     [SerializeField] private float _displayHeightOffset = -2f;
     [SerializeField] private float _displayDepth = -1f;
@@ -16,6 +15,7 @@ public class WaveformVisualizer : MonoBehaviour
 
     private MicrophoneAdaptor _microphoneAdaptor;
     private LineRenderer _lineRenderer;
+    private bool _isEnabled = false;
 
     void Awake()
     {
@@ -26,6 +26,8 @@ public class WaveformVisualizer : MonoBehaviour
 
     public void Update()
     {
+        if (!_isEnabled) return;
+
         float[] samples = _microphoneAdaptor.SampleBuffer;
         _lineRenderer.positionCount = samples.Length;
         for (int i = 0; i < samples.Length; i++)
@@ -34,6 +36,12 @@ public class WaveformVisualizer : MonoBehaviour
             float yPos = samples[i] * _waveformScale + _displayHeightOffset;
             _lineRenderer.SetPosition(i, new Vector3(xPos, yPos, _displayDepth));
         }
+    }
+
+    public void EnableWaveform(bool enable)
+    {
+        _isEnabled = enable;
+        _lineRenderer.enabled = enable;
     }
 
     private void SetupLineRenderer()

@@ -18,6 +18,7 @@ public class GameContext
 
     public readonly Action<ControlSystem> SetControlSystem;
     public readonly Action<bool> EnableMovement;
+    public readonly Action<bool> EnableWaveform;
     public readonly Action WinGame;
     public readonly Action Reset;
     private int _lives = 3;
@@ -27,6 +28,7 @@ public class GameContext
         PaddleController paddleController,
         BallController ballController,
         EffectsPlayer effectsPlayer,
+        WaveformVisualizer waveformVisualizer,
         GameObject blocksContainer,
         Equalizer equalizer,
         GameObject titleScreenUI,
@@ -58,6 +60,10 @@ public class GameContext
                 paddleController.DisableMovement();
                 ballController.DisableMovement();
             }
+        };
+
+        EnableWaveform = enable => {
+            waveformVisualizer.EnableWaveform(enable);
         };
 
         ballController.OnOutOfBounds = () => {

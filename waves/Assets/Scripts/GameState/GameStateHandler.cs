@@ -73,6 +73,7 @@ public class VoiceCalibrationHandler : IGameStateHandler
     {
         context.CalibrationUI.SetActive(true);
         context.SetControlSystem(ControlSystem.Voice);
+        context.EnableWaveform(true);
         // start menu music
     }
 
@@ -95,6 +96,7 @@ public class PlayHandler : IGameStateHandler
     public void OnExit(GameContext context)
     {
         context.EnableMovement(false);
+        context.EnableWaveform(false);
         // pause game music
     }
 }

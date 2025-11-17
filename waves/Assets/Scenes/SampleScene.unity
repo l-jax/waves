@@ -1639,6 +1639,7 @@ MonoBehaviour:
   _paddleController: {fileID: 1469887080}
   _ballController: {fileID: 1178395841}
   _effectsPlayer: {fileID: 90551712}
+  _waveformVisualizer: {fileID: 921247254}
   _blocksContainer: {fileID: 1197108566}
   _equalizer: {fileID: 1250290449}
   _titleScreenUI: {fileID: 1205089192}
@@ -5096,6 +5097,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6780897424503097281, guid: a3a02dab54f8d4c8f9227b91bc85ab62, type: 3}
   m_PrefabInstance: {fileID: 2013636157}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &921247254 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8367273900883602855, guid: 2b9abb4d3d4b1422e9eae75423f41a56, type: 3}
+  m_PrefabInstance: {fileID: 1307724415}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f33beed024764b5093f2fb77ad1fbee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WaveformVisualizer
 --- !u!4 &926763121 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6780897424503097281, guid: a3a02dab54f8d4c8f9227b91bc85ab62, type: 3}
