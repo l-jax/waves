@@ -69,7 +69,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: b40adbab089b8456683aa879eb3eef1e, type: 2}
-  - {fileID: 2100000, guid: 6322804f1e2fa45f7a7d3c8d1b632295, type: 2}
+  - {fileID: 2100000, guid: 1db195736d14146de8d069b95a85bcb2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -125,4 +125,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40f4fd388e67541d4a984c0a9e2a5906, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BlockController
-  _breakParticles: {fileID: 7992277016241461058, guid: 5e22fbd4b7b664aaa8f56c6151ac5312, type: 3}
