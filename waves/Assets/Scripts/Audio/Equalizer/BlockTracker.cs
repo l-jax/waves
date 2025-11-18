@@ -34,7 +34,7 @@ public class BlockTracker : MonoBehaviour
                 return;
             }
             maxRevealedHeight++;
-        }   
+        }
     }
 
     public int GetMaxRevealedHeight(int trackIndex)
