@@ -67,7 +67,7 @@ public class PaddleController : MonoBehaviour
     private void HandleKeyboardInput()
     {
         Keyboard keyboard = Keyboard.current;
-        float moveInput = keyboard.aKey.isPressed ? -1 : keyboard.dKey.isPressed ? 1 : 0;
+        float moveInput = keyboard.aKey.isPressed || keyboard.leftArrowKey.isPressed ? -1 : keyboard.dKey.isPressed || keyboard.rightArrowKey.isPressed ? 1 : 0;
         transform.position += moveInput * _speed * Time.deltaTime * transform.right;
     }
 
