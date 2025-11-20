@@ -27,7 +27,7 @@ public class EightTrackPlayer : MonoBehaviour
     
     private const float MinDB = -80f;
     private const float MaxDB = 0f;
-    private const float MaxEleven = 11f;
+    private const float MaxBlocks = 12f;
 
     private void Start()
     {
@@ -56,18 +56,16 @@ public class EightTrackPlayer : MonoBehaviour
                     _mixer.SetFloat(volumeParamNames[i], MinDB);
                     continue;
                 }
-
-                float desiredElevenValue = 11f;
                 
-                float maxAllowedElevenValue = maxRevealedHeights[i];
+                float maxAllowed = maxRevealedHeights[i];
                 
-                float revealPercent = (maxAllowedElevenValue - 1f) / (MaxEleven - 1f);
+                float revealPercent = (maxAllowed - 1f) / (MaxBlocks - 1f);
 
                 float curvedPercent = Mathf.Pow(revealPercent, _volumeCurveExponent);
                 float volumeMultiplier = Mathf.Lerp(_minVolumeMultiplier, 1.0f, curvedPercent);
-                float scaledElevenValue = desiredElevenValue * volumeMultiplier;
+                float scaledValue = MaxBlocks * volumeMultiplier;
                 
-                float targetDb = ConvertElevenToDb(scaledElevenValue);                
+                float targetDb = ConvertBlocksToDb(scaledValue);                
                 _mixer.SetFloat(volumeParamNames[i], targetDb);
             }
             else
@@ -77,10 +75,10 @@ public class EightTrackPlayer : MonoBehaviour
         }
     }
 
-    private float ConvertElevenToDb(float elevenValue)
+    private float ConvertBlocksToDb(float blocksValue)
     {
-        float clampedEleven = Mathf.Clamp(elevenValue, 0, MaxEleven);
-        float dB = MinDB + (clampedEleven * ((MaxDB - MinDB) / MaxEleven));
+        float clampedBlocks = Mathf.Clamp(blocksValue, 0, MaxBlocks);
+        float dB = MinDB + (clampedBlocks * ((MaxDB - MinDB) / MaxBlocks));
         return dB;
     }
 }
