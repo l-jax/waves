@@ -25,16 +25,16 @@ public class BlockTracker : MonoBehaviour
     {
         int maxRevealedHeight = 0;
         
-        // Count how many blocks have been destroyed from the bottom up
         for (int j = column.childCount - 1; j >= 0; j--)
         {
             if (column.GetChild(j).gameObject.activeInHierarchy)
             {
-                _maxRevealedHeight[column.GetSiblingIndex()] = maxRevealedHeight;
-                return;
+                break;
             }
             maxRevealedHeight++;
         }
+        
+        _maxRevealedHeight[column.GetSiblingIndex()] = maxRevealedHeight;
     }
 
     public int GetMaxRevealedHeight(int trackIndex)
