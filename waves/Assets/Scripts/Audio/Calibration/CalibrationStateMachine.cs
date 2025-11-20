@@ -49,8 +49,8 @@ public class CalibrationStateMachine
         return _currentStep switch
         {
             CalibrationStep.Welcome => nextStep == CalibrationStep.CalibrateSilence || nextStep == CalibrationStep.Complete,
-            CalibrationStep.CalibrateSilence => nextStep == CalibrationStep.CalibrateQuiet,
-            CalibrationStep.CalibrateQuiet => nextStep == CalibrationStep.CalibrateLoud,
+            CalibrationStep.CalibrateSilence => nextStep == CalibrationStep.CalibrateQuiet || nextStep == CalibrationStep.Complete,
+            CalibrationStep.CalibrateQuiet => nextStep == CalibrationStep.CalibrateLoud || nextStep == CalibrationStep.Complete,
             CalibrationStep.CalibrateLoud => nextStep == CalibrationStep.Complete,
             _ => false
         };

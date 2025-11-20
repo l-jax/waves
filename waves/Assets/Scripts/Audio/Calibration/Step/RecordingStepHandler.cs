@@ -75,6 +75,16 @@ public abstract class RecordingCalibrationStepHandler : ICalibrationStepHandler
         context.Recorder.StopRecording();
     }
 
+    public void OnSkipClicked(CalibrationContext context)
+    {
+        if (context.Persistence.HasSavedData())
+        {
+            context.Data = context.Persistence.Load();
+        }
+
+        context.TransitionToStep(CalibrationStep.Complete);
+    }
+
     public bool CanSkip => true;
 }
 
