@@ -15,6 +15,7 @@ public class GameContext
     public readonly GameObject KeyboardSetupUI;
     public readonly GameObject CalibrationUI;
     public readonly GameObject GameOverUI;
+    public readonly AudioController AudioController;
 
     public readonly Action<ControlSystem> SetControlSystem;
     public readonly Action<bool> EnableMovement;
@@ -27,10 +28,8 @@ public class GameContext
         GameStateMachine stateMachine,
         PaddleController paddleController,
         BallController ballController,
-        EffectsPlayer effectsPlayer,
-        WaveformVisualizer waveformVisualizer,
         GameObject blocksContainer,
-        Equalizer equalizer,
+        AudioController audioController,
         GameObject titleScreenUI,
         GameObject mainMenuUI,
         GameObject keyboardSetupUI,
@@ -43,10 +42,11 @@ public class GameContext
         KeyboardSetupUI = keyboardSetupUI;
         CalibrationUI = calibrationUI;
         GameOverUI = gameOverUI;
+        AudioController = audioController;
 
         SetControlSystem = controlSystem => {
             paddleController.SetControlSystem(controlSystem);
-            equalizer.SetControlSystem(controlSystem);
+            audioController.SetControlSystem(controlSystem);
         };
 
         EnableMovement = enable => {
@@ -63,7 +63,7 @@ public class GameContext
         };
 
         EnableWaveform = enable => {
-            waveformVisualizer.EnableWaveform(enable);
+            audioController.EnableWaveform(enable);
         };
 
         ballController.OnOutOfBounds = () => {
@@ -74,7 +74,7 @@ public class GameContext
 
         WinGame = () => {
             if (_lives <= 0) return;
-            effectsPlayer.PlayEffect(Effect.Win, Vector3.zero, Quaternion.identity);
+            audioController.WinGame();
         };
 
         Reset = () => {   

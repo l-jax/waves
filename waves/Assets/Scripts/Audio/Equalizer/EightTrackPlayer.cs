@@ -29,21 +29,34 @@ public class EightTrackPlayer : MonoBehaviour
     private const float MaxDB = 0f;
     private const float MaxBlocks = 12f;
 
-    private void Start()
+    private bool _isPlaying = false;
+
+    void Start()
     {
         _equalizer = GetComponent<Equalizer>();
-
-        for (int i = 0; i < _trackSources.Length; i++)
-        {
-            if (_trackSources[i] != null && _trackSources[i].clip != null)
-            {
-                _trackSources[i].Play();
-            }
-        }
     }
 
-    private void Update()
+    public void Play()
     {
+        foreach (var source in _trackSources)
+        {
+            source.Play();
+        }
+        _isPlaying = true;
+    }
+
+    public void Pause()
+    {
+        foreach (var source in _trackSources)
+        {
+            source.Pause();
+        }
+        _isPlaying = false;
+    }
+
+    void Update()
+    {
+        if (!_isPlaying) return;
         int[] maxRevealedHeights = _equalizer.GetMaxRevealedHeights();
 
         for (int i = 0; i < volumeParamNames.Length; i++)

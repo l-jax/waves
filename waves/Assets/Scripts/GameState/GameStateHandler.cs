@@ -15,13 +15,13 @@ public class TitleScreenHandler : IGameStateHandler
         context.TitleScreenUI.GetComponentInChildren<Button>().onClick.AddListener(() => {
             context.StateMachine.TransitionTo(GameState.MainMenu);
         });
-        // play title music
+        context.AudioController.PlayMenuMusic();
     }
 
     public void OnExit(GameContext context)
     {
         context.TitleScreenUI.SetActive(false);
-        // stop title music
+        context.AudioController.PauseMenuMusic();
     }
 }
 
@@ -37,13 +37,13 @@ public class MainMenuHandler : IGameStateHandler
         buttons[1].onClick.AddListener(() => {
             context.StateMachine.TransitionTo(GameState.VoiceCalibration);
         });
-        // play menu music
+        context.AudioController.PlayMenuMusic();
     }
 
     public void OnExit(GameContext context)
     {
         context.MainMenuUI.SetActive(false);
-        // pause menu music
+        context.AudioController.PauseMenuMusic();
     }
 }
 
@@ -56,14 +56,13 @@ public class KeyboardSetupHandler : IGameStateHandler
         context.KeyboardSetupUI.GetComponentInChildren<Button>().onClick.AddListener(() => {
             context.StateMachine.TransitionTo(GameState.Playing);
         });
-        // start menu music
+        context.AudioController.PlayMenuMusic();
     }
 
     public void OnExit(GameContext context)
     {
         context.KeyboardSetupUI.SetActive(false);
-        // pause menu music
-
+        context.AudioController.PauseMenuMusic();
     }
 }
 
@@ -74,13 +73,13 @@ public class VoiceCalibrationHandler : IGameStateHandler
         context.CalibrationUI.SetActive(true);
         context.SetControlSystem(ControlSystem.Voice);
         context.EnableWaveform(true);
-        // start menu music
+        context.AudioController.PlayMenuMusic();
     }
 
     public void OnExit(GameContext context)
     {
         context.CalibrationUI.SetActive(false);
-        // pause menu music     
+        context.AudioController.PauseMenuMusic();
     }
 }
 
@@ -90,14 +89,14 @@ public class PlayHandler : IGameStateHandler
     public void OnEnter(GameContext context)
     {
         context.EnableMovement(true);
-        // start game music
+        context.AudioController.PlayGameMusic();
     }
 
     public void OnExit(GameContext context)
     {
         context.EnableMovement(false);
         context.EnableWaveform(false);
-        // pause game music
+        context.AudioController.PauseGameMusic();
     }
 }
 
@@ -110,13 +109,13 @@ public class GameOverHandler : IGameStateHandler
         context.GameOverUI.GetComponentInChildren<Button>().onClick.AddListener(() => {
             context.StateMachine.TransitionTo(GameState.MainMenu);
         });
-        // play game over music
+        context.AudioController.PlayMenuMusic();
     }
 
     public void OnExit(GameContext context)
     {
         context.GameOverUI.SetActive(false);
         context.Reset();
-        // stop game over music
+        context.AudioController.PauseMenuMusic();
     }
 }
