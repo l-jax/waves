@@ -1,15 +1,29 @@
 using UnityEngine;
+using System;
 
 public class BlockTracker : MonoBehaviour
 {
     [SerializeField] private Transform _blocksContainer;
     private readonly int[] _maxRevealedHeight = new int[8];
+    private bool _allBlocksBroken = false;
+    
+    public event Action OnAllBlocksBroken;
     
     public void Initialize()
     {
         for (int i = 0; i < 8; i++)
         {
             _maxRevealedHeight[i] = 0;
+        }
+        
+        _allBlocksBroken = false;
+        
+        foreach (Transform column in _blocksContainer)
+        {
+            for (int i = 0; i < column.childCount; i++)
+            {
+                column.GetChild(i).gameObject.SetActive(true);
+            }
         }
     }
 
@@ -19,6 +33,8 @@ public class BlockTracker : MonoBehaviour
         {
             UpdateColumnHeight(column);
         }
+        
+        CheckAllBlocksBroken();
     }
 
     private void UpdateColumnHeight(Transform column)
@@ -35,6 +51,31 @@ public class BlockTracker : MonoBehaviour
         }
         
         _maxRevealedHeight[column.GetSiblingIndex()] = maxRevealedHeight;
+    }
+
+    private void CheckAllBlocksBroken()
+    {
+        if (_allBlocksBroken) return;
+
+        foreach (Transform column in _blocksContainer)
+        {
+            if (column.childCount == 0) continue;
+            
+            bool hasActiveBlock = false;
+            for (int i = 0; i < column.childCount; i++)
+            {
+                if (column.GetChild(i).gameObject.activeInHierarchy)
+                {
+                    hasActiveBlock = true;
+                    break;
+                }
+            }
+
+            if (hasActiveBlock) return;
+        }
+        
+        _allBlocksBroken = true;
+        OnAllBlocksBroken?.Invoke();
     }
 
     public int GetMaxRevealedHeight(int trackIndex)

@@ -28,7 +28,7 @@ public class GameContext
         GameStateMachine stateMachine,
         PaddleController paddleController,
         BallController ballController,
-        GameObject blocksContainer,
+        BlockTracker blockTracker,
         AudioController audioController,
         GameObject titleScreenUI,
         GameObject mainMenuUI,
@@ -72,6 +72,8 @@ public class GameContext
             StateMachine.TransitionTo(GameState.GameOver);
         };
 
+        blockTracker.OnAllBlocksBroken += () => StateMachine.TransitionTo(GameState.GameOver);
+
         WinGame = () => {
             if (_lives <= 0) return;
             audioController.WinGame();
@@ -79,13 +81,7 @@ public class GameContext
 
         Reset = () => {   
             _lives = 3;
-            foreach (Transform column in blocksContainer.transform)
-            {
-                foreach (Transform block in column)
-                {
-                    block.gameObject.SetActive(true);
-                }
-            }
+            blockTracker.Initialize();
         };
     }
 }
