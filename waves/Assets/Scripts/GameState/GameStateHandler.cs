@@ -104,13 +104,13 @@ public class GameOverHandler : IGameStateHandler
 {
     public void OnEnter(GameContext context)
     {
-        if (context.Lives > 0)
+        if (context.AllBlocksBroken())
         {
             context.AudioController.WinGame();
         }
 
         context.GameOverUI.SetActive(true);
-        context.GameOverUI.GetComponentInChildren<TextMeshProUGUI>().text = context.Lives > 0 ? "You Win!" : "Game Over";
+        context.GameOverUI.GetComponentInChildren<TextMeshProUGUI>().text = context.AllBlocksBroken() ? "You Win!" : "Game Over";
         context.GameOverUI.GetComponentInChildren<Button>().onClick.AddListener(() => {
             context.StateMachine.TransitionTo(GameState.MainMenu);
         });

@@ -3,6 +3,7 @@ using System;
 
 public class BlockTracker : MonoBehaviour
 {
+    public bool AllBlocksBroken => _allBlocksBroken;
     [SerializeField] private Transform _blocksContainer;
     private readonly int[] _maxRevealedHeight = new int[8];
     private bool _allBlocksBroken = false;

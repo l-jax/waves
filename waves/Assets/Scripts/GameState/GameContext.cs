@@ -22,7 +22,7 @@ public class GameContext
     public readonly Action<bool> EnableWaveform;
     public readonly Action WinGame;
     public readonly Action Reset;
-    public int Lives { get { return _lives; } }
+    public readonly Func<bool> AllBlocksBroken;
     private int _lives = 3;
 
     public GameContext(
@@ -83,7 +83,11 @@ public class GameContext
             }
         };
 
-        blockTracker.OnAllBlocksBroken += () => StateMachine.TransitionTo(GameState.GameOver);
+        blockTracker.OnAllBlocksBroken += () => {
+            StateMachine.TransitionTo(GameState.GameOver);
+        };
+
+        AllBlocksBroken = () => blockTracker.AllBlocksBroken;
 
         Reset = () => {   
             _lives = 3;
