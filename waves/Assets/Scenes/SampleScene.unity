@@ -434,7 +434,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.3
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -551,7 +551,7 @@ Transform:
   m_GameObject: {fileID: 103073041}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -7.138, y: -2.53, z: -0.96}
+  m_LocalPosition: {x: -7.01, y: -1.958, z: -0.9}
   m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1087,7 +1087,7 @@ Transform:
   m_GameObject: {fileID: 237411911}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -7.138, y: -1.64, z: -0.96}
+  m_LocalPosition: {x: -7.01, y: -1.0350001, z: -0.9}
   m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6594,7 +6594,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: df0086c4011ce4331b81937705d13634, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.25
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -9038,7 +9038,7 @@ Transform:
   m_GameObject: {fileID: 1536860962}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -7.138, y: -3.443, z: -0.96}
+  m_LocalPosition: {x: -7.01, y: -2.877, z: -0.9}
   m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10499,6 +10499,14 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: ed3a1bda7b4aa474f973228871c5d471, type: 2}
+    - target: {fileID: -4683669308469848369, guid: 0c90766e9d9a7456caf52b167a5ec985, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 906f9a82c65614d32bfd3d1c1ed781fe, type: 2}
+    - target: {fileID: -4683669308469848369, guid: 0c90766e9d9a7456caf52b167a5ec985, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a0233f73be4a4408bba48439c3cf4984, type: 2}
     - target: {fileID: -1461304994638716399, guid: 0c90766e9d9a7456caf52b167a5ec985, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
