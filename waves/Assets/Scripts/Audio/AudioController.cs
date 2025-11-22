@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
@@ -34,6 +35,11 @@ public class AudioController : MonoBehaviour
         _menuMusicSource.Pause();
     }
 
+    public void FadeOutMenuMusic(float duration)
+    {
+        StartCoroutine(FadeOutCoroutine(duration));
+    }
+
     public void PlayGameMusic()
     {
         _eightTrackPlayer.Play();
@@ -42,5 +48,21 @@ public class AudioController : MonoBehaviour
     public void PauseGameMusic()
     {
         _eightTrackPlayer.Pause();
+    }
+
+    private IEnumerator FadeOutCoroutine(float duration)
+    {
+        float startVolume = _menuMusicSource.volume;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            _menuMusicSource.volume = Mathf.Lerp(startVolume, 0f, elapsed / duration);
+            yield return null;
+        }
+
+        _menuMusicSource.volume = 0f;
+        _menuMusicSource.Stop();
     }
 }

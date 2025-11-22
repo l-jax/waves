@@ -1,4 +1,4 @@
-using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
 
 public interface IGameStateHandler
@@ -62,7 +62,7 @@ public class KeyboardSetupHandler : IGameStateHandler
     public void OnExit(GameContext context)
     {
         context.KeyboardSetupUI.SetActive(false);
-        context.AudioController.PauseMenuMusic();
+        context.AudioController.FadeOutMenuMusic(1f);
     }
 }
 
@@ -79,7 +79,7 @@ public class VoiceCalibrationHandler : IGameStateHandler
     public void OnExit(GameContext context)
     {
         context.CalibrationUI.SetActive(false);
-        context.AudioController.PauseMenuMusic();
+        context.AudioController.FadeOutMenuMusic(1f);
     }
 }
 
@@ -104,18 +104,23 @@ public class GameOverHandler : IGameStateHandler
 {
     public void OnEnter(GameContext context)
     {
-        context.WinGame();        
+        if (context.Lives > 0)
+        {
+            context.AudioController.WinGame();
+        }
+
         context.GameOverUI.SetActive(true);
+        context.GameOverUI.GetComponentInChildren<TextMeshProUGUI>().text = context.Lives > 0 ? "You Win!" : "Game Over";
         context.GameOverUI.GetComponentInChildren<Button>().onClick.AddListener(() => {
             context.StateMachine.TransitionTo(GameState.MainMenu);
         });
-        context.AudioController.PlayMenuMusic();
+        context.AudioController.PlayGameMusic();
     }
 
     public void OnExit(GameContext context)
     {
         context.GameOverUI.SetActive(false);
         context.Reset();
-        context.AudioController.PauseMenuMusic();
+        context.AudioController.PauseGameMusic();
     }
 }

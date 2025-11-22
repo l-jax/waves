@@ -22,6 +22,7 @@ public class GameContext
     public readonly Action<bool> EnableWaveform;
     public readonly Action WinGame;
     public readonly Action Reset;
+    public int Lives { get { return _lives; } }
     private int _lives = 3;
 
     public GameContext(
@@ -73,11 +74,6 @@ public class GameContext
         };
 
         blockTracker.OnAllBlocksBroken += () => StateMachine.TransitionTo(GameState.GameOver);
-
-        WinGame = () => {
-            if (_lives <= 0) return;
-            audioController.WinGame();
-        };
 
         Reset = () => {   
             _lives = 3;
