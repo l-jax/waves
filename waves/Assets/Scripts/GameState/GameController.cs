@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject _keyboardSetupUI;
     [SerializeField] private GameObject _calibrationUI;
     [SerializeField] private GameObject _gameOverUI;
+    [SerializeField] private GameObject _livesUI;
 
     private GameStateMachine _stateMachine;
     private Dictionary<GameState, IGameStateHandler> _stateHandler;
@@ -63,7 +64,8 @@ public class GameController : MonoBehaviour
             _mainMenuUI,
             _keyboardSetupUI,
             _calibrationUI,
-            _gameOverUI
+            _gameOverUI,
+            _livesUI
         );
     }
 

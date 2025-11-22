@@ -35,7 +35,8 @@ public class GameContext
         GameObject mainMenuUI,
         GameObject keyboardSetupUI,
         GameObject calibrationUI,
-        GameObject gameOverUI
+        GameObject gameOverUI,
+        GameObject livesUI
     ) {
         StateMachine = stateMachine;
         TitleScreenUI = titleScreenUI;
@@ -68,15 +69,28 @@ public class GameContext
         };
 
         ballController.OnOutOfBounds = () => {
+
+            if (_lives <= 0)
+            {
+                StateMachine.TransitionTo(GameState.GameOver);
+                return;
+            }
+
             _lives--;
-            if (_lives >0) return;
-            StateMachine.TransitionTo(GameState.GameOver);
+            if (livesUI.transform.childCount >= _lives)
+            {
+                livesUI.transform.GetChild(_lives).gameObject.SetActive(false);
+            }
         };
 
         blockTracker.OnAllBlocksBroken += () => StateMachine.TransitionTo(GameState.GameOver);
 
         Reset = () => {   
             _lives = 3;
+            for (int i = 0; i < livesUI.transform.childCount; i++)
+            {
+                livesUI.transform.GetChild(i).gameObject.SetActive(true);
+            }
             blockTracker.Initialize();
         };
     }
