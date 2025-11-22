@@ -11,15 +11,11 @@ public class GameContext
 {
     public readonly GameStateMachine StateMachine;
     public readonly GameObject TitleScreenUI;
-    public readonly GameObject MainMenuUI;
     public readonly GameObject KeyboardSetupUI;
-    public readonly GameObject CalibrationUI;
     public readonly GameObject GameOverUI;
     public readonly AudioController AudioController;
-
     public readonly Action<ControlSystem> SetControlSystem;
     public readonly Action<bool> EnableMovement;
-    public readonly Action<bool> EnableWaveform;
     public readonly Action WinGame;
     public readonly Action Reset;
     public readonly Func<bool> AllBlocksBroken;
@@ -32,17 +28,13 @@ public class GameContext
         BlockTracker blockTracker,
         AudioController audioController,
         GameObject titleScreenUI,
-        GameObject mainMenuUI,
         GameObject keyboardSetupUI,
-        GameObject calibrationUI,
         GameObject gameOverUI,
         GameObject livesUI
     ) {
         StateMachine = stateMachine;
         TitleScreenUI = titleScreenUI;
-        MainMenuUI = mainMenuUI;
         KeyboardSetupUI = keyboardSetupUI;
-        CalibrationUI = calibrationUI;
         GameOverUI = gameOverUI;
         AudioController = audioController;
 
@@ -62,10 +54,6 @@ public class GameContext
                 paddleController.DisableMovement();
                 ballController.DisableMovement();
             }
-        };
-
-        EnableWaveform = enable => {
-            audioController.EnableWaveform(enable);
         };
 
         ballController.OnOutOfBounds = () => {

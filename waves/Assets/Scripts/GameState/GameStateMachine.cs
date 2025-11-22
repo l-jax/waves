@@ -3,9 +3,7 @@ using System;
 public enum GameState
 {
     TitleScreen,
-    MainMenu,
     KeyboardSetup,
-    VoiceCalibration,
     Playing,
     GameOver
 }
@@ -38,12 +36,10 @@ public class GameStateMachine
     {
         return _currentState switch
         {
-            GameState.TitleScreen => nextState == GameState.MainMenu,
-            GameState.MainMenu => nextState == GameState.KeyboardSetup || nextState == GameState.VoiceCalibration ,
+            GameState.TitleScreen => nextState == GameState.KeyboardSetup,
             GameState.KeyboardSetup => nextState == GameState.Playing,
-            GameState.VoiceCalibration => nextState == GameState.Playing,
             GameState.Playing => nextState == GameState.GameOver,
-            GameState.GameOver => nextState == GameState.MainMenu,
+            GameState.GameOver => nextState == GameState.KeyboardSetup,
             _ => false
         };
     }

@@ -8,7 +8,6 @@ public class Equalizer : MonoBehaviour
     [SerializeField] private GameObject _backgroundModel;
     [SerializeField] private AudioSource[] _eightTrackSources = new AudioSource[8];
     
-    private MicrophoneAdaptor _microphoneAdaptor;
     private GameObject[][] _tracks;
     private BlockTracker _blockTracker;
 
@@ -17,7 +16,6 @@ public class Equalizer : MonoBehaviour
 
     public void Awake()
     {
-        _microphoneAdaptor = FindFirstObjectByType<MicrophoneAdaptor>();
         _blockTracker = GetComponent<BlockTracker>();
     }
 
@@ -45,9 +43,6 @@ public class Equalizer : MonoBehaviour
         {
             case ControlSystem.Keyboard:
                 StartCoroutine(DisplayEightTrackDataCoroutine());
-                break;
-            case ControlSystem.Voice:
-                StartCoroutine(DisplayMicrophoneDataCoroutine());
                 break;
         }
     }
@@ -106,16 +101,6 @@ public class Equalizer : MonoBehaviour
 
         float rms = Mathf.Sqrt(sum / samples.Length);
         return Mathf.Clamp01(rms * 5f);
-    }
-
-    private IEnumerator DisplayMicrophoneDataCoroutine()
-    {
-        while (true)
-        {
-            float[] bandPowers = _microphoneAdaptor.GetEightBandSpectrum();
-            DisplayBars(bandPowers);
-            yield return new WaitForSeconds(0.1f);
-        }
     }
 
     private void DisplayBars(float[] bandPowers)

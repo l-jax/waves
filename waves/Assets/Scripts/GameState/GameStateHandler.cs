@@ -13,7 +13,7 @@ public class TitleScreenHandler : IGameStateHandler
     {
         context.TitleScreenUI.SetActive(true);
         context.TitleScreenUI.GetComponentInChildren<Button>().onClick.AddListener(() => {
-            context.StateMachine.TransitionTo(GameState.MainMenu);
+            context.StateMachine.TransitionTo(GameState.KeyboardSetup);
         });
         context.AudioController.PlayMenuMusic();
     }
@@ -21,28 +21,6 @@ public class TitleScreenHandler : IGameStateHandler
     public void OnExit(GameContext context)
     {
         context.TitleScreenUI.SetActive(false);
-        context.AudioController.PauseMenuMusic();
-    }
-}
-
-public class MainMenuHandler : IGameStateHandler
-{
-    public void OnEnter(GameContext context)
-    {
-        context.MainMenuUI.SetActive(true);
-        Button[] buttons = context.MainMenuUI.GetComponentsInChildren<Button>();
-        buttons[0].onClick.AddListener(() => {
-            context.StateMachine.TransitionTo(GameState.KeyboardSetup);
-        });
-        buttons[1].onClick.AddListener(() => {
-            context.StateMachine.TransitionTo(GameState.VoiceCalibration);
-        });
-        context.AudioController.PlayMenuMusic();
-    }
-
-    public void OnExit(GameContext context)
-    {
-        context.MainMenuUI.SetActive(false);
         context.AudioController.PauseMenuMusic();
     }
 }
@@ -66,23 +44,6 @@ public class KeyboardSetupHandler : IGameStateHandler
     }
 }
 
-public class VoiceCalibrationHandler : IGameStateHandler
-{
-    public void OnEnter(GameContext context)
-    {
-        context.CalibrationUI.SetActive(true);
-        context.SetControlSystem(ControlSystem.Voice);
-        context.EnableWaveform(true);
-        context.AudioController.PlayMenuMusic();
-    }
-
-    public void OnExit(GameContext context)
-    {
-        context.CalibrationUI.SetActive(false);
-        context.AudioController.FadeOutMenuMusic(2f);
-    }
-}
-
 public class PlayHandler : IGameStateHandler
 {
 
@@ -95,7 +56,6 @@ public class PlayHandler : IGameStateHandler
     public void OnExit(GameContext context)
     {
         context.EnableMovement(false);
-        context.EnableWaveform(false);
         context.AudioController.PauseGameMusic();
     }
 }
@@ -112,7 +72,7 @@ public class GameOverHandler : IGameStateHandler
         context.GameOverUI.SetActive(true);
         context.GameOverUI.GetComponentInChildren<TextMeshProUGUI>().text = context.AllBlocksBroken() ? "You Win!" : "Game Over";
         context.GameOverUI.GetComponentInChildren<Button>().onClick.AddListener(() => {
-            context.StateMachine.TransitionTo(GameState.MainMenu);
+            context.StateMachine.TransitionTo(GameState.KeyboardSetup);
         });
         context.AudioController.PlayGameMusic();
     }

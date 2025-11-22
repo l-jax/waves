@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(AudioSource))]
 public class PaddleController : MonoBehaviour
 {
-    public float CurrentVolume => _microphoneAdaptor == null ? 0f : _microphoneAdaptor.CurrentVolume;
 
     [Header("Movement Settings")]
     [Tooltip("Control with keyboard or voice?")]
@@ -25,12 +24,6 @@ public class PaddleController : MonoBehaviour
     private float _speed = 10f;
 
     private bool _isMovementEnabled = true;
-    private MicrophoneAdaptor _microphoneAdaptor;
-
-    void Awake()
-    {
-        _microphoneAdaptor = FindFirstObjectByType<MicrophoneAdaptor>();
-    }
 
     void Update()
     {
@@ -40,10 +33,6 @@ public class PaddleController : MonoBehaviour
         {
             case ControlSystem.Keyboard:
                 HandleKeyboardInput();
-                break;
-            case ControlSystem.Voice:
-                _microphoneAdaptor.Update();
-                HandleVoiceInput();
                 break;
         }
         ClampPosition();
@@ -69,23 +58,6 @@ public class PaddleController : MonoBehaviour
         Keyboard keyboard = Keyboard.current;
         float moveInput = keyboard.aKey.isPressed || keyboard.leftArrowKey.isPressed ? -1 : keyboard.dKey.isPressed || keyboard.rightArrowKey.isPressed ? 1 : 0;
         transform.position += moveInput * _speed * Time.deltaTime * transform.right;
-    }
-
-    private void HandleVoiceInput()
-    {
-        if (_microphoneAdaptor == null) return;
-        Direction direction = _microphoneAdaptor.GetDirection();
-        switch (direction)
-        {
-            case Direction.Left:
-                transform.position += -_speed * Time.deltaTime * transform.right;
-                break;
-            case Direction.Right:
-                transform.position += _speed * Time.deltaTime * transform.right;
-                break;
-            case Direction.Stationary:
-                break;
-        }
     }
 
     private void ClampPosition()

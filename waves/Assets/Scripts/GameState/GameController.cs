@@ -8,9 +8,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private BlockTracker _blockTracker;
     [SerializeField] private AudioController _audioController;
     [SerializeField] private GameObject _titleScreenUI;
-    [SerializeField] private GameObject _mainMenuUI;
     [SerializeField] private GameObject _keyboardSetupUI;
-    [SerializeField] private GameObject _calibrationUI;
     [SerializeField] private GameObject _gameOverUI;
     [SerializeField] private GameObject _livesUI;
 
@@ -44,9 +42,7 @@ public class GameController : MonoBehaviour
         _stateHandler = new Dictionary<GameState, IGameStateHandler>
         {
             { GameState.TitleScreen, new TitleScreenHandler() },
-            { GameState.MainMenu, new MainMenuHandler() },
             { GameState.KeyboardSetup, new KeyboardSetupHandler() },
-            { GameState.VoiceCalibration, new VoiceCalibrationHandler() },
             { GameState.Playing, new PlayHandler() },
             { GameState.GameOver, new GameOverHandler() }
         };
@@ -61,9 +57,7 @@ public class GameController : MonoBehaviour
             _blockTracker,
             _audioController,
             _titleScreenUI,
-            _mainMenuUI,
             _keyboardSetupUI,
-            _calibrationUI,
             _gameOverUI,
             _livesUI
         );

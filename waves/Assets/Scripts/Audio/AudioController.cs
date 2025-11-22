@@ -8,16 +8,10 @@ public class AudioController : MonoBehaviour
     [SerializeField] private EffectsPlayer _effectsPlayer;
     [SerializeField] private Equalizer _equalizer;
     [SerializeField] private EightTrackPlayer _eightTrackPlayer;
-    [SerializeField] private WaveformVisualizer _waveformVisualizer;
 
     public void SetControlSystem(ControlSystem controlSystem)
     {
         _equalizer.SetControlSystem(controlSystem);
-    }
-
-    public void EnableWaveform(bool enable)
-    {
-        _waveformVisualizer.EnableWaveform(enable);
     }
 
     public void WinGame()
