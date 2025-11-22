@@ -62,7 +62,7 @@ public class KeyboardSetupHandler : IGameStateHandler
     public void OnExit(GameContext context)
     {
         context.KeyboardSetupUI.SetActive(false);
-        context.AudioController.FadeOutMenuMusic(1f);
+        context.AudioController.FadeOutMenuMusic(2f);
     }
 }
 
@@ -79,7 +79,7 @@ public class VoiceCalibrationHandler : IGameStateHandler
     public void OnExit(GameContext context)
     {
         context.CalibrationUI.SetActive(false);
-        context.AudioController.FadeOutMenuMusic(1f);
+        context.AudioController.FadeOutMenuMusic(2f);
     }
 }
 
