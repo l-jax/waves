@@ -26,7 +26,6 @@ public class BallController : MonoBehaviour
 
     private Transform _paddle;
     private EffectsPlayer _effectsPlayer;
-    private CameraController _cameraController;
 
     void Awake()
     {
@@ -34,7 +33,6 @@ public class BallController : MonoBehaviour
 
         _paddle = GameObject.FindGameObjectWithTag("Player").transform;
         _effectsPlayer = GameObject.Find("EffectsPlayer").GetComponent<EffectsPlayer>();
-        _cameraController = Camera.main.GetComponent<CameraController>();
 
         _rb = GetComponent<Rigidbody>();
         _rb.useGravity = false;
@@ -76,7 +74,7 @@ public class BallController : MonoBehaviour
             return;
         }
 
-        PlayCollisionEffects(other);
+        _effectsPlayer.PlayEffect(Effect.Bounce, other.contacts[0].point, Quaternion.LookRotation(other.contacts[0].normal));
 
         if (!other.gameObject.CompareTag("Player")) return;
 
@@ -92,14 +90,6 @@ public class BallController : MonoBehaviour
     {
         _isMovementEnabled = false;
         ResetBall();
-    }
-
-    private void PlayCollisionEffects(Collision other)
-    {
-        ShakeType shakeType = other.gameObject.CompareTag("Block") ? ShakeType.Large : ShakeType.Small;
-        _cameraController.Shake(shakeType);
-
-        _effectsPlayer.PlayEffect(Effect.Bounce, other.contacts[0].point, Quaternion.LookRotation(other.contacts[0].normal));
     }
 
     private void BounceOffPaddle(Vector3 collisionPoint, Transform paddleTransform)
