@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,7 +15,7 @@ public class CalibrationContext
 
     public readonly Action<string> SetInstructionText;
     public readonly Action<string> SetButtonText;
-    public readonly Action<bool> SetButtonEnabled;
+    public readonly Action<bool> SetButtonsEnabled;
 
     public readonly Action<bool> ShowVolumeMeter;
     public readonly Action<float> UpdateVolumeMeter;
@@ -36,7 +37,7 @@ public class CalibrationContext
         ICalibrationPersistence persistence,
         Slider volumeMeter,
         TextMeshProUGUI instructionText,
-        Button button
+        Dictionary<string, Button> buttons
     ) {
         CalibrationPanel = calibrationPanel;
         Recorder = recorder;
@@ -44,12 +45,19 @@ public class CalibrationContext
 
         SetInstructionText = text => instructionText.text = text;
         SetButtonText = text => {
-            TextMeshProUGUI buttonText = button.GetComponentInChildren<TextMeshProUGUI>();
+            TextMeshProUGUI buttonText = buttons["Next"].GetComponentInChildren<TextMeshProUGUI>();
             buttonText.text = text;
         };
-        SetButtonEnabled = enabled => button.interactable = enabled;
 
+        SetButtonsEnabled = enabled => {
+            foreach (var button in buttons.Values)
+            {
+                button.interactable = enabled;
+            }
+        };
+       
         ShowVolumeMeter = show => volumeMeter.gameObject.SetActive(show);
+        
         UpdateVolumeMeter = volume =>
         {
             volumeMeter.value = Mathf.Lerp(volumeMeter.value, volume * 1000f, 0.3f);

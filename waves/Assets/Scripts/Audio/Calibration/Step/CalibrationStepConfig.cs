@@ -22,11 +22,11 @@ public static class CalibrationStepConfig
     {
         Step = CalibrationStep.Welcome,
         InstructionText =
-        "Let's set up your voice control.\n\n" +
-        "Silence makes the paddle stop\n" +
-        "Quiet sounds move left\n" +
-        "Loud sounds move right\n\n",
-        ButtonText = "Start",
+        "Let's calibrate your voice controls.\n\n" +
+        "Silent: paddle stays still\n" +
+        "Quiet: paddle moves left\n" +
+        "Loud: paddle moves right",
+        ButtonText = "Begin",
         ShowVolumeMeter = false
     };
 
@@ -34,9 +34,9 @@ public static class CalibrationStepConfig
     {
         Step = CalibrationStep.CalibrateSilence,
         InstructionText =
-        "Press start and keep quiet for two seconds\n\n" +
-        "We need to measure your background noise",
-        ButtonText = "Start",
+        "Stay completely silent for two seconds.\n\n" +
+        "We'll measure your background noise.",
+        ButtonText = "Record",
         ShowVolumeMeter = true
     };
 
@@ -44,9 +44,9 @@ public static class CalibrationStepConfig
     {
         Step = CalibrationStep.CalibrateQuiet,
         InstructionText =
-        "Press start and make a quiet sound for two seconds\n\n" +
-        "Try a whisper or a soft hum",
-        ButtonText = "Start",
+        "Make a quiet sound for two seconds.\n\n" +
+        "Try a whisper or soft hum.",
+        ButtonText = "Record",
         ShowVolumeMeter = true
     };
 
@@ -54,9 +54,9 @@ public static class CalibrationStepConfig
     {
         Step = CalibrationStep.CalibrateLoud,
         InstructionText =
-        "Press start and make a loud sound for two seconds\n\n" +
-        "You could shout, sing, or hum loudly",
-        ButtonText = "Start",
+        "Make a loud sound for two seconds.\n\n" +
+        "Try shouting or singing.",
+        ButtonText = "Record",
         ShowVolumeMeter = true
     };
 
@@ -64,11 +64,7 @@ public static class CalibrationStepConfig
     {
         Step = CalibrationStep.Complete,
         InstructionText =
-        "Try moving the paddle\n" +
-        "Does it move left when you make a quiet sound?\n\n" +
-        "And right when you make a loud sound?" +
-        "\n\n" +
-        "Yes? Press Play to start the game",
+        "Calibration complete. Ready to play?",
         ButtonText = "Play",
         ShowVolumeMeter = false
     };

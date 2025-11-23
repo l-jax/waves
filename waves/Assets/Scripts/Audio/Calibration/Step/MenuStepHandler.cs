@@ -5,7 +5,7 @@ public class WelcomeStepHandler : ICalibrationStepHandler
         context.SetInstructionText(CalibrationStepConfig.WelcomeStep.InstructionText);
         context.SetButtonText(CalibrationStepConfig.WelcomeStep.ButtonText);
         context.ShowVolumeMeter(CalibrationStepConfig.WelcomeStep.ShowVolumeMeter);
-        context.SetButtonEnabled(true);
+        context.SetButtonsEnabled(true);
     }
 
     public void OnNextClicked(CalibrationContext context)
@@ -35,7 +35,7 @@ public class CompleteStepHandler : ICalibrationStepHandler
 
         context.SetInstructionText(CalibrationStepConfig.CompleteStep.InstructionText);
         context.SetButtonText(CalibrationStepConfig.CompleteStep.ButtonText);
-        context.SetButtonEnabled(true);
+        context.SetButtonsEnabled(true);
         context.ShowVolumeMeter(CalibrationStepConfig.CompleteStep.ShowVolumeMeter);
     }
 

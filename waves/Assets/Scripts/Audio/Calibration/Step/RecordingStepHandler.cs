@@ -14,7 +14,7 @@ public abstract class RecordingCalibrationStepHandler : ICalibrationStepHandler
         context.SetInstructionText(stepConfig.InstructionText);
         context.SetButtonText(stepConfig.ButtonText);
         context.ShowVolumeMeter(stepConfig.ShowVolumeMeter);
-        context.SetButtonEnabled(true);
+        context.SetButtonsEnabled(true);
     }
 
     public void OnUpdate(CalibrationContext context)
@@ -25,13 +25,12 @@ public abstract class RecordingCalibrationStepHandler : ICalibrationStepHandler
         context.UpdateVolumeMeter(currentVolume);
 
         if (context.Recorder.IsRecording)
-        {;
+        {
             float remaining = context.RecordingDuration - context.Recorder.ElapsedTime;
 
-            context.SetInstructionText(
-                $"Two seconds: {remaining:F1}s\n\n" +
-                $"Current: {currentVolume:F4}"
-            );
+            StepConfig stepConfig = StepConfig();
+
+            context.SetInstructionText($"{remaining:F1}s");
 
             if (context.Recorder.IsComplete)
             {
@@ -40,12 +39,10 @@ public abstract class RecordingCalibrationStepHandler : ICalibrationStepHandler
 
                 SaveResult(context, result);
                 
-                context.SetInstructionText(
-                    $"Your volume is {result.AverageVolume:F4}\n\n"
-                );
+                context.SetInstructionText("Done");
 
                 context.SetButtonText("Next");
-                context.SetButtonEnabled(true);
+                context.SetButtonsEnabled(true);
                 _isComplete = true;
             }
         }
@@ -64,7 +61,7 @@ public abstract class RecordingCalibrationStepHandler : ICalibrationStepHandler
             volumeProvider: context.GetCurrentVolume,
             duration: context.RecordingDuration
         );
-        context.SetButtonEnabled(false);
+        context.SetButtonsEnabled(false);
     }
 
     public void OnExit(CalibrationContext context)

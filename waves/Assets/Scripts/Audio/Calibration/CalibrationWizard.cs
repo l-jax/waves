@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class CalibrationWizard : MonoBehaviour
 {
@@ -75,6 +76,12 @@ public class CalibrationWizard : MonoBehaviour
     
     private void InitializeContext()
     {
+        Dictionary<string, Button> buttons = new()
+        {
+            ["Next"] = _nextButton,
+            ["Skip"] = _skipButton,
+            ["Back"] = _backButton
+        };
         _context = new CalibrationContext(
             _gameController,
             _stateMachine,
@@ -84,7 +91,7 @@ public class CalibrationWizard : MonoBehaviour
             new PlayerPrefsCalibrationPersistence(),
             _volumeMeter,
             _instructionText,
-            _nextButton
+            buttons
         );
     }
 
