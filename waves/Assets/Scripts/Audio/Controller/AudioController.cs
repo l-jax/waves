@@ -14,6 +14,7 @@ public class AudioController : MonoBehaviour
     public void SetControlSystem(ControlSystem controlSystem)
     {
         _equalizer.SetControlSystem(controlSystem);
+        _effectsPlayer.SetControlSystem(controlSystem);
         _currentControlSystem = controlSystem;
     }
 

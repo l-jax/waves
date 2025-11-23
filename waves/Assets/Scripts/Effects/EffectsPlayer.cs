@@ -36,10 +36,16 @@ public class EffectsPlayer : MonoBehaviour
     private ParticleSystem _winParticles;
 
     private AudioSource _audioSource;
+    private ControlSystem _currentControlSystem;
 
     void Start()
     {
         _audioSource = GetComponent<AudioSource>();
+    }
+
+    public void SetControlSystem(ControlSystem controlSystem)
+    {
+        _currentControlSystem = controlSystem;
     }
 
     public void PlayEffect(Effect effect, Vector3 position, Quaternion rotation)
@@ -53,10 +59,12 @@ public class EffectsPlayer : MonoBehaviour
         switch (effect)
         {
             case Effect.Break:
+                if (_currentControlSystem == ControlSystem.Voice) break;
                 PlayAudio(effect, _breakSound);
                 PlayParticles(effect, _breakParticles, position, rotation);
                 break;
             case Effect.Bounce:
+                if (_currentControlSystem == ControlSystem.Voice) break;
                 PlayAudio(effect, _bounceSound);
                 PlayParticles(effect, _bounceParticles, position, rotation);
                 break;
