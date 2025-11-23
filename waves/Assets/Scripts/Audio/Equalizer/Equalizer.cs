@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 [RequireComponent(typeof(EightTrackPlayer))]
 [RequireComponent(typeof(BlockTracker))]
@@ -14,6 +13,10 @@ public class Equalizer : MonoBehaviour
 
     private readonly float[] _currentVisualHeight = new float[8];
     private readonly float[] _targetHeight = new float[8];
+
+    private ControlSystem _currentControlSystem;
+    private int _frameCount = 0;
+    private const int UpdateInterval = 10;
 
     public void Awake()
     {
@@ -40,25 +43,24 @@ public class Equalizer : MonoBehaviour
 
     public void SetControlSystem(ControlSystem controlSystem)
     {
-        StopAllCoroutines();
-        switch (controlSystem)
-        {
-            case ControlSystem.Keyboard:
-                StartCoroutine(DisplayEightTrackDataCoroutine());
-                break;
-            case ControlSystem.Voice:
-                StartCoroutine(DisplayMicrophoneDataCoroutine());
-                break;
-        }
+        _currentControlSystem = controlSystem;
     }
 
-    private IEnumerator DisplayEightTrackDataCoroutine()
+    void Update()
     {
-        while (true)
+        _frameCount++;
+        if (_frameCount % UpdateInterval != 0) return;
+        _frameCount = 0;
+
+        if (_currentControlSystem == ControlSystem.Voice)
+        {
+            float[] bandPowers = _microphoneAdaptor.GetEightBandSpectrum();
+            DisplayBars(bandPowers);
+        }
+        else if (_currentControlSystem == ControlSystem.Keyboard)
         {
             float[] bandPowers = GetEightTrackAmplitudes();
             DisplayBars(bandPowers);
-            yield return new WaitForSeconds(0.05f);
         }
     }
 
@@ -106,16 +108,6 @@ public class Equalizer : MonoBehaviour
 
         float rms = Mathf.Sqrt(sum / samples.Length);
         return Mathf.Clamp01(rms * 5f);
-    }
-
-    private IEnumerator DisplayMicrophoneDataCoroutine()
-    {
-        while (true)
-        {
-            float[] bandPowers = _microphoneAdaptor.GetEightBandSpectrum();
-            DisplayBars(bandPowers);
-            yield return new WaitForSeconds(0.1f);
-        }
     }
 
     private void DisplayBars(float[] bandPowers)
