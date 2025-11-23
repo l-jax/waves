@@ -419,7 +419,7 @@ MonoBehaviour:
   _bounceParticles: {fileID: 86423232036158362, guid: 89b92c4524b0d43919767f79a5343800, type: 3}
   _outOfBoundsSound: {fileID: 8300000, guid: 9cf33c20d50bf4983963c176d7739f8c, type: 3}
   _outOfBoundsParticles: {fileID: 1895291763589490876, guid: c8267c2a51176494eaf48efbb40fd11a, type: 3}
-  _winSound: {fileID: 0}
+  _winSound: {fileID: 8300000, guid: 5d0bf33d52a9243dea21c4c7b0b62805, type: 3}
   _winParticles: {fileID: 9076028812288583599, guid: e6d61c4f2e52b4cb593905170e4806a9, type: 3}
 --- !u!82 &90551713
 AudioSource:
@@ -1702,10 +1702,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdc36733a405947e1a84a021c6cbc4d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
-  _smallShakeDuration: 0.05
-  _smallShakeMagnitude: 0.05
-  _largeShakeDuration: 0.1
-  _largeShakeMagnitudes: 0.1
+  _smallShakeDuration: 0
+  _smallShakeMagnitude: 0
+  _largeShakeDuration: 0
+  _largeShakeMagnitudes: 0
 --- !u!1001 &342632278
 PrefabInstance:
   m_ObjectHideFlags: 0
