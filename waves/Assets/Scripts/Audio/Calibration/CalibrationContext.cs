@@ -60,7 +60,7 @@ public class CalibrationContext
         
         UpdateVolumeMeter = volume =>
         {
-            volumeMeter.value = Mathf.Lerp(volumeMeter.value, volume * 1000f, 0.3f);
+            volumeMeter.value = Mathf.Lerp(volumeMeter.value, volume * 500f, 0.3f);
         };
 
         GetCurrentVolume = () => microphoneAdaptor.CurrentVolume;
