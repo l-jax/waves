@@ -6556,7 +6556,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1116643971}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2946fbea01d954ba99b905b77dd4c7dd, type: 3}
+  m_Script: {fileID: 11500000, guid: f21226979dda140f4969a6314c08ce64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioController
   _menuMusicSource: {fileID: 1116643974}

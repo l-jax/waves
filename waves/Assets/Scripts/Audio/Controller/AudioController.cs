@@ -9,10 +9,12 @@ public class AudioController : MonoBehaviour
     [SerializeField] private Equalizer _equalizer;
     [SerializeField] private EightTrackPlayer _eightTrackPlayer;
     [SerializeField] private WaveformVisualizer _waveformVisualizer;
+    private ControlSystem _currentControlSystem;
 
     public void SetControlSystem(ControlSystem controlSystem)
     {
         _equalizer.SetControlSystem(controlSystem);
+        _currentControlSystem = controlSystem;
     }
 
     public void EnableWaveform(bool enable)
@@ -42,6 +44,7 @@ public class AudioController : MonoBehaviour
 
     public void PlayGameMusic()
     {
+        if (_currentControlSystem == ControlSystem.Voice) return;
         _eightTrackPlayer.Play();
     }
 

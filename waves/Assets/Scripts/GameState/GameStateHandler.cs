@@ -43,7 +43,7 @@ public class MainMenuHandler : IGameStateHandler
     public void OnExit(GameContext context)
     {
         context.MainMenuUI.SetActive(false);
-        context.AudioController.PauseMenuMusic();
+        context.AudioController.FadeOutMenuMusic(2f);
     }
 }
 
@@ -56,13 +56,11 @@ public class KeyboardSetupHandler : IGameStateHandler
         context.KeyboardSetupUI.GetComponentInChildren<Button>().onClick.AddListener(() => {
             context.StateMachine.TransitionTo(GameState.Playing);
         });
-        context.AudioController.PlayMenuMusic();
     }
 
     public void OnExit(GameContext context)
     {
         context.KeyboardSetupUI.SetActive(false);
-        context.AudioController.FadeOutMenuMusic(2f);
     }
 }
 
@@ -73,13 +71,11 @@ public class VoiceCalibrationHandler : IGameStateHandler
         context.CalibrationUI.SetActive(true);
         context.SetControlSystem(ControlSystem.Voice);
         context.EnableWaveform(true);
-        context.AudioController.PlayMenuMusic();
     }
 
     public void OnExit(GameContext context)
     {
         context.CalibrationUI.SetActive(false);
-        context.AudioController.FadeOutMenuMusic(2f);
     }
 }
 
