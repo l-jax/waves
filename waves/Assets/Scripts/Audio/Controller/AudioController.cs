@@ -45,7 +45,7 @@ public class AudioController : MonoBehaviour
 
     public void PlayGameMusic()
     {
-        if (_currentControlSystem == ControlSystem.Voice) return;
+        // if (_currentControlSystem == ControlSystem.Voice) return;
         _eightTrackPlayer.Play();
     }
 
