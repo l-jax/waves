@@ -17,7 +17,6 @@ public class CalibrationContext
     public readonly Action<string> SetButtonText;
     public readonly Action<bool> SetButtonsEnabled;
 
-    public readonly Action<bool> ShowVolumeMeter;
     public readonly Action<float> UpdateVolumeMeter;
     public readonly Func<float> GetCurrentVolume;
     
@@ -55,12 +54,10 @@ public class CalibrationContext
                 button.interactable = enabled;
             }
         };
-       
-        ShowVolumeMeter = show => volumeMeter.gameObject.SetActive(show);
         
         UpdateVolumeMeter = volume =>
         {
-            volumeMeter.value = Mathf.Lerp(volumeMeter.value, volume * 500f, 0.3f);
+            volumeMeter.value = Mathf.Lerp(volumeMeter.value, volume * 400f, 0.3f);
         };
 
         GetCurrentVolume = () => microphoneAdaptor.CurrentVolume;

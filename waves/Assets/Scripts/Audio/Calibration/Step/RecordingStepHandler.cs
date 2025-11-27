@@ -13,7 +13,6 @@ public abstract class RecordingCalibrationStepHandler : ICalibrationStepHandler
         StepConfig stepConfig = StepConfig();
         context.SetInstructionText(stepConfig.InstructionText);
         context.SetButtonText(stepConfig.ButtonText);
-        context.ShowVolumeMeter(stepConfig.ShowVolumeMeter);
         context.SetButtonsEnabled(true);
     }
 
