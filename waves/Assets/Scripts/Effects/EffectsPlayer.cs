@@ -59,14 +59,14 @@ public class EffectsPlayer : MonoBehaviour
         switch (effect)
         {
             case Effect.Break:
+                PlayParticles(effect, _breakParticles, position, rotation);
                 if (_currentControlSystem == ControlSystem.Voice) break;
                 PlayAudio(effect, _breakSound);
-                PlayParticles(effect, _breakParticles, position, rotation);
                 break;
             case Effect.Bounce:
+                PlayParticles(effect, _bounceParticles, position, rotation);
                 if (_currentControlSystem == ControlSystem.Voice) break;
                 PlayAudio(effect, _bounceSound);
-                PlayParticles(effect, _bounceParticles, position, rotation);
                 break;
             case Effect.OutOfBounds:
                 PlayAudio(effect, _outOfBoundsSound);

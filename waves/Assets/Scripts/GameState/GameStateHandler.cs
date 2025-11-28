@@ -106,7 +106,7 @@ public class GameOverHandler : IGameStateHandler
         }
 
         context.GameOverUI.SetActive(true);
-        context.GameOverUI.GetComponentInChildren<TextMeshProUGUI>().text = context.AllBlocksBroken() ? "You Win!" : "Game Over";
+        context.GameOverUI.GetComponentInChildren<TextMeshProUGUI>().text = context.AllBlocksBroken() ? "You Win" : "Game Over";
         context.GameOverUI.GetComponentInChildren<Button>().onClick.AddListener(() => {
             context.StateMachine.TransitionTo(GameState.MainMenu);
         });
